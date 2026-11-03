@@ -127,7 +127,7 @@ export const PhoneBookView: React.FC<PhoneBookViewProps> = ({
                     <p className="text-xs text-slate-500">Booth #{voter.boothNumber} • Sr {voter.serialNo}</p>
                   </div>
                   <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                    voter.politicalLeaning === 'STRONG_SUPPORTER' ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-700'
+                    voter.politicalLeaning === 'STRONG_SUPPORTER' ? 'bg-brand-100 text-brand-800' : 'bg-slate-100 text-slate-700'
                   }`}>
                     {voter.politicalLeaning.replace('_', ' ')}
                   </span>
@@ -150,14 +150,14 @@ export const PhoneBookView: React.FC<PhoneBookViewProps> = ({
                   onClick={() => handleCall(voter.fullName, voter.mobile)}
                   className="flex-1 py-1.5 px-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg text-xs transition-colors flex items-center justify-center gap-1.5"
                 >
-                  <Phone className="w-3.5 h-3.5 text-emerald-600" />
+                  <Phone className="w-3.5 h-3.5 text-slate-600" />
                   <span>Call</span>
                 </button>
                 <button
                   onClick={() => handleWhatsApp(voter.fullName, voter.mobile)}
-                  className="flex-1 py-1.5 px-3 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold rounded-lg text-xs transition-colors flex items-center justify-center gap-1.5"
+                  className="flex-1 py-1.5 px-3 bg-brand-50 hover:bg-brand-100 text-brand-700 font-bold rounded-lg text-xs transition-colors flex items-center justify-center gap-1.5"
                 >
-                  <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />
+                  <MessageSquare className="w-3.5 h-3.5 text-brand-600" />
                   <span>WhatsApp</span>
                 </button>
                 <button
@@ -208,14 +208,14 @@ export const PhoneBookView: React.FC<PhoneBookViewProps> = ({
                   onClick={() => handleCall(user.name, user.phone)}
                   className="flex-1 py-1.5 px-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg text-xs transition-colors flex items-center justify-center gap-1.5"
                 >
-                  <Phone className="w-3.5 h-3.5 text-emerald-600" />
+                  <Phone className="w-3.5 h-3.5 text-slate-600" />
                   <span>Call Team</span>
                 </button>
                 <button
                   onClick={() => handleWhatsApp(user.name, user.phone)}
-                  className="flex-1 py-1.5 px-3 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold rounded-lg text-xs transition-colors flex items-center justify-center gap-1.5"
+                  className="flex-1 py-1.5 px-3 bg-brand-50 hover:bg-brand-100 text-brand-700 font-bold rounded-lg text-xs transition-colors flex items-center justify-center gap-1.5"
                 >
-                  <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />
+                  <MessageSquare className="w-3.5 h-3.5 text-brand-600" />
                   <span>WhatsApp</span>
                 </button>
               </div>

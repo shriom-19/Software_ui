@@ -72,7 +72,7 @@ export const UpdateRequestsView: React.FC = () => {
                 req.status === 'PENDING'
                   ? 'bg-amber-100 text-amber-800'
                   : req.status === 'APPROVED'
-                  ? 'bg-emerald-100 text-emerald-800'
+                  ? 'bg-brand-100 text-brand-800'
                   : 'bg-rose-100 text-rose-800'
               }`}>
                 {req.status}
@@ -99,11 +99,11 @@ export const UpdateRequestsView: React.FC = () => {
                 </p>
               </div>
 
-              <div className="p-4 bg-emerald-50/60 rounded-xl border border-emerald-200 text-xs">
-                <span className="text-emerald-700 font-bold uppercase tracking-wider text-[10px] block mb-1">
+              <div className="p-4 bg-brand-50/60 rounded-xl border border-brand-200 text-xs">
+                <span className="text-brand-700 font-bold uppercase tracking-wider text-[10px] block mb-1">
                   Proposed Updated Data
                 </span>
-                <p className="font-mono text-emerald-950 font-bold text-sm bg-white p-2.5 rounded-lg border border-emerald-300">
+                <p className="font-mono text-brand-950 font-bold text-sm bg-white p-2.5 rounded-lg border border-brand-300">
                   {req.proposedValue}
                 </p>
               </div>
@@ -120,7 +120,7 @@ export const UpdateRequestsView: React.FC = () => {
                 </button>
                 <button
                   onClick={() => handleApprove(req.id, req.karyakartaName)}
-                  className="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs transition-colors shadow-xs"
+                  className="px-5 py-2 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl text-xs transition-colors shadow-xs"
                 >
                   Approve & Commit Update
                 </button>

@@ -105,7 +105,7 @@ export const VoterSlipModal: React.FC<VoterSlipModalProps> = ({ voter, onClose }
             {/* Footer Notice */}
             <div className="text-[10px] text-slate-500 border-t border-slate-200 pt-2 flex items-center justify-between">
               <span className="flex items-center gap-1">
-                <CheckCircle className="w-3 h-3 text-emerald-600" /> Verified via Indata Electoral Roll
+                <CheckCircle className="w-3 h-3 text-brand-600" /> Verified via Indata Electoral Roll
               </span>
               <span>Valid along with standard Govt Photo ID</span>
             </div>

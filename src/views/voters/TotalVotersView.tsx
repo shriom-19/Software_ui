@@ -553,35 +553,44 @@ export const TotalVotersView: React.FC<TotalVotersViewProps> = ({
                         </span>
                       </td>
                       <td className="py-3 px-3">
-                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                        <span className={`px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wide inline-flex items-center gap-1 shadow-xs ${
                           v.politicalLeaning === 'STRONG_SUPPORTER'
-                            ? 'bg-emerald-100 text-emerald-800'
+                            ? 'bg-blue-50 text-blue-700 border border-blue-200'
                             : v.politicalLeaning === 'LEANING_SUPPORTER'
-                            ? 'bg-teal-100 text-teal-800'
+                            ? 'bg-cyan-50 text-cyan-700 border border-cyan-200'
                             : v.politicalLeaning === 'NEUTRAL'
-                            ? 'bg-amber-100 text-amber-800'
-                            : 'bg-rose-100 text-rose-800'
+                            ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                            : 'bg-rose-50 text-rose-700 border border-rose-200'
                         }`}>
+                          <span className={`w-1.5 h-1.5 rounded-full ${
+                            v.politicalLeaning === 'STRONG_SUPPORTER'
+                              ? 'bg-blue-600'
+                              : v.politicalLeaning === 'LEANING_SUPPORTER'
+                              ? 'bg-cyan-500'
+                              : v.politicalLeaning === 'NEUTRAL'
+                              ? 'bg-amber-500'
+                              : 'bg-rose-500'
+                          }`}></span>
                           {v.politicalLeaning.replace('_', ' ')}
                         </span>
                       </td>
                       <td className="py-3 px-3">
-                        <span className="text-xs font-medium text-slate-800 block">{v.caste}</span>
-                        <span className="text-[10px] text-slate-500">
+                        <span className="text-xs font-bold text-slate-800 block">{v.caste}</span>
+                        <span className="text-[10px] text-indigo-600 font-semibold bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-100 inline-block mt-0.5">
                           {v.schemeBeneficiary && v.schemeBeneficiary.length > 0
                             ? v.schemeBeneficiary[0]
                             : 'No central scheme'}
                         </span>
                       </td>
                       <td className="py-3 px-3">
-                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider inline-flex items-center gap-1 shadow-xs ${
                           v.voterSlipStatus === 'DELIVERED'
-                            ? 'bg-emerald-100 text-emerald-800'
+                            ? 'bg-indigo-50 text-indigo-700 border border-indigo-200'
                             : v.voterSlipStatus === 'PRINTED'
-                            ? 'bg-blue-100 text-blue-800'
+                            ? 'bg-blue-50 text-blue-700 border border-blue-200'
                             : v.voterSlipStatus === 'GENERATED'
-                            ? 'bg-amber-100 text-amber-800'
-                            : 'bg-slate-100 text-slate-600'
+                            ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                            : 'bg-slate-100 text-slate-600 border border-slate-200'
                         }`}>
                           {v.voterSlipStatus.replace('_', ' ')}
                         </span>

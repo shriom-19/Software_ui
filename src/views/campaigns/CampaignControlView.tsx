@@ -213,8 +213,8 @@ export const CampaignControlView: React.FC = () => {
           </div>
         </div>
         <div className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-xl border border-white/10 shrink-0">
-          <CreditCard className="w-4 h-4 text-emerald-400" />
-          <span className="font-mono text-emerald-300 font-bold">Balance: 124,500 Credits</span>
+          <CreditCard className="w-4 h-4 text-amber-300" />
+          <span className="font-mono text-amber-200 font-bold">Balance: 124,500 Credits</span>
         </div>
       </div>
 
@@ -315,7 +315,7 @@ export const CampaignControlView: React.FC = () => {
                           </span>
                           <div className="w-24 bg-slate-100 h-1.5 rounded-full overflow-hidden">
                             <div
-                              className="bg-emerald-500 h-full rounded-full"
+                              className="bg-brand-500 h-full rounded-full"
                               style={{
                                 width: `${c.recipientCount ? (c.deliveredCount / c.recipientCount) * 100 : 0}%`
                               }}
@@ -329,7 +329,7 @@ export const CampaignControlView: React.FC = () => {
                       <td className="py-3 px-4">
                         <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
                           c.status === 'RUNNING'
-                            ? 'bg-emerald-100 text-emerald-800'
+                            ? 'bg-brand-100 text-brand-800'
                             : c.status === 'COMPLETED'
                             ? 'bg-blue-100 text-blue-800'
                             : c.status === 'SCHEDULED'
@@ -375,7 +375,7 @@ export const CampaignControlView: React.FC = () => {
               <h3 className="font-bold text-slate-900 text-sm">Pre-Approved Telecom & Meta DLT Templates</h3>
               <p className="text-xs text-slate-500">Compliant templates ready for broadcast with dynamic candidate variables.</p>
             </div>
-            <span className="px-3 py-1 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold">
+            <span className="px-3 py-1 rounded-xl bg-slate-100 text-slate-700 border border-slate-200 text-xs font-bold">
               100% TRAI DLT Compliant
             </span>
           </div>
@@ -497,7 +497,7 @@ export const CampaignControlView: React.FC = () => {
             <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
               <span className="text-[11px] font-bold text-slate-400 uppercase">WhatsApp Broadcast Balance</span>
               <p className="text-2xl font-black text-slate-900 mt-1">45,680</p>
-              <span className="text-xs text-emerald-600 font-semibold">Credits Available</span>
+              <span className="text-xs text-brand-600 font-semibold">Credits Available</span>
             </div>
             <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
               <span className="text-[11px] font-bold text-slate-400 uppercase">High-Speed SMS Credits</span>
@@ -573,9 +573,9 @@ export const CampaignControlView: React.FC = () => {
                 <span className="text-[10px] text-slate-400 font-semibold block uppercase">Queued</span>
                 <span className="text-base font-black text-slate-900 mt-0.5 block">{selectedCampaignForStats.recipientCount.toLocaleString()}</span>
               </div>
-              <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-200">
-                <span className="text-[10px] text-emerald-700 font-semibold block uppercase">Delivered</span>
-                <span className="text-base font-black text-emerald-900 mt-0.5 block">{selectedCampaignForStats.deliveredCount.toLocaleString()}</span>
+              <div className="p-3 bg-brand-50 rounded-xl border border-brand-200">
+                <span className="text-[10px] text-brand-700 font-semibold block uppercase">Delivered</span>
+                <span className="text-base font-black text-brand-900 mt-0.5 block">{selectedCampaignForStats.deliveredCount.toLocaleString()}</span>
               </div>
               <div className="p-3 bg-blue-50 rounded-xl border border-blue-200">
                 <span className="text-[10px] text-blue-700 font-semibold block uppercase">Read Rate</span>
@@ -693,7 +693,7 @@ export const CampaignControlView: React.FC = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
           <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full border border-slate-200 overflow-hidden flex flex-col max-h-[90vh] animate-scale-up">
             {/* Wizard Header */}
-            <div className="p-5 px-6 bg-gradient-to-r from-slate-900 to-brand-900 text-white flex items-center justify-between">
+            <div className="p-5 px-6 bg-slate-950 text-white flex items-center justify-between border-b border-slate-800">
               <div>
                 <span className="text-[10px] font-bold uppercase tracking-wider text-amber-300">
                   Step {wizardStep} of 6
@@ -713,7 +713,7 @@ export const CampaignControlView: React.FC = () => {
                     wizardStep === i + 1
                       ? 'bg-brand-600 text-white'
                       : wizardStep > i + 1
-                      ? 'bg-emerald-600 text-white'
+                      ? 'bg-brand-600 text-white'
                       : 'bg-slate-200 text-slate-600'
                   }`}>
                     {i + 1}
@@ -869,7 +869,7 @@ export const CampaignControlView: React.FC = () => {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-slate-500">Estimated Cost:</span>
-                      <span className="font-bold text-emerald-700">{recipientCount.toLocaleString()} Credits</span>
+                      <span className="font-bold text-slate-800">{recipientCount.toLocaleString()} Credits</span>
                     </div>
                   </div>
                 </div>
@@ -877,7 +877,7 @@ export const CampaignControlView: React.FC = () => {
 
               {wizardStep === 6 && (
                 <div className="text-center py-4 space-y-3">
-                  <div className="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-2xl flex items-center justify-center mx-auto">
+                  <div className="w-12 h-12 bg-brand-100 text-brand-700 rounded-2xl flex items-center justify-center mx-auto">
                     <CheckCircle2 className="w-6 h-6" />
                   </div>
                   <h4 className="font-bold text-base text-slate-900">Ready to Schedule Simulated Broadcast</h4>
@@ -916,7 +916,7 @@ export const CampaignControlView: React.FC = () => {
                 <button
                   type="button"
                   onClick={handleCreateCampaign}
-                  className="px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-md"
+                  className="px-6 py-2 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-md transition-colors"
                 >
                   <Send className="w-4 h-4" />
                   <span>Confirm & Launch Campaign</span>

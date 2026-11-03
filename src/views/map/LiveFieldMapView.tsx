@@ -233,7 +233,7 @@ export const LiveFieldMapView: React.FC = () => {
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span className="w-2.5 h-2.5 rounded-full bg-brand-500 animate-pulse"></span>
               <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
                 GIS Operations & Field Intelligence
               </span>
@@ -453,7 +453,7 @@ export const LiveFieldMapView: React.FC = () => {
               >
                 <div className={`p-2 rounded-2xl border flex items-center gap-1.5 shadow-lg backdrop-blur-md transition-transform group-hover:scale-110 ${
                   b.grade === 'A'
-                    ? 'bg-emerald-950/90 text-emerald-300 border-emerald-500'
+                    ? 'bg-slate-900/90 text-brand-300 border-brand-500'
                     : b.grade === 'B'
                     ? 'bg-blue-950/90 text-blue-300 border-blue-500'
                     : 'bg-amber-950/90 text-amber-300 border-amber-500'
@@ -478,10 +478,10 @@ export const LiveFieldMapView: React.FC = () => {
               >
                 <div className="relative flex flex-col items-center">
                   {k.isOnline && (
-                    <span className="w-4 h-4 rounded-full bg-emerald-500 ring-4 ring-emerald-400/40 animate-ping absolute"></span>
+                    <span className="w-4 h-4 rounded-full bg-brand-500 ring-4 ring-brand-400/40 animate-ping absolute"></span>
                   )}
                   <div className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs shadow-lg border-2 border-white ${
-                    k.isOnline ? 'bg-emerald-600 text-white' : 'bg-slate-600 text-slate-200'
+                    k.isOnline ? 'bg-brand-600 text-white' : 'bg-slate-600 text-slate-200'
                   }`}>
                     {k.name[0]}
                   </div>
@@ -504,7 +504,7 @@ export const LiveFieldMapView: React.FC = () => {
               <div className="flex flex-col items-center transition-transform group-hover:scale-110">
                 {s.slipType === 'PRINTED_THERMAL' ? (
                   /* 58mm Thermal Printed Slip Pin */
-                  <div className="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center shadow-lg border-2 border-white ring-2 ring-emerald-400/50">
+                  <div className="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center shadow-lg border-2 border-white ring-2 ring-indigo-400/50">
                     <Printer className="w-4 h-4" />
                   </div>
                 ) : (
@@ -515,7 +515,7 @@ export const LiveFieldMapView: React.FC = () => {
                 )}
                 <span className={`mt-1 px-2 py-0.5 rounded-full text-[9px] font-bold whitespace-nowrap shadow-md border ${
                   s.slipType === 'PRINTED_THERMAL'
-                    ? 'bg-emerald-950/95 text-emerald-300 border-emerald-500'
+                    ? 'bg-indigo-950/95 text-indigo-300 border-indigo-500'
                     : 'bg-cyan-950/95 text-cyan-300 border-cyan-500'
                 }`}>
                   {s.voterName.split(' ')[0]} ({s.slipType === 'PRINTED_THERMAL' ? '58mm Print' : 'WhatsApp QR'})
@@ -581,7 +581,7 @@ export const LiveFieldMapView: React.FC = () => {
           </div>
           <div className="grid grid-cols-2 gap-x-3 gap-y-1">
             <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+              <span className="w-2.5 h-2.5 rounded-full bg-brand-500"></span>
               <span>Online Karyakarta</span>
             </div>
             <div className="flex items-center gap-1.5">
@@ -593,7 +593,7 @@ export const LiveFieldMapView: React.FC = () => {
               <span>Digital WhatsApp Slip</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+              <span className="w-2.5 h-2.5 rounded-full bg-indigo-500"></span>
               <span>58mm Thermal Print Slip</span>
             </div>
             <div className="flex items-center gap-1.5 col-span-2">
@@ -638,7 +638,7 @@ export const LiveFieldMapView: React.FC = () => {
                   </div>
                   <div className="bg-slate-50 p-2 rounded-lg">
                     <span className="text-[10px] text-slate-400 block">Slips Delivered:</span>
-                    <span className="font-bold text-emerald-600">{selectedMarker.data.slipsDeliveredPercent}%</span>
+                    <span className="font-bold text-brand-600">{selectedMarker.data.slipsDeliveredPercent}%</span>
                   </div>
                 </div>
                 <div className="bg-brand-50 p-2 rounded-lg border border-brand-200">
@@ -653,12 +653,12 @@ export const LiveFieldMapView: React.FC = () => {
             {selectedMarker.type === 'karyakarta' && (
               <div className="space-y-2 text-slate-700">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xs">
+                  <div className="w-8 h-8 rounded-full bg-brand-100 text-brand-800 flex items-center justify-center font-bold text-xs">
                     {selectedMarker.data.name[0]}
                   </div>
                   <div>
                     <h4 className="font-bold text-slate-900 text-sm">{selectedMarker.data.name}</h4>
-                    <span className="text-[10px] text-emerald-600 font-semibold">Active in Field</span>
+                    <span className="text-[10px] text-brand-600 font-semibold">Active in Field</span>
                   </div>
                 </div>
                 <p className="text-slate-600">Assigned: Booth #{selectedMarker.data.assignedBooth} ({selectedMarker.data.prabhaag})</p>
@@ -682,7 +682,7 @@ export const LiveFieldMapView: React.FC = () => {
                   <span className="font-mono font-bold text-brand-700">{selectedMarker.data.id}</span>
                   <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                     selectedMarker.data.slipType === 'PRINTED_THERMAL'
-                      ? 'bg-emerald-100 text-emerald-800'
+                      ? 'bg-brand-100 text-brand-800'
                       : 'bg-cyan-100 text-cyan-800'
                   }`}>
                     {selectedMarker.data.slipType === 'PRINTED_THERMAL' ? '58mm Thermal Slip' : 'Digital WhatsApp Slip'}
@@ -710,7 +710,7 @@ export const LiveFieldMapView: React.FC = () => {
                     <span className="font-medium text-slate-800">{selectedMarker.data.mobile}</span>
                   </div>
                 </div>
-                <p className="text-[11px] text-slate-600 bg-emerald-50/60 p-2 rounded-lg border border-emerald-100">
+                <p className="text-[11px] text-slate-600 bg-brand-50/60 p-2 rounded-lg border border-brand-100">
                   {selectedMarker.data.notes}
                 </p>
                 <button

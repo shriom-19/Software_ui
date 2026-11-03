@@ -83,7 +83,7 @@ export const AddUserView: React.FC<AddUserViewProps> = ({ onBack, onUserAdded })
       </div>
 
       <div className="bg-white rounded-3xl border border-slate-200 shadow-xs overflow-hidden">
-        <div className="bg-gradient-to-r from-slate-900 via-brand-900 to-indigo-950 p-6 text-white">
+        <div className="bg-slate-950 p-6 text-white border-b border-slate-800">
           <h1 className="text-xl font-black">Provision New Portal User</h1>
           <p className="text-xs text-brand-200 mt-1">
             Assign credentials, jurisdiction, booth boundaries, and security permissions.

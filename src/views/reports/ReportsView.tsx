@@ -126,7 +126,7 @@ export const ReportsView: React.FC = () => {
                     {r.category}
                   </span>
                   <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                    r.type === 'ANALYTICAL_PDF' ? 'bg-purple-100 text-purple-800' : 'bg-emerald-100 text-emerald-800'
+                    r.type === 'ANALYTICAL_PDF' ? 'bg-purple-100 text-purple-800' : 'bg-brand-100 text-brand-800'
                   }`}>
                     {r.type === 'ANALYTICAL_PDF' ? 'Formatted Analytical PDF' : 'Raw CSV Export'}
                   </span>
@@ -187,7 +187,7 @@ export const ReportsView: React.FC = () => {
                     <td className="py-2.5 px-3">2,14,200</td>
                     <td className="py-2.5 px-3">1,98,200</td>
                     <td className="py-2.5 px-3 font-semibold text-brand-700">925 / 1000</td>
-                    <td className="py-2.5 px-3 font-bold text-emerald-600">68.4%</td>
+                    <td className="py-2.5 px-3 font-bold text-brand-600">68.4%</td>
                   </tr>
                   <tr className="hover:bg-slate-50">
                     <td className="py-2.5 px-3 font-bold text-slate-900">215 - Shivajinagar Assembly Segment</td>
@@ -195,7 +195,7 @@ export const ReportsView: React.FC = () => {
                     <td className="py-2.5 px-3">1,68,000</td>
                     <td className="py-2.5 px-3">1,52,100</td>
                     <td className="py-2.5 px-3 font-semibold text-brand-700">905 / 1000</td>
-                    <td className="py-2.5 px-3 font-bold text-emerald-600">59.8%</td>
+                    <td className="py-2.5 px-3 font-bold text-brand-600">59.8%</td>
                   </tr>
                   <tr className="hover:bg-slate-50">
                     <td className="py-2.5 px-3 font-bold text-slate-900">212 - Parvati Assembly Segment</td>
@@ -203,7 +203,7 @@ export const ReportsView: React.FC = () => {
                     <td className="py-2.5 px-3">2,02,100</td>
                     <td className="py-2.5 px-3">1,87,400</td>
                     <td className="py-2.5 px-3 font-semibold text-brand-700">927 / 1000</td>
-                    <td className="py-2.5 px-3 font-bold text-emerald-600">62.1%</td>
+                    <td className="py-2.5 px-3 font-bold text-brand-600">62.1%</td>
                   </tr>
                 </tbody>
               </table>

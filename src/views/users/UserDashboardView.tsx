@@ -57,7 +57,7 @@ export const UserDashboardView: React.FC<UserDashboardViewProps> = ({ onNavigate
         >
           <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block">Field Karyakartas</span>
           <p className="text-2xl font-black text-slate-900 mt-1">{MOCK_KARYAKARTAS.length}</p>
-          <p className="text-[11px] text-emerald-600 font-semibold mt-1">
+          <p className="text-[11px] text-brand-600 font-semibold mt-1">
             {MOCK_KARYAKARTAS.filter(k => k.isOnline).length} Active on Field now
           </p>
         </div>

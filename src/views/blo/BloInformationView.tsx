@@ -79,7 +79,7 @@ export const BloInformationView: React.FC = () => {
             <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
               ECI Field Officers
             </span>
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-brand-50 text-brand-800 border border-brand-200">
               Government Appointees
             </span>
           </div>
@@ -158,7 +158,7 @@ export const BloInformationView: React.FC = () => {
                   <td className="py-3 px-4">
                     <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
                       blo.status === 'ACTIVE'
-                        ? 'bg-emerald-100 text-emerald-800'
+                        ? 'bg-brand-100 text-brand-800'
                         : blo.status === 'ON_LEAVE'
                         ? 'bg-amber-100 text-amber-800'
                         : 'bg-rose-100 text-rose-800'
@@ -172,7 +172,7 @@ export const BloInformationView: React.FC = () => {
                       onClick={() => handleCall(blo.name, blo.phone)}
                       className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold rounded-lg text-xs transition-colors inline-flex items-center gap-1.5"
                     >
-                      <Phone className="w-3.5 h-3.5 text-emerald-600" />
+                      <Phone className="w-3.5 h-3.5 text-brand-600" />
                       <span>Call BLO</span>
                     </button>
                   </td>

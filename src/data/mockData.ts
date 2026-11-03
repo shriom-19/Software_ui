@@ -1212,7 +1212,7 @@ export const MOCK_SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
     description: "High-throughput verified WhatsApp Business API credits with media templates and button slips.",
     features: [
       "50,000 Verified Meta API Messages",
-      "Green Tick Verified Channel Delivery",
+      "Official Verified Channel Delivery",
       "Voter Slip Media PDF & PNG Attachment Support",
       "Detailed Read Receipt & Click Tracking",
       "No Expiry across current election year"

@@ -54,7 +54,7 @@ export const MembersKaryakartasView: React.FC = () => {
             <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
               Field Cadre Directory
             </span>
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-brand-50 text-brand-700 border border-brand-200">
               Grassroots Mobilizers
             </span>
           </div>
@@ -129,7 +129,7 @@ export const MembersKaryakartasView: React.FC = () => {
                       <div>
                         <span className="font-bold text-slate-900 block">{k.name}</span>
                         <div className="flex items-center gap-1.5 mt-0.5">
-                          <span className={`w-2 h-2 rounded-full ${k.isOnline ? 'bg-emerald-500' : 'bg-slate-300'}`}></span>
+                          <span className={`w-2 h-2 rounded-full ${k.isOnline ? 'bg-brand-500' : 'bg-slate-300'}`}></span>
                           <span className="text-[10px] text-slate-400">{k.isOnline ? 'Online on Field' : 'Offline'}</span>
                         </div>
                       </div>
@@ -142,7 +142,7 @@ export const MembersKaryakartasView: React.FC = () => {
                   </td>
                   <td className="py-3 px-4">
                     <div className="flex items-center gap-1.5 font-bold text-slate-800">
-                      <TrendingUp className="w-3.5 h-3.5 text-emerald-600" />
+                      <TrendingUp className="w-3.5 h-3.5 text-brand-600" />
                       <span>{k.surveysCompleted}</span>
                     </div>
                   </td>
@@ -155,7 +155,7 @@ export const MembersKaryakartasView: React.FC = () => {
                   <td className="py-3 px-4">
                     <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
                       k.status === 'APPROVED'
-                        ? 'bg-emerald-100 text-emerald-800'
+                        ? 'bg-brand-100 text-brand-800'
                         : k.status === 'PENDING'
                         ? 'bg-amber-100 text-amber-800'
                         : 'bg-rose-100 text-rose-800'
@@ -168,7 +168,7 @@ export const MembersKaryakartasView: React.FC = () => {
                       <div className="flex items-center justify-end gap-2">
                         <button
                           onClick={() => handleApprove(k.id, k.name)}
-                          className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg text-xs transition-colors shadow-xs"
+                          className="px-2.5 py-1 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-lg text-xs transition-colors shadow-xs"
                         >
                           Approve
                         </button>

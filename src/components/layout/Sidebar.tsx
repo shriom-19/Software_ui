@@ -49,35 +49,36 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <aside
-      className={`bg-slate-900 text-slate-300 flex flex-col h-screen sticky top-0 transition-all duration-300 z-40 select-none ${
+      className={`bg-slate-950 text-slate-300 flex flex-col h-screen sticky top-0 transition-all duration-300 z-40 select-none border-r border-slate-900 ${
         isCollapsed ? 'w-20' : 'w-64'
       }`}
     >
       {/* Brand Header */}
-      <div className="h-16 px-4 flex items-center justify-between border-b border-slate-800 bg-slate-950/60">
+      <div className="h-16 px-4 flex items-center justify-between border-b border-slate-900/80 bg-slate-950">
         {!isCollapsed ? (
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-500 flex items-center justify-center text-white shadow-md font-extrabold text-lg">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center text-white shadow-lg shadow-indigo-500/20 font-black text-sm tracking-wide">
               IN
             </div>
             <div>
-              <span className="font-extrabold text-base tracking-tight text-white block leading-tight">
+              <span className="font-extrabold text-base tracking-tight text-white block leading-tight flex items-center gap-1.5">
                 INDATA
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
               </span>
-              <span className="text-[10px] font-semibold text-brand-400 tracking-wider uppercase block">
-                Candidate Admin
+              <span className="text-[10px] font-bold bg-gradient-to-r from-amber-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent tracking-wider uppercase block">
+                Candidate Portal
               </span>
             </div>
           </div>
         ) : (
-          <div className="w-10 h-10 mx-auto rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-500 flex items-center justify-center text-white font-extrabold shadow-md">
+          <div className="w-10 h-10 mx-auto rounded-xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center text-white font-black shadow-lg shadow-indigo-500/20 text-sm">
             IN
           </div>
         )}
 
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors hidden md:block"
+          className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-900 transition-colors hidden md:block"
           title={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
         >
           {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
@@ -116,11 +117,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
               }`}
               title="Live Field Map"
             >
-              <MapPin className="w-4 h-4 shrink-0 text-emerald-400" />
+              <MapPin className="w-4 h-4 shrink-0 text-cyan-400" />
               {!isCollapsed && (
                 <div className="flex-1 flex items-center justify-between">
                   <span>Live Field Map</span>
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                  <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
                 </div>
               )}
             </button>
@@ -310,7 +311,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               }`}
               title="BLO Information"
             >
-              <ShieldAlert className="w-4 h-4 shrink-0 text-emerald-400" />
+              <ShieldAlert className="w-4 h-4 shrink-0 text-sky-400" />
               {!isCollapsed && <span>BLO Information</span>}
             </button>
 

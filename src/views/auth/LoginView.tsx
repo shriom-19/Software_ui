@@ -53,11 +53,11 @@ export const LoginView: React.FC<LoginViewProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-brand-950 flex flex-col justify-center items-center p-4">
+    <div className="min-h-screen bg-slate-950 flex flex-col justify-center items-center p-4">
       {/* Container */}
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden">
+      <div className="w-full max-w-md bg-white rounded-3xl shadow-premium-lg border border-slate-800/20 overflow-hidden">
         {/* Brand Banner */}
-        <div className="bg-gradient-to-r from-brand-700 via-brand-600 to-indigo-700 p-8 text-center text-white relative">
+        <div className="bg-slate-900 p-8 text-center text-white relative border-b border-slate-800">
           <div className="w-14 h-14 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 flex items-center justify-center mx-auto mb-3 shadow-lg">
             <span className="text-2xl font-black tracking-tight text-white">IN</span>
           </div>

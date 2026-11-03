@@ -132,7 +132,7 @@ export const GlobalAIModal: React.FC<GlobalAIModalProps> = ({
               <div className="flex items-center gap-2">
                 <h3 className="font-bold text-base">Global AI Mode</h3>
                 <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase ${
-                  isAiLocked ? 'bg-rose-500/30 text-rose-200 border border-rose-400/40' : 'bg-emerald-500/30 text-emerald-200 border border-emerald-400/40'
+                  isAiLocked ? 'bg-rose-500/30 text-rose-200 border border-rose-400/40' : 'bg-brand-500/30 text-brand-200 border border-brand-400/40'
                 }`}>
                   {isAiLocked ? 'Locked / Pro Tier' : 'Active • Enterprise'}
                 </span>
@@ -219,7 +219,7 @@ export const GlobalAIModal: React.FC<GlobalAIModalProps> = ({
                             <span className="text-[11px] text-slate-500 block">{m.label}</span>
                             <div className="flex items-baseline gap-1 mt-0.5">
                               <span className="font-bold text-slate-800">{m.value}</span>
-                              {m.trend && <span className="text-[10px] text-emerald-600 font-semibold">{m.trend}</span>}
+                              {m.trend && <span className="text-[10px] text-brand-600 font-semibold">{m.trend}</span>}
                             </div>
                           </div>
                         ))}

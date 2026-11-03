@@ -78,14 +78,14 @@ export const CentralVoterProfileView: React.FC<CentralVoterProfileViewProps> = (
             onClick={handleCall}
             className="flex items-center gap-1.5 px-3 py-2 bg-white hover:bg-slate-50 text-slate-700 font-bold rounded-xl text-xs border border-slate-200 shadow-xs transition-colors"
           >
-            <Phone className="w-3.5 h-3.5 text-emerald-600" />
+            <Phone className="w-3.5 h-3.5 text-slate-600" />
             <span>Call Voter</span>
           </button>
           <button
             onClick={handleWhatsApp}
-            className="flex items-center gap-1.5 px-3 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold rounded-xl text-xs border border-emerald-200 shadow-xs transition-colors"
+            className="flex items-center gap-1.5 px-3 py-2 bg-brand-50 hover:bg-brand-100 text-brand-700 font-bold rounded-xl text-xs border border-brand-200 shadow-xs transition-colors"
           >
-            <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />
+            <MessageSquare className="w-3.5 h-3.5 text-brand-600" />
             <span>WhatsApp Slip</span>
           </button>
           <button
@@ -100,7 +100,7 @@ export const CentralVoterProfileView: React.FC<CentralVoterProfileViewProps> = (
 
       {/* Voter Profile Master Header Card */}
       <div className="bg-white rounded-3xl border border-slate-200 shadow-xs overflow-hidden">
-        <div className="bg-gradient-to-r from-slate-900 via-brand-950 to-indigo-950 p-6 text-white flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="bg-slate-950 p-6 text-white flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-slate-800">
           <div className="flex items-center gap-4">
             {/* Voter Photo / Avatar */}
             <div className="w-20 h-20 rounded-2xl bg-white/10 border-2 border-white/20 flex flex-col items-center justify-center text-center p-1 shrink-0 backdrop-blur-sm">
@@ -143,7 +143,7 @@ export const CentralVoterProfileView: React.FC<CentralVoterProfileViewProps> = (
             </div>
             <div className="flex justify-between gap-4">
               <span className="text-slate-300">Voter Slip:</span>
-              <span className="font-bold text-emerald-300">{profile.voterSlipStatus}</span>
+              <span className="font-bold text-brand-300">{profile.voterSlipStatus}</span>
             </div>
           </div>
         </div>
@@ -281,8 +281,8 @@ export const CentralVoterProfileView: React.FC<CentralVoterProfileViewProps> = (
                 <span className="text-xs font-bold text-slate-700 block mb-2">Availing Government Benefits:</span>
                 <div className="flex flex-wrap gap-2">
                   {profile.schemeBeneficiary?.map((s, idx) => (
-                    <span key={idx} className="px-3 py-1 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-lg text-xs font-semibold flex items-center gap-1.5">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                    <span key={idx} className="px-3 py-1 bg-brand-50 text-brand-800 border border-brand-200 rounded-lg text-xs font-semibold flex items-center gap-1.5">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-brand-600" />
                       <span>{s}</span>
                     </span>
                   ))}
@@ -304,7 +304,7 @@ export const CentralVoterProfileView: React.FC<CentralVoterProfileViewProps> = (
                 </label>
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
                   {[
-                    { id: 'STRONG_SUPPORTER', label: 'Strong Supporter', color: 'emerald' },
+                    { id: 'STRONG_SUPPORTER', label: 'Strong Supporter', color: 'brand' },
                     { id: 'LEANING_SUPPORTER', label: 'Leaning Supporter', color: 'teal' },
                     { id: 'NEUTRAL', label: 'Neutral / Undecided', color: 'amber' },
                     { id: 'LEANING_OPPOSITION', label: 'Leaning Opposition', color: 'rose' },
@@ -379,7 +379,7 @@ export const CentralVoterProfileView: React.FC<CentralVoterProfileViewProps> = (
                   </div>
                   <p className="text-slate-700"><strong>Key Issue:</strong> {s.keyIssue}</p>
                   <p className="text-slate-700"><strong>Candidate Sentiment:</strong> {s.opinionOnCandidate}</p>
-                  <p className="text-emerald-700 font-semibold">Likelihood to Vote: {s.likelihoodToVote}</p>
+                  <p className="text-brand-700 font-semibold">Likelihood to Vote: {s.likelihoodToVote}</p>
                 </div>
               ))}
             </div>
@@ -402,7 +402,7 @@ export const CentralVoterProfileView: React.FC<CentralVoterProfileViewProps> = (
                     <p className="text-slate-600 mt-1">{issue.description}</p>
                   </div>
                   <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                    issue.status === 'RESOLVED' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
+                    issue.status === 'RESOLVED' ? 'bg-brand-100 text-brand-800' : 'bg-amber-100 text-amber-800'
                   }`}>
                     {issue.status}
                   </span>
@@ -429,7 +429,7 @@ export const CentralVoterProfileView: React.FC<CentralVoterProfileViewProps> = (
                     <p className="text-slate-600 text-[11px] mt-0.5">{c.summary}</p>
                   </div>
                   <div className="text-right">
-                    <span className="font-bold text-[10px] text-emerald-600 block">{c.status}</span>
+                    <span className="font-bold text-[10px] text-brand-600 block">{c.status}</span>
                     <span className="text-[10px] text-slate-400">{c.date}</span>
                   </div>
                 </div>

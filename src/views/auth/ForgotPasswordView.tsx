@@ -66,8 +66,8 @@ export const ForgotPasswordView: React.FC<ForgotPasswordViewProps> = ({ onNaviga
 
         {isResetDone ? (
           <div className="text-center space-y-4">
-            <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-emerald-800 text-xs flex items-center justify-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+            <div className="p-3 bg-brand-50 rounded-xl border border-brand-200 text-brand-800 text-xs flex items-center justify-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-brand-600" />
               <span>Password updated successfully!</span>
             </div>
             <button

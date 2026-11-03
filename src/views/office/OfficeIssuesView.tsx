@@ -185,7 +185,7 @@ export const OfficeIssuesView: React.FC = () => {
         <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
           <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Today's Visitors</span>
           <p className="text-2xl font-black text-slate-900 mt-1">28</p>
-          <p className="text-[11px] text-emerald-600 font-semibold mt-1">19 Linked to Voter Roll</p>
+          <p className="text-[11px] text-brand-600 font-semibold mt-1">19 Linked to Voter Roll</p>
         </div>
         <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
           <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Open Tickets</span>
@@ -203,10 +203,10 @@ export const OfficeIssuesView: React.FC = () => {
         </div>
         <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
           <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Resolved Issues</span>
-          <p className="text-2xl font-black text-emerald-600 mt-1">
+          <p className="text-2xl font-black text-brand-700 mt-1">
             {tickets.filter(t => t.status === 'RESOLVED').length}
           </p>
-          <p className="text-[11px] text-emerald-600 font-semibold mt-1">89% Satisfaction Index</p>
+          <p className="text-[11px] text-brand-600 font-semibold mt-1">89% Satisfaction Index</p>
         </div>
       </div>
 
@@ -275,7 +275,7 @@ export const OfficeIssuesView: React.FC = () => {
                     <div className="flex items-center gap-1.5 mt-0.5">
                       <span className={`px-1.5 py-0.2 rounded text-[9px] font-bold ${
                         t.isLinkedVoter
-                          ? 'bg-emerald-100 text-emerald-800'
+                          ? 'bg-brand-100 text-brand-800'
                           : 'bg-amber-100 text-amber-800'
                       }`}>
                         {t.isLinkedVoter ? `Verified Voter (${t.voterEpic})` : 'Unverified Visitor'}
@@ -302,7 +302,7 @@ export const OfficeIssuesView: React.FC = () => {
                   <td className="py-3 px-4">
                     <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
                       t.status === 'RESOLVED'
-                        ? 'bg-emerald-100 text-emerald-800'
+                        ? 'bg-brand-100 text-brand-800'
                         : t.status === 'IN_PROGRESS'
                         ? 'bg-blue-100 text-blue-800'
                         : 'bg-amber-100 text-amber-800'
@@ -334,7 +334,7 @@ export const OfficeIssuesView: React.FC = () => {
                 <div className="flex items-center gap-2">
                   <span className="font-mono font-bold text-brand-700 text-sm">{selectedTicket.id}</span>
                   <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                    selectedTicket.status === 'RESOLVED' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
+                    selectedTicket.status === 'RESOLVED' ? 'bg-brand-100 text-brand-800' : 'bg-amber-100 text-amber-800'
                   }`}>
                     {selectedTicket.status}
                   </span>
@@ -355,7 +355,7 @@ export const OfficeIssuesView: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <span className="font-bold text-slate-900 text-sm">{selectedTicket.visitorName}</span>
                   <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                    selectedTicket.isLinkedVoter ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
+                    selectedTicket.isLinkedVoter ? 'bg-brand-100 text-brand-800' : 'bg-amber-100 text-amber-800'
                   }`}>
                     {selectedTicket.isLinkedVoter ? 'Verified Voter' : 'Unverified Citizen Visitor'}
                   </span>
@@ -395,7 +395,7 @@ export const OfficeIssuesView: React.FC = () => {
                     onClick={() => handleUpdateStatus('RESOLVED')}
                     className={`py-2 px-3 rounded-xl font-bold border transition-all ${
                       selectedTicket.status === 'RESOLVED'
-                        ? 'bg-emerald-600 text-white border-emerald-700'
+                        ? 'bg-brand-600 text-white border-brand-700'
                         : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
                     }`}
                   >
@@ -414,7 +414,7 @@ export const OfficeIssuesView: React.FC = () => {
 
               {/* Resolution Note if resolved */}
               {selectedTicket.resolutionNote && (
-                <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-emerald-900">
+                <div className="p-3 bg-brand-50 rounded-xl border border-brand-200 text-brand-900">
                   <span className="font-bold block mb-0.5">Resolution Verification Note:</span>
                   <p>{selectedTicket.resolutionNote}</p>
                 </div>

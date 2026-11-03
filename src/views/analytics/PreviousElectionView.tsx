@@ -186,7 +186,7 @@ export const PreviousElectionView: React.FC = () => {
 
               <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 text-xs">
                 <span className="text-slate-400 block text-[11px]">Winning Margin:</span>
-                <span className="font-bold text-emerald-600 text-base mt-0.5 block">+{selectedElection.margin.toLocaleString()}</span>
+                <span className="font-bold text-brand-600 text-base mt-0.5 block">+{selectedElection.margin.toLocaleString()}</span>
                 <span className="text-slate-500">Dominant Lead</span>
               </div>
 
@@ -257,7 +257,7 @@ export const PreviousElectionView: React.FC = () => {
                       <span className="text-[10px] text-slate-400">Turnout: {s.turnout}</span>
                     </div>
                     <div className="text-right">
-                      <span className="font-mono font-bold text-emerald-600 block">{s.lead}</span>
+                      <span className="font-mono font-bold text-brand-600 block">{s.lead}</span>
                       <span className="text-[10px] text-slate-500">{s.status}</span>
                     </div>
                   </div>
@@ -270,7 +270,7 @@ export const PreviousElectionView: React.FC = () => {
         /* MODE 2: Strategy Bot Chat Interface */
         <div className="bg-white rounded-3xl border border-slate-200 shadow-xs overflow-hidden flex flex-col h-[600px]">
           {/* Bot Mode Sub-header */}
-          <div className="p-4 px-6 bg-gradient-to-r from-fuchsia-950 via-slate-900 to-indigo-950 text-white flex items-center justify-between border-b border-slate-800">
+          <div className="p-4 px-6 bg-slate-950 text-white flex items-center justify-between border-b border-slate-800">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
                 <Bot className="w-5 h-5 text-fuchsia-400 animate-pulse" />
@@ -279,7 +279,7 @@ export const PreviousElectionView: React.FC = () => {
                 <div className="flex items-center gap-2">
                   <h3 className="font-bold text-sm">Strategy Bot - Pune War Room Advisor</h3>
                   <span className={`text-[9px] px-2 py-0.5 rounded font-bold uppercase ${
-                    isBotLocked ? 'bg-amber-400 text-slate-950' : 'bg-emerald-500/30 text-emerald-200'
+                    isBotLocked ? 'bg-amber-400 text-slate-950' : 'bg-brand-500/30 text-brand-200'
                   }`}>
                     {isBotLocked ? 'Locked / Pro' : 'Active Tier'}
                   </span>
@@ -345,7 +345,7 @@ export const PreviousElectionView: React.FC = () => {
                             {m.tableData.rows.map((row, rIdx) => (
                               <div key={rIdx} className="flex justify-between py-1 text-[10px]">
                                 <span className="font-semibold text-slate-800">{row[0]}</span>
-                                <span className="font-bold text-emerald-700">{row[1]}</span>
+                                <span className="font-bold text-brand-700">{row[1]}</span>
                                 <span className="text-slate-500">{row[2]}</span>
                               </div>
                             ))}

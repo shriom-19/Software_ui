@@ -495,7 +495,7 @@ export const ProfilePartySettingsView: React.FC = () => {
                 </p>
                 <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 flex items-center justify-between">
                   <span className="font-semibold text-slate-700">Status: All parameters validated</span>
-                  <span className="px-2 py-0.5 rounded font-bold text-[10px] bg-emerald-100 text-emerald-800">
+                  <span className="px-2 py-0.5 rounded font-bold text-[10px] bg-brand-100 text-brand-800">
                     Active
                   </span>
                 </div>

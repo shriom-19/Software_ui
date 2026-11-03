@@ -145,7 +145,7 @@ export const RegisterView: React.FC<RegisterViewProps> = ({
                       <div
                         className={`w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold transition-all shadow-sm ${
                           isPassed
-                            ? 'bg-emerald-600 text-white'
+                            ? 'bg-brand-600 text-white'
                             : isCurrent
                             ? 'bg-brand-600 text-white ring-4 ring-brand-100'
                             : 'bg-white border border-slate-300 text-slate-500'
@@ -164,7 +164,7 @@ export const RegisterView: React.FC<RegisterViewProps> = ({
                     {step.number !== 7 && (
                       <div
                         className={`w-12 h-0.5 mx-2 -mt-4 transition-colors ${
-                          isPassed ? 'bg-emerald-500' : 'bg-slate-200'
+                          isPassed ? 'bg-brand-600' : 'bg-slate-200'
                         }`}
                       />
                     )}
@@ -236,10 +236,10 @@ export const RegisterView: React.FC<RegisterViewProps> = ({
                 </>
               ) : (
                 <>
-                  <div className="w-16 h-16 rounded-3xl bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto mb-4 border border-emerald-200">
+                  <div className="w-16 h-16 rounded-3xl bg-brand-50 text-brand-600 flex items-center justify-center mx-auto mb-4 border border-brand-200">
                     <CheckCircle2 className="w-8 h-8" />
                   </div>
-                  <span className="px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 uppercase">
+                  <span className="px-3 py-1 rounded-full text-xs font-bold bg-brand-50 text-brand-800 border border-brand-200 uppercase">
                     Status: Portal Approved & Provisioned
                   </span>
                   <h2 className="text-2xl font-extrabold text-slate-900 mt-3 mb-2">
@@ -251,7 +251,7 @@ export const RegisterView: React.FC<RegisterViewProps> = ({
 
                   <button
                     onClick={onRegistrationComplete}
-                    className="w-full py-3 px-6 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-sm shadow-md transition-all flex items-center justify-center gap-2"
+                    className="w-full py-3 px-6 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl text-sm shadow-md transition-all flex items-center justify-center gap-2"
                   >
                     <span>Launch War Room Dashboard</span>
                     <ArrowRight className="w-4 h-4" />
@@ -709,7 +709,7 @@ export const RegisterView: React.FC<RegisterViewProps> = ({
                 ) : (
                   <button
                     type="submit"
-                    className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-md shadow-emerald-600/20"
+                    className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold transition-all shadow-md shadow-brand-600/20"
                   >
                     <FileCheck className="w-4 h-4" />
                     <span>Submit Candidate Registration</span>

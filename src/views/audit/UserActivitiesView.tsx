@@ -181,7 +181,7 @@ export const UserActivitiesView: React.FC = () => {
                   <td className="py-3 px-4">
                     <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
                       log.outcome === 'SUCCESS'
-                        ? 'bg-emerald-100 text-emerald-800'
+                        ? 'bg-brand-100 text-brand-800'
                         : log.outcome === 'FAILED'
                         ? 'bg-rose-100 text-rose-800'
                         : 'bg-amber-100 text-amber-800'
@@ -235,7 +235,7 @@ export const UserActivitiesView: React.FC = () => {
                 </div>
                 <div>
                   <span className="text-slate-400 block text-[10px]">Outcome:</span>
-                  <span className="font-bold text-emerald-700">{selectedLog.outcome}</span>
+                  <span className="font-bold text-brand-700">{selectedLog.outcome}</span>
                 </div>
               </div>
 
