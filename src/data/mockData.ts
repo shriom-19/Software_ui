@@ -1345,3 +1345,270 @@ export const MOCK_HISTORICAL_ELECTIONS = [
     totalVotesPolled: 734992
   }
 ];
+
+export interface DashboardTask {
+  id: string;
+  title: string;
+  assignedTo: string;
+  assignedRole: string;
+  boothNumber: number;
+  priority: 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
+  deadline: string;
+  status: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'OVERDUE';
+  category: string;
+}
+
+export const MOCK_DASHBOARD_TASKS: DashboardTask[] = [
+  {
+    id: "TSK-101",
+    title: "Distribute remaining 120 voter slips in Paud Phata swing cluster",
+    assignedTo: "Vikas Mane",
+    assignedRole: "Karyakarta",
+    boothNumber: 103,
+    priority: "CRITICAL",
+    deadline: "Today, 5:00 PM",
+    status: "OVERDUE",
+    category: "Slip Distribution"
+  },
+  {
+    id: "TSK-102",
+    title: "Verify 18 unmapped senior citizens for home voting assistance",
+    assignedTo: "Pooja Jadhav",
+    assignedRole: "Karyakarta Lead",
+    boothNumber: 101,
+    priority: "HIGH",
+    deadline: "Tomorrow, 12:00 PM",
+    status: "IN_PROGRESS",
+    category: "Voter Verification"
+  },
+  {
+    id: "TSK-103",
+    title: "Escalate low water pressure grievance TKT-9210 to PMC Ward Officer",
+    assignedTo: "Ramesh Shinde",
+    assignedRole: "War Room Operator",
+    boothNumber: 105,
+    priority: "HIGH",
+    deadline: "Today, 6:30 PM",
+    status: "IN_PROGRESS",
+    category: "Citizen Grievance"
+  },
+  {
+    id: "TSK-104",
+    title: "Set up Bluetooth slip printer desks at Navbharat School gate",
+    assignedTo: "Ganesh Patil",
+    assignedRole: "Booth Adhyaksh",
+    boothNumber: 102,
+    priority: "MEDIUM",
+    deadline: "In 2 days",
+    status: "PENDING",
+    category: "Booth Setup"
+  },
+  {
+    id: "TSK-105",
+    title: "Cross-check ECI roll additions with BLO Sanjay Kulkarni",
+    assignedTo: "Amit Deshmukh",
+    assignedRole: "Prabhaag Incharge",
+    boothNumber: 101,
+    priority: "LOW",
+    deadline: "Completed 2h ago",
+    status: "COMPLETED",
+    category: "Roll Audit"
+  },
+  {
+    id: "TSK-106",
+    title: "AI Voice broadcast follow-up for 420 undecided youth electors",
+    assignedTo: "Sneha Joshi",
+    assignedRole: "Campaign Manager",
+    boothNumber: 104,
+    priority: "MEDIUM",
+    deadline: "Today, 8:00 PM",
+    status: "IN_PROGRESS",
+    category: "Campaign Outreach"
+  }
+];
+
+export const MOCK_MONITORING_EVENTS = {
+  booth: [
+    { id: 'be-1', time: '3m ago', title: 'Booth #101 crossed 92% slip delivery', location: 'Navbharat High School', user: 'Sanjay Kulkarni (BLO)', status: 'NORMAL', icon: 'CheckCircle2' },
+    { id: 'be-2', time: '18m ago', title: 'Swing warning flag raised for Booth #103', location: 'Paud Phata', user: 'Strategy Bot', status: 'ALERT', icon: 'AlertTriangle' },
+    { id: 'be-3', time: '34m ago', title: 'Table agent verification confirmed for Booth #104', location: 'PMC Primary School', user: 'Ramesh Shinde', status: 'NORMAL', icon: 'ShieldCheck' },
+    { id: 'be-4', time: '55m ago', title: 'Booth Adhyaksh replacement request received', location: 'Booth #108 Deccan', user: 'Amit Deshmukh', status: 'WARNING', icon: 'Clock' }
+  ],
+  worker: [
+    { id: 'we-1', time: '1m ago', title: 'Pooja Jadhav checked in live at Kothrud Ward 12', location: 'GPS 18.5074, 73.8077', user: 'Pooja Jadhav', status: 'ACTIVE', icon: 'MapPin' },
+    { id: 'we-2', time: '12m ago', title: 'Ganesh Patil completed 24 family door-to-door visits', location: 'Booth #102', user: 'Ganesh Patil', status: 'ACTIVE', icon: 'Award' },
+    { id: 'we-3', time: '29m ago', title: 'Vikas Mane battery low warning on mobile terminal', location: 'Booth #103 Paud Phata', user: 'Telemetry System', status: 'WARNING', icon: 'AlertCircle' },
+    { id: 'we-4', time: '1h ago', title: '6 newly recruited youth volunteers enrolled into Squad C', location: 'Central Office', user: 'Adv. Vikram Patil', status: 'ACTIVE', icon: 'Users' }
+  ],
+  survey: [
+    { id: 'se-1', time: '4m ago', title: 'New household survey: Supporter (4 members mapped)', location: 'Dahanukar Colony', user: 'Pooja Jadhav', status: 'CONFIRMED', icon: 'Check' },
+    { id: 'se-2', time: '9m ago', title: 'Scheme beneficiary verified: Ladki Bahin Yojana', location: 'Erandwane Lane 4', user: 'Sunita Rao', status: 'CONFIRMED', icon: 'Sparkles' },
+    { id: 'se-3', time: '22m ago', title: 'Undecided swing voter survey flagged for follow-up call', location: 'Mayur Colony', user: 'Ganesh Patil', status: 'FOLLOW_UP', icon: 'PhoneCall' },
+    { id: 'se-4', time: '41m ago', title: 'Water shortage grievance noted in household survey', location: 'Paud Road', user: 'Vikas Mane', status: 'TICKET_LINKED', icon: 'AlertTriangle' }
+  ],
+  field: [
+    { id: 'fe-1', time: '2m ago', title: 'Voter Slip Batch #14 sync completed (180 records)', location: 'Mobile Terminal Cloud', user: 'Background Sync', status: 'SYNCED', icon: 'RefreshCw' },
+    { id: 'fe-2', time: '15m ago', title: 'Thermal printer roll replacement delivered to Paud Station', location: 'Paud Phata Desk', user: 'Field Logistics', status: 'DELIVERED', icon: 'Printer' },
+    { id: 'fe-3', time: '38m ago', title: 'Grievance ticket TKT-9210 escalated to Municipal Officer', location: 'PMC Ward 12', user: 'Office Desk', status: 'ESCALATED', icon: 'AlertTriangle' },
+    { id: 'fe-4', time: '1h ago', title: 'Constituency boundary telemetry recalibrated with ECI GeoJSON', location: 'Pune LS-34', user: 'GIS System', status: 'SYNCED', icon: 'Radio' }
+  ]
+};
+
+export const MOCK_ATTENTION_ALERTS = [
+  {
+    id: "alt-01",
+    severity: "CRITICAL",
+    category: "Voter Slip Lag",
+    title: "3 High-Priority Swing Booths Under 50% Slip Distribution",
+    description: "Booth #103 (Paud Phata, 48% slips), Booth #108 (Deccan, 44%), and Booth #112 (Karve Nagar, 46%) require urgent mobilizer surge before tomorrow evening.",
+    affectedArea: "Prabhaag 12 & 14 (3 Polling Stations, 3,420 Electors)",
+    timestamp: "12m ago",
+    actionLabel: "Dispatch Surge Squad",
+    actionView: "map"
+  },
+  {
+    id: "alt-02",
+    severity: "HIGH",
+    category: "Public Grievance",
+    title: "Critical Water Supply Disruption in Dahanukar Colony",
+    description: "Ticket #TKT-9210 escalated: Low municipal water pressure reported by 45 resident households in swing sector. Immediate water tanker dispatch coordinated.",
+    affectedArea: "Dahanukar Colony, Kothrud (Booth #102 & #103)",
+    timestamp: "24m ago",
+    actionLabel: "Open Ticket Desk",
+    actionView: "office"
+  },
+  {
+    id: "alt-03",
+    severity: "HIGH",
+    category: "Cadre Inactivity",
+    title: "5 Assigned Karyakartas Inactive on Field for > 48 Hours",
+    description: "Field terminals at Booths #106 and #110 have recorded 0 door-to-door surveys since yesterday morning. Follow-up automated SMS dispatched.",
+    affectedArea: "Prabhaag 13 - Erandwane East",
+    timestamp: "1h ago",
+    actionLabel: "Reassign Cadre",
+    actionView: "users-members"
+  },
+  {
+    id: "alt-04",
+    severity: "WARNING",
+    category: "Campaign Broadcast",
+    title: "WhatsApp Delivery Rate Dip on Inactive Carrier Network",
+    description: "142 broadcast messages temporarily queued due to carrier DND filtration on BSNL mobile range in rural prabhaags.",
+    affectedArea: "Rural Outskirts Sector 4",
+    timestamp: "2h ago",
+    actionLabel: "Review Campaign",
+    actionView: "campaigns"
+  },
+  {
+    id: "alt-05",
+    severity: "WARNING",
+    category: "Roll Audit",
+    title: "68 Voter Records Require Address Landmark Geocoding",
+    description: "Newly migrated ECI addition entries lack building/apartment coordinates for automatic slip delivery route optimization.",
+    affectedArea: "Booth #105 (Garware College Locality)",
+    timestamp: "3h ago",
+    actionLabel: "Inspect Roll",
+    actionView: "voters"
+  }
+];
+
+export interface MemberRecord {
+  id: string;
+  name: string;
+  phone: string;
+  membershipId: string;
+  role: string;
+  status: 'ACTIVE' | 'INACTIVE' | 'NEWLY_REGISTERED';
+  joinedDate: string;
+  assignedBooth: number;
+  prabhaag: string;
+}
+
+export const MOCK_ORGANISATION_MEMBERS: MemberRecord[] = [
+  { id: 'mem-001', name: 'Adv. Vikram Patil', phone: '+91 98220 99000', membershipId: 'RVM-PN-001', role: 'Candidate / Chief Patron', status: 'ACTIVE', joinedDate: '2021-01-15', assignedBooth: 101, prabhaag: 'Prabhaag 12 - Kothrud West' },
+  { id: 'mem-002', name: 'Ganesh Patil', phone: '+91 98220 12345', membershipId: 'RVM-PN-042', role: 'Booth Adhyaksh Lead', status: 'ACTIVE', joinedDate: '2022-03-10', assignedBooth: 102, prabhaag: 'Prabhaag 12 - Kothrud West' },
+  { id: 'mem-003', name: 'Pooja Jadhav', phone: '+91 98220 23456', membershipId: 'RVM-PN-089', role: 'Mahila Morcha Coordinator', status: 'ACTIVE', joinedDate: '2022-06-18', assignedBooth: 101, prabhaag: 'Prabhaag 12 - Kothrud West' },
+  { id: 'mem-004', name: 'Vikas Mane', phone: '+91 98220 34567', membershipId: 'RVM-PN-112', role: 'Field Squad Lead', status: 'ACTIVE', joinedDate: '2023-01-20', assignedBooth: 103, prabhaag: 'Prabhaag 12 - Kothrud West' },
+  { id: 'mem-005', name: 'Sunita Rao', phone: '+91 98220 45678', membershipId: 'RVM-PN-154', role: 'Youth Mobilizer', status: 'NEWLY_REGISTERED', joinedDate: '2024-03-01', assignedBooth: 104, prabhaag: 'Prabhaag 13 - Erandwane' },
+  { id: 'mem-006', name: 'Ramesh Shinde', phone: '+91 98220 56789', membershipId: 'RVM-PN-188', role: 'Booth Secretary', status: 'ACTIVE', joinedDate: '2023-08-14', assignedBooth: 105, prabhaag: 'Prabhaag 13 - Erandwane' },
+  { id: 'mem-007', name: 'Amit Deshmukh', phone: '+91 98220 67890', membershipId: 'RVM-PN-201', role: 'Prabhaag Incharge', status: 'ACTIVE', joinedDate: '2021-11-05', assignedBooth: 106, prabhaag: 'Prabhaag 14 - Shivajinagar' },
+  { id: 'mem-008', name: 'Kavita Joshi', phone: '+91 98220 78901', membershipId: 'RVM-PN-245', role: 'Ward Volunteer', status: 'INACTIVE', joinedDate: '2022-09-12', assignedBooth: 107, prabhaag: 'Prabhaag 14 - Shivajinagar' },
+  { id: 'mem-009', name: 'Sachin Kulkarni', phone: '+91 98220 89012', membershipId: 'RVM-PN-290', role: 'Social Media Cell', status: 'NEWLY_REGISTERED', joinedDate: '2024-04-02', assignedBooth: 108, prabhaag: 'Prabhaag 14 - Shivajinagar' },
+  { id: 'mem-010', name: 'Deepak More', phone: '+91 98220 90123', membershipId: 'RVM-PN-310', role: 'Booth Volunteer', status: 'INACTIVE', joinedDate: '2023-04-18', assignedBooth: 103, prabhaag: 'Prabhaag 12 - Kothrud West' }
+];
+
+export const MOCK_CASTE_CATEGORIES = [
+  { name: 'General / Open Category', code: 'GEN', voterCount: 712000, percentage: 33.1, color: '#3b82f6' },
+  { name: 'OBC (Other Backward Classes)', code: 'OBC', voterCount: 624000, percentage: 29.0, color: '#06b6d4' },
+  { name: 'SC (Scheduled Castes)', code: 'SC', voterCount: 298000, percentage: 13.8, color: '#8b5cf6' },
+  { name: 'Religious Minorities', code: 'MIN', voterCount: 184000, percentage: 8.5, color: '#6366f1' },
+  { name: 'ST / NT (Nomadic Tribes)', code: 'NT', voterCount: 142000, percentage: 6.6, color: '#f59e0b' },
+  { name: 'Other / Unclassified', code: 'OTH', voterCount: 194200, percentage: 9.0, color: '#94a3b8' }
+];
+
+export const MOCK_CASTE_DISTRIBUTION = [
+  { casteName: 'Maratha', category: 'General / Open Category', voterCount: 482100, percentage: 22.4, color: '#2563eb' },
+  { casteName: 'Mali (OBC)', category: 'OBC', voterCount: 198000, percentage: 9.2, color: '#0284c7' },
+  { casteName: 'Brahmin', category: 'General / Open Category', voterCount: 224000, percentage: 10.4, color: '#4f46e5' },
+  { casteName: 'Neo-Buddhist (SC)', category: 'SC', voterCount: 198000, percentage: 9.2, color: '#7c3aed' },
+  { casteName: 'Vanjari (OBC/NT)', category: 'OBC', voterCount: 114000, percentage: 5.3, color: '#0891b2' },
+  { casteName: 'Muslim', category: 'Religious Minorities', voterCount: 142000, percentage: 6.6, color: '#9333ea' },
+  { casteName: 'Matang (SC)', category: 'SC', voterCount: 100000, percentage: 4.6, color: '#a855f7' },
+  { casteName: 'Dhangar (OBC/NT)', category: 'OBC', voterCount: 88000, percentage: 4.1, color: '#0ea5e9' },
+  { casteName: 'Jain / Marwari', category: 'General / Open Category', voterCount: 94000, percentage: 4.4, color: '#38bdf8' },
+  { casteName: 'Other Micro Communities', category: 'Other / Unclassified', voterCount: 514100, percentage: 23.8, color: '#cbd5e1' }
+];
+
+export interface AssemblyConstituency {
+  id: string;
+  code: string;
+  name: string;
+  totalVoters: number;
+  totalBooths: number;
+}
+
+export interface ParliamentaryConstituency {
+  id: string;
+  name: string;
+  code: string;
+  state: string;
+  totalVoters: number;
+  totalBooths: number;
+  assemblySegments: AssemblyConstituency[];
+}
+
+export const MOCK_CONSTITUENCIES: ParliamentaryConstituency[] = [
+  {
+    id: "pc-34",
+    name: "34 - Pune Parliamentary Constituency",
+    code: "PC-34",
+    state: "Maharashtra",
+    totalVoters: 2154200,
+    totalBooths: 2045,
+    assemblySegments: [
+      { id: "ac-all", code: "ALL", name: "All Vidhan Sabha Segments", totalVoters: 2154200, totalBooths: 2045 },
+      { id: "ac-214", code: "214", name: "214 - Kothrud Assembly Segment", totalVoters: 412500, totalBooths: 395 },
+      { id: "ac-215", code: "215", name: "215 - Shivajinagar Assembly Segment", totalVoters: 345800, totalBooths: 320 },
+      { id: "ac-208", code: "208", name: "208 - Vadgaon Sheri Assembly Segment", totalVoters: 472100, totalBooths: 440 },
+      { id: "ac-210", code: "210", name: "210 - Pune Cantonment Assembly Segment", totalVoters: 312400, totalBooths: 295 },
+      { id: "ac-211", code: "211", name: "211 - Kasba Peth Assembly Segment", totalVoters: 289400, totalBooths: 285 },
+      { id: "ac-212", code: "212", name: "212 - Parvati Assembly Segment", totalVoters: 322000, totalBooths: 310 }
+    ]
+  },
+  {
+    id: "pc-35",
+    name: "35 - Baramati Parliamentary Constituency",
+    code: "PC-35",
+    state: "Maharashtra",
+    totalVoters: 2314500,
+    totalBooths: 2180,
+    assemblySegments: [
+      { id: "ac-bar-all", code: "ALL", name: "All Vidhan Sabha Segments", totalVoters: 2314500, totalBooths: 2180 },
+      { id: "ac-213", code: "213", name: "213 - Khadakwasla Assembly Segment", totalVoters: 512000, totalBooths: 490 },
+      { id: "ac-214b", code: "214", name: "214 - Daund Assembly Segment", totalVoters: 324000, totalBooths: 310 }
+    ]
+  }
+];
+
+
+
