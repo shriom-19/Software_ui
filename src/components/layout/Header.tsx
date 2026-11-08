@@ -15,9 +15,12 @@ import {
   Shield,
   Layers,
   ArrowRight,
-  X
+  X,
+  Sun,
+  Moon
 } from 'lucide-react';
 import { CURRENT_ELECTION_CONTEXT, MOCK_VOTERS, MOCK_BOOTHS, MOCK_USERS, MOCK_TICKETS } from '../../data/mockData';
+import { useTheme } from '../../context/ThemeContext';
 
 interface HeaderProps {
   activeView: string;
@@ -34,6 +37,8 @@ export const Header: React.FC<HeaderProps> = ({
   isAiLocked,
   onOpenLogout
 }) => {
+  const { theme, toggleTheme } = useTheme();
+
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
@@ -84,7 +89,7 @@ export const Header: React.FC<HeaderProps> = ({
       type: 'Voter',
       title: v.fullName,
       subtitle: `EPIC: ${v.epicNumber} • Booth #${v.boothNumber}`,
-      view: 'central-profile',
+      view: 'voters',
       id: v.id
     })),
     ...MOCK_BOOTHS.filter(b =>
@@ -142,116 +147,107 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <header className="h-16 bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-6 flex items-center justify-between sticky top-0 z-30 shadow-premium-xs">
+    <header className="h-16 bg-white/95 dark:bg-[#0D1526]/95 backdrop-blur-md border-b border-slate-200/80 dark:border-[#273750] px-6 flex items-center justify-between sticky top-0 z-30 shadow-premium-xs transition-colors duration-200">
       {/* Left: Election Geography Context Dropdown */}
       <div className="flex items-center gap-4">
         <div className="relative">
           <button
             onClick={() => setShowGeoDropdown(!showGeoDropdown)}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 text-xs font-semibold text-slate-800 transition-colors"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-[#273750] bg-slate-50 dark:bg-[#111C30] hover:bg-slate-100 dark:hover:bg-[#17243A] text-xs font-semibold text-slate-800 dark:text-[#F1F5FC] transition-colors"
           >
-            <MapPin className="w-3.5 h-3.5 text-brand-600" />
+            <MapPin className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
             <span className="truncate max-w-[210px]">{selectedGeo}</span>
-            <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+            <ChevronDown className="w-3.5 h-3.5 text-slate-400 dark:text-[#71819B]" />
           </button>
 
           {showGeoDropdown && (
-            <div className="absolute left-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-slate-200 p-2 z-50 animate-scale-up">
-              <div className="px-2 py-1.5 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                Select Active Constituency
+            <div className="absolute left-0 mt-2 w-72 bg-white dark:bg-[#111C30] rounded-xl shadow-xl border border-slate-200 dark:border-[#273750] p-2 z-50 animate-scale-up">
+              <div className="px-2 py-1.5 text-[11px] font-bold text-slate-400 dark:text-[#71819B] uppercase tracking-wider">
+                Switch Parliamentary Constituency
               </div>
               <button
                 onClick={() => { setSelectedGeo("34 - Pune Parliamentary Constituency"); setShowGeoDropdown(false); }}
-                className="w-full text-left px-3 py-2 text-xs rounded-lg hover:bg-brand-50 hover:text-brand-700 font-medium flex items-center justify-between"
+                className={`w-full text-left px-3 py-2 text-xs rounded-lg flex items-center justify-between ${selectedGeo.includes("Pune") ? "bg-blue-50 dark:bg-[#17243A] text-blue-700 dark:text-blue-400 font-bold" : "text-slate-700 dark:text-[#A5B3C9] hover:bg-slate-50 dark:hover:bg-[#17243A]"}`}
               >
-                <span>34 - Pune (Lok Sabha)</span>
-                {selectedGeo.includes("Pune") && <Check className="w-3.5 h-3.5 text-brand-600" />}
+                <span>34 - Pune (General)</span>
+                {selectedGeo.includes("Pune") && <Check className="w-3.5 h-3.5" />}
               </button>
               <button
-                onClick={() => { setSelectedGeo("214 - Kothrud Assembly Segment"); setShowGeoDropdown(false); }}
-                className="w-full text-left px-3 py-2 text-xs rounded-lg hover:bg-brand-50 hover:text-brand-700 font-medium flex items-center justify-between"
+                onClick={() => { setSelectedGeo("35 - Baramati Parliamentary Constituency"); setShowGeoDropdown(false); }}
+                className={`w-full text-left px-3 py-2 text-xs rounded-lg flex items-center justify-between ${selectedGeo.includes("Baramati") ? "bg-blue-50 dark:bg-[#17243A] text-blue-700 dark:text-blue-400 font-bold" : "text-slate-700 dark:text-[#A5B3C9] hover:bg-slate-50 dark:hover:bg-[#17243A]"}`}
               >
-                <span>214 - Kothrud (Vidhan Sabha)</span>
-                {selectedGeo.includes("Kothrud") && <Check className="w-3.5 h-3.5 text-brand-600" />}
-              </button>
-              <button
-                onClick={() => { setSelectedGeo("215 - Shivajinagar Assembly Segment"); setShowGeoDropdown(false); }}
-                className="w-full text-left px-3 py-2 text-xs rounded-lg hover:bg-brand-50 hover:text-brand-700 font-medium flex items-center justify-between"
-              >
-                <span>215 - Shivajinagar (Vidhan Sabha)</span>
-                {selectedGeo.includes("Shivajinagar") && <Check className="w-3.5 h-3.5 text-brand-600" />}
+                <span>35 - Baramati (General)</span>
+                {selectedGeo.includes("Baramati") && <Check className="w-3.5 h-3.5" />}
               </button>
             </div>
           )}
         </div>
 
-        {/* Live sync pill */}
-        <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-brand-50 text-brand-700 border border-brand-200 text-[11px] font-medium">
-          <span className="w-2 h-2 rounded-full bg-brand-500 animate-pulse"></span>
+        {/* Live War Room Status Indicator */}
+        <div className="hidden lg:flex items-center gap-2 px-3 py-1 bg-blue-50 dark:bg-[#17243A] border border-blue-200/80 dark:border-blue-900/60 rounded-full text-xs font-semibold text-blue-700 dark:text-blue-400">
+          <span className="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse"></span>
           <span>War Room Live</span>
         </div>
       </div>
 
       {/* Center: Global Search Bar */}
-      <div ref={searchRef} className="flex-1 max-w-lg mx-6 relative">
+      <div ref={searchRef} className="flex-1 max-w-md mx-6 relative hidden sm:block">
         <div className="relative">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-slate-400 dark:text-[#71819B] absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
-            placeholder="Global search: voter name, EPIC ID, booth, phone, ticket..."
+            placeholder="Global search: voter name, EPIC ID, booth, phone..."
             value={searchQuery}
             onChange={(e) => {
               setSearchQuery(e.target.value);
               setShowSearchResults(true);
             }}
             onFocus={() => setShowSearchResults(true)}
-            className="w-full pl-10 pr-8 py-2 bg-slate-50 hover:bg-slate-100/80 focus:bg-white text-xs text-slate-800 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all placeholder:text-slate-400"
+            className="w-full pl-10 pr-8 py-2 bg-slate-50 dark:bg-[#111C30] border border-slate-200 dark:border-[#273750] rounded-xl text-xs text-slate-900 dark:text-[#F1F5FC] placeholder:text-slate-400 dark:placeholder:text-[#71819B] focus:outline-none focus:ring-1 focus:ring-blue-500 transition-all"
           />
           {searchQuery && (
             <button
               onClick={() => { setSearchQuery(''); setShowSearchResults(false); }}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
             >
               <X className="w-3.5 h-3.5" />
             </button>
           )}
         </div>
 
-        {/* Global Search Results Dropdown */}
+        {/* Search Results Dropdown */}
         {showSearchResults && searchQuery.trim() && (
-          <div className="absolute left-0 right-0 mt-2 bg-white rounded-xl shadow-2xl border border-slate-200 max-h-96 overflow-y-auto z-50 p-2 animate-scale-up">
-            <div className="px-3 py-1.5 text-[11px] font-semibold text-slate-400 uppercase tracking-wider flex justify-between">
-              <span>Matching Records ({searchResults.length})</span>
-              <span>Press ESC to dismiss</span>
+          <div className="absolute left-0 right-0 mt-2 bg-white dark:bg-[#111C30] rounded-xl shadow-xl border border-slate-200 dark:border-[#273750] p-2 max-h-80 overflow-y-auto z-50 animate-scale-up">
+            <div className="px-2 py-1 text-[10px] font-bold text-slate-400 dark:text-[#71819B] uppercase tracking-wider">
+              Search Results ({searchResults.length})
             </div>
-
             {searchResults.length === 0 ? (
-              <div className="p-4 text-center text-xs text-slate-500">
-                No matching records found for "{searchQuery}".
+              <div className="p-3 text-center text-xs text-slate-500 dark:text-[#71819B]">
+                No matching voters, booths, or records found.
               </div>
             ) : (
-              searchResults.map((res, index) => (
+              searchResults.map((res, i) => (
                 <button
-                  key={index}
+                  key={i}
                   onClick={() => {
                     setActiveView(res.view);
                     setShowSearchResults(false);
                     setSearchQuery('');
                   }}
-                  className="w-full text-left px-3 py-2 rounded-lg hover:bg-slate-50 flex items-center justify-between group transition-colors"
+                  className="w-full text-left px-3 py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-[#17243A] flex items-center justify-between group transition-colors"
                 >
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 uppercase">
+                      <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-slate-100 dark:bg-[#17243A] text-slate-600 dark:text-[#A5B3C9] uppercase">
                         {res.type}
                       </span>
-                      <span className="text-xs font-semibold text-slate-800 group-hover:text-brand-600">
+                      <span className="text-xs font-semibold text-slate-800 dark:text-[#F1F5FC] group-hover:text-blue-600 dark:group-hover:text-blue-400">
                         {res.title}
                       </span>
                     </div>
-                    <p className="text-[11px] text-slate-500 mt-0.5">{res.subtitle}</p>
+                    <p className="text-[11px] text-slate-500 dark:text-[#71819B] mt-0.5">{res.subtitle}</p>
                   </div>
-                  <ArrowRight className="w-3.5 h-3.5 text-slate-300 group-hover:text-brand-600 transition-colors" />
+                  <ArrowRight className="w-3.5 h-3.5 text-slate-300 dark:text-[#71819B] group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" />
                 </button>
               ))
             )}
@@ -259,68 +255,76 @@ export const Header: React.FC<HeaderProps> = ({
         )}
       </div>
 
-      {/* Right Controls: AI Mode, Notification Bell, User Menu */}
+      {/* Right Controls: Theme Switch, AI Mode, Notification Bell, User Menu */}
       <div className="flex items-center gap-3">
+        {/* Theme Switch Toggle (Light / Dark) */}
+        <button
+          onClick={toggleTheme}
+          className="p-2 text-slate-600 dark:text-[#A5B3C9] hover:text-slate-900 dark:hover:text-[#F1F5FC] hover:bg-slate-100 dark:hover:bg-[#17243A] rounded-xl transition-colors border border-slate-200 dark:border-[#273750]"
+          title={theme === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
+        >
+          {theme === 'dark' ? (
+            <Sun className="w-4 h-4 text-amber-400" />
+          ) : (
+            <Moon className="w-4 h-4 text-slate-700" />
+          )}
+        </button>
+
         {/* AI Mode Entry Point */}
         <button
           onClick={onOpenAI}
           className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-semibold shadow-xs transition-all ${
             isAiLocked
-              ? 'bg-amber-50 text-amber-900 border border-amber-300 hover:bg-amber-100'
-              : 'bg-gradient-to-r from-brand-600 to-indigo-600 text-white hover:opacity-95'
+              ? 'bg-amber-50 dark:bg-amber-950/40 text-amber-900 dark:text-amber-200 border border-amber-300 dark:border-amber-700 hover:bg-amber-100'
+              : 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:opacity-95'
           }`}
           title="Open Global AI Election Intelligence"
         >
           <Sparkles className="w-4 h-4 text-amber-300 animate-pulse" />
           <span className="hidden sm:inline">AI Mode</span>
-          {isAiLocked && (
-            <span className="text-[10px] px-1.5 py-0.2 bg-amber-200 text-amber-800 rounded font-bold uppercase">
-              Pro
-            </span>
-          )}
         </button>
 
         {/* Notifications Bell */}
         <div ref={notifRef} className="relative">
           <button
             onClick={() => setShowNotifications(!showNotifications)}
-            className="p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-colors relative"
+            className="p-2 text-slate-600 dark:text-[#A5B3C9] hover:text-slate-900 dark:hover:text-[#F1F5FC] hover:bg-slate-100 dark:hover:bg-[#17243A] rounded-xl transition-colors relative"
             title="System Notifications"
           >
-            <Bell className="w-5 h-5" />
+            <Bell className="w-4 h-4" />
             {unreadCount > 0 && (
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-rose-500 ring-2 ring-white"></span>
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-rose-500 ring-2 ring-white dark:ring-[#0D1526]"></span>
             )}
           </button>
 
           {showNotifications && (
-            <div className="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden z-50 animate-scale-up">
-              <div className="px-4 py-3 border-b border-slate-100 flex items-center justify-between bg-slate-50">
-                <span className="font-bold text-xs text-slate-800">Notifications ({unreadCount} new)</span>
+            <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-[#111C30] rounded-2xl shadow-xl border border-slate-200 dark:border-[#273750] overflow-hidden z-50 animate-scale-up">
+              <div className="px-4 py-3 border-b border-slate-100 dark:border-[#273750] flex items-center justify-between bg-slate-50 dark:bg-[#0D1526]">
+                <span className="font-bold text-xs text-slate-800 dark:text-[#F1F5FC]">Notifications ({unreadCount} new)</span>
                 {unreadCount > 0 && (
                   <button
                     onClick={markAllRead}
-                    className="text-[11px] text-brand-600 hover:underline font-semibold"
+                    className="text-[11px] text-blue-600 dark:text-blue-400 hover:underline font-semibold"
                   >
                     Mark all read
                   </button>
                 )}
               </div>
-              <div className="max-h-80 overflow-y-auto divide-y divide-slate-100">
+              <div className="max-h-80 overflow-y-auto divide-y divide-slate-100 dark:divide-[#273750]">
                 {notifications.map((n) => (
-                  <div key={n.id} className={`p-3 text-xs hover:bg-slate-50 transition-colors ${n.unread ? 'bg-brand-50/20' : ''}`}>
+                  <div key={n.id} className={`p-3 text-xs hover:bg-slate-50 dark:hover:bg-[#17243A] transition-colors ${n.unread ? 'bg-blue-50/20 dark:bg-blue-950/20' : ''}`}>
                     <div className="flex items-start justify-between gap-1">
-                      <h4 className="font-semibold text-slate-800">{n.title}</h4>
-                      <span className="text-[10px] text-slate-400 shrink-0">{n.time}</span>
+                      <h4 className="font-semibold text-slate-800 dark:text-[#F1F5FC]">{n.title}</h4>
+                      <span className="text-[10px] text-slate-400 dark:text-[#71819B] shrink-0">{n.time}</span>
                     </div>
-                    <p className="text-slate-500 text-[11px] mt-1">{n.desc}</p>
+                    <p className="text-slate-500 dark:text-[#A5B3C9] text-[11px] mt-1">{n.desc}</p>
                   </div>
                 ))}
               </div>
-              <div className="p-2 border-t border-slate-100 text-center bg-slate-50">
+              <div className="p-2 border-t border-slate-100 dark:border-[#273750] text-center bg-slate-50 dark:bg-[#0D1526]">
                 <button
                   onClick={() => { setActiveView('audit'); setShowNotifications(false); }}
-                  className="text-xs text-brand-600 hover:underline font-medium"
+                  className="text-xs text-blue-600 dark:text-blue-400 hover:underline font-medium"
                 >
                   View full activity log
                 </button>
@@ -333,54 +337,54 @@ export const Header: React.FC<HeaderProps> = ({
         <div ref={profileRef} className="relative">
           <button
             onClick={() => setShowProfileMenu(!showProfileMenu)}
-            className="flex items-center gap-2.5 p-1.5 rounded-xl hover:bg-slate-100 transition-colors"
+            className="flex items-center gap-2.5 p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-[#17243A] transition-colors"
           >
-            <div className="w-8 h-8 rounded-full bg-brand-700 text-white flex items-center justify-center font-bold text-xs shadow-xs">
+            <div className="w-8 h-8 rounded-full bg-blue-700 text-white flex items-center justify-center font-bold text-xs shadow-xs">
               VP
             </div>
             <div className="hidden md:block text-left">
-              <span className="text-xs font-bold text-slate-800 block leading-tight">
+              <span className="text-xs font-bold text-slate-800 dark:text-[#F1F5FC] block leading-tight">
                 Adv. Vikram Patil
               </span>
-              <span className="text-[10px] text-slate-500 font-medium block leading-tight">
+              <span className="text-[10px] text-slate-500 dark:text-[#71819B] font-medium block leading-tight">
                 Candidate Admin
               </span>
             </div>
-            <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+            <ChevronDown className="w-3.5 h-3.5 text-slate-400 dark:text-[#71819B]" />
           </button>
 
           {showProfileMenu && (
-            <div className="absolute right-0 mt-2 w-60 bg-white rounded-2xl shadow-xl border border-slate-200 p-2 z-50 animate-scale-up">
-              <div className="px-3 py-2 border-b border-slate-100 mb-1">
-                <p className="text-xs font-bold text-slate-800">{CURRENT_ELECTION_CONTEXT.candidateName}</p>
-                <p className="text-[11px] text-brand-600 font-medium">{CURRENT_ELECTION_CONTEXT.partyName}</p>
-                <p className="text-[10px] text-slate-400 mt-0.5">Role: Candidate Super Admin</p>
+            <div className="absolute right-0 mt-2 w-60 bg-white dark:bg-[#111C30] rounded-2xl shadow-xl border border-slate-200 dark:border-[#273750] p-2 z-50 animate-scale-up">
+              <div className="px-3 py-2 border-b border-slate-100 dark:border-[#273750] mb-1">
+                <p className="text-xs font-bold text-slate-800 dark:text-[#F1F5FC]">{CURRENT_ELECTION_CONTEXT.candidateName}</p>
+                <p className="text-[11px] text-blue-600 dark:text-blue-400 font-medium">{CURRENT_ELECTION_CONTEXT.partyName}</p>
+                <p className="text-[10px] text-slate-400 dark:text-[#71819B] mt-0.5">Role: Candidate Super Admin</p>
               </div>
 
               <button
                 onClick={() => { setActiveView('settings'); setShowProfileMenu(false); }}
-                className="w-full text-left px-3 py-2 text-xs rounded-lg hover:bg-slate-50 text-slate-700 flex items-center gap-2 font-medium"
+                className="w-full text-left px-3 py-2 text-xs rounded-lg hover:bg-slate-50 dark:hover:bg-[#17243A] text-slate-700 dark:text-[#A5B3C9] flex items-center gap-2 font-medium"
               >
-                <Settings className="w-3.5 h-3.5 text-slate-400" />
+                <Settings className="w-3.5 h-3.5 text-slate-400 dark:text-[#71819B]" />
                 <span>Profile & Party Settings</span>
               </button>
 
               <button
                 onClick={() => { setActiveView('subscription'); setShowProfileMenu(false); }}
-                className="w-full text-left px-3 py-2 text-xs rounded-lg hover:bg-slate-50 text-slate-700 flex items-center gap-2 font-medium"
+                className="w-full text-left px-3 py-2 text-xs rounded-lg hover:bg-slate-50 dark:hover:bg-[#17243A] text-slate-700 dark:text-[#A5B3C9] flex items-center gap-2 font-medium"
               >
-                <Layers className="w-3.5 h-3.5 text-slate-400" />
+                <Layers className="w-3.5 h-3.5 text-slate-400 dark:text-[#71819B]" />
                 <span>Subscription & Billing</span>
               </button>
 
-              <div className="my-1 border-t border-slate-100"></div>
+              <div className="my-1 border-t border-slate-100 dark:border-[#273750]"></div>
 
               <button
                 onClick={() => {
                   setShowProfileMenu(false);
                   onOpenLogout();
                 }}
-                className="w-full text-left px-3 py-2 text-xs rounded-lg hover:bg-rose-50 text-rose-600 flex items-center gap-2 font-semibold"
+                className="w-full text-left px-3 py-2 text-xs rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/40 text-rose-600 dark:text-rose-400 flex items-center gap-2 font-semibold"
               >
                 <LogOut className="w-3.5 h-3.5 text-rose-500" />
                 <span>Log Out</span>

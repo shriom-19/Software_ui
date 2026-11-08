@@ -5,7 +5,6 @@ import {
   Users,
   Filter,
   Vote,
-  UserCheck,
   Contact,
   FileBarChart2,
   Building2,
@@ -169,19 +168,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
             >
               <Vote className="w-4 h-4 shrink-0 text-cyan-400" />
               {!isCollapsed && <span>Total Voters</span>}
-            </button>
-
-            <button
-              onClick={() => setActiveView('central-profile')}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                activeView === 'central-profile'
-                  ? 'bg-brand-600 text-white shadow-md shadow-brand-600/30'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-800/80'
-              }`}
-              title="Central Voter Profile"
-            >
-              <UserCheck className="w-4 h-4 shrink-0 text-blue-400" />
-              {!isCollapsed && <span>Central Voter Profile</span>}
             </button>
 
             <button

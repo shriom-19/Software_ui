@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ToastProvider, useToast } from './components/common/Toast';
+import { ThemeProvider } from './context/ThemeContext';
 import { Header } from './components/layout/Header';
 import { Sidebar } from './components/layout/Sidebar';
 import { GlobalAIModal } from './components/common/GlobalAIModal';
@@ -106,7 +107,7 @@ const MainApp: React.FC = () => {
 
   // Render Main Application Shell
   return (
-    <div className="flex h-screen bg-slate-50 overflow-hidden font-sans antialiased text-slate-800">
+    <div className="flex h-screen bg-slate-50 dark:bg-[#0B1120] overflow-hidden font-sans antialiased text-slate-800 dark:text-[#F1F5FC] transition-colors duration-200">
       {/* Sidebar */}
       <Sidebar
         activeView={activeView}
@@ -237,8 +238,10 @@ const MainApp: React.FC = () => {
 
 export default function App() {
   return (
-    <ToastProvider>
-      <MainApp />
-    </ToastProvider>
+    <ThemeProvider>
+      <ToastProvider>
+        <MainApp />
+      </ToastProvider>
+    </ThemeProvider>
   );
 }

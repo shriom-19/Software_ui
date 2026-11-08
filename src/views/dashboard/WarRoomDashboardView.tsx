@@ -91,6 +91,90 @@ export const WarRoomDashboardView: React.FC<WarRoomDashboardViewProps> = ({ onNa
   const [topBoothSearch, setTopBoothSearch] = useState('');
   const [topBoothAreaFilter, setTopBoothAreaFilter] = useState('ALL');
 
+  // Smart Insights Auto-Sliding Panel State (Replaces static AI Strategic Intelligence Box)
+  const [activeSlideIndex, setActiveSlideIndex] = useState(0);
+  const [isSlidePaused, setIsSlidePaused] = useState(false);
+
+  const smartSuggestions = useMemo(() => [
+    {
+      id: 'sug-1',
+      category: 'VOTER DATA INSIGHT',
+      badgeClass: 'bg-purple-500/20 text-purple-300 border-purple-400/30',
+      title: 'Voters Without Mobile Numbers',
+      description: 'Identify voter records where mobile contact information is missing across priority booths.',
+      metric: '2,450 matching records',
+      metricLabel: 'Incomplete contact roll',
+      actionText: 'View Filtered Voters',
+      destinationView: 'voters',
+      actionPayload: { filter: 'no_mobile' }
+    },
+    {
+      id: 'sug-2',
+      category: 'ATTENTION REQUIRED',
+      badgeClass: 'bg-amber-500/20 text-amber-300 border-amber-400/30',
+      title: 'Pending Voter Update Requests',
+      description: 'New information collected on-ground by field workers is waiting for candidate admin review.',
+      metric: '1,240 records pending review',
+      metricLabel: 'Awaiting sync approval',
+      actionText: 'Review Update Requests',
+      destinationView: 'users-requests',
+      actionPayload: { status: 'PENDING' }
+    },
+    {
+      id: 'sug-3',
+      category: 'STRATEGIC AI INTELLIGENCE',
+      badgeClass: 'bg-indigo-500/20 text-indigo-300 border-indigo-400/30',
+      title: 'Historical Booth Performance',
+      description: 'Review the significant changes recorded across the 2014 and 2019 historical elections.',
+      metric: 'Booth 103 – Historical swing analysis',
+      metricLabel: 'Turnout variance: +4.2%',
+      actionText: 'Open Strategic Analysis',
+      destinationView: 'strategy',
+      actionPayload: { query: 'Booth 103' }
+    },
+    {
+      id: 'sug-4',
+      category: 'OPERATIONAL RECOMMENDATION',
+      badgeClass: 'bg-emerald-500/20 text-emerald-300 border-emerald-400/30',
+      title: 'Incomplete Survey Coverage',
+      description: 'Some booth survey records are still incomplete. Review the relevant records and assigned field workers.',
+      metric: '12 booths require attention',
+      metricLabel: 'Survey quota < 50%',
+      actionText: 'Review Booths & Field Squads',
+      destinationView: 'users-karyakarta',
+      actionPayload: { type: 'survey_incomplete' }
+    },
+    {
+      id: 'sug-5',
+      category: 'HISTORICAL STRATEGY INSIGHT',
+      badgeClass: 'bg-cyan-500/20 text-cyan-300 border-cyan-400/30',
+      title: 'Previous Campaign Coverage',
+      description: 'Review historical campaign activities and booth coverage recorded in the selected constituency.',
+      metric: '18 booths covered in available records',
+      metricLabel: 'Prior election blueprint',
+      actionText: 'View Historical Strategy',
+      destinationView: 'strategy',
+      actionPayload: { tab: 'OLD_STRATEGIES' }
+    }
+  ], []);
+
+  // Continuous auto-sliding rotation (every 7 seconds, paused on hover/interaction)
+  React.useEffect(() => {
+    if (isSlidePaused || smartSuggestions.length <= 1) return;
+    const interval = setInterval(() => {
+      setActiveSlideIndex(prev => (prev + 1) % smartSuggestions.length);
+    }, 7000);
+    return () => clearInterval(interval);
+  }, [isSlidePaused, smartSuggestions.length]);
+
+  const handleNextSlide = () => {
+    setActiveSlideIndex(prev => (prev + 1) % smartSuggestions.length);
+  };
+
+  const handlePrevSlide = () => {
+    setActiveSlideIndex(prev => (prev - 1 + smartSuggestions.length) % smartSuggestions.length);
+  };
+
   // Booth table state
   const [boothSearch, setBoothSearch] = useState('');
   const [selectedGradeFilter, setSelectedGradeFilter] = useState('ALL');
@@ -660,54 +744,103 @@ export const WarRoomDashboardView: React.FC<WarRoomDashboardViewProps> = ({ onNa
           </div>
         </div>
 
-        {/* Bot Intelligence & Demographic Highlights */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 text-white shadow-premium-md flex flex-col justify-between relative overflow-hidden">
+        {/* Bot Intelligence & Demographic Highlights — REPLACED WITH AUTO-SLIDING SMART INSIGHTS & RECOMMENDATIONS PANEL */}
+        <div
+          onMouseEnter={() => setIsSlidePaused(true)}
+          onMouseLeave={() => setIsSlidePaused(false)}
+          className="bg-slate-900 border border-slate-800 rounded-2xl p-6 text-white shadow-premium-md flex flex-col justify-between relative overflow-hidden group min-h-[360px]"
+        >
           <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-br from-brand-500/10 to-indigo-500/10 blur-2xl pointer-events-none"></div>
+
           <div>
-            <div className="flex items-center justify-between mb-4">
+            {/* Top Carousel Header with Category, Prev/Next Arrows and Live Indicator */}
+            <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
                 <div className="w-7 h-7 rounded-lg bg-amber-400 text-slate-950 flex items-center justify-center font-bold">
                   <Sparkles className="w-4 h-4" />
                 </div>
-                <span className="text-[11px] font-bold text-amber-300 uppercase tracking-wider">
-                  Indata AI Strategic Intelligence
+                <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${smartSuggestions[activeSlideIndex].badgeClass}`}>
+                  {smartSuggestions[activeSlideIndex].category}
                 </span>
               </div>
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700 font-medium">
-                Live Insights
-              </span>
+
+              {/* Slider Controls: Arrows & Live Badge */}
+              <div className="flex items-center gap-1.5">
+                <button
+                  onClick={handlePrevSlide}
+                  className="p-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition"
+                  title="Previous Insight"
+                >
+                  <ChevronDown className="w-3.5 h-3.5 rotate-90" />
+                </button>
+                <button
+                  onClick={handleNextSlide}
+                  className="p-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition"
+                  title="Next Insight"
+                >
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </button>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700 font-medium">
+                  {isSlidePaused ? 'Paused' : 'Auto'}
+                </span>
+              </div>
             </div>
 
-            <h4 className="text-sm font-bold text-white mb-2 leading-snug">
-              Key Opportunity: Ladki Bahin Yojana Sentiment Lift
-            </h4>
-            <p className="text-xs text-slate-300 leading-relaxed">
-              Survey data indicates an 18.4% favorable sentiment swing among women voters in Wards 12 & 13 following direct benefit disbursements. Recommending dedicated women karyakarta squads for Booth 103 and 105.
-            </p>
+            {/* Slide Body with Fade-in Animation */}
+            <div key={smartSuggestions[activeSlideIndex].id} className="animate-fade-in space-y-2">
+              <h4 className="text-sm font-bold text-white leading-snug">
+                {smartSuggestions[activeSlideIndex].title}
+              </h4>
+              <p className="text-xs text-slate-300 leading-relaxed min-h-[40px]">
+                {smartSuggestions[activeSlideIndex].description}
+              </p>
 
-            <div className="mt-4 p-3 rounded-xl bg-slate-800/80 border border-slate-700/60 space-y-2 text-xs">
-              <div className="flex justify-between items-center">
-                <span className="text-slate-400">Projected Pune Turnout:</span>
-                <span className="font-bold text-amber-300 font-mono">68.4% (Target: 72%)</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-slate-400">Strong Supporter Base:</span>
-                <span className="font-bold text-brand-300 font-mono">46.8% (+4.2%)</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-slate-400">Undecided Swing Voters:</span>
-                <span className="font-bold text-amber-300 font-mono">18.5%</span>
+              {/* Dynamic Highlight Card */}
+              <div className="mt-3 p-3 rounded-xl bg-slate-800/80 border border-slate-700/60 space-y-1.5 text-xs">
+                <div className="flex justify-between items-center">
+                  <span className="text-slate-400">Target Indicator:</span>
+                  <span className="font-bold text-amber-300 font-mono">
+                    {smartSuggestions[activeSlideIndex].metric}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center text-[11px]">
+                  <span className="text-slate-400">Classification:</span>
+                  <span className="text-brand-300 font-medium">
+                    {smartSuggestions[activeSlideIndex].metricLabel}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
 
-          <button
-            onClick={() => onNavigateToView('strategy')}
-            className="mt-4 w-full py-2.5 px-4 bg-white hover:bg-slate-100 text-slate-950 font-bold rounded-xl text-xs transition-all shadow-premium-sm flex items-center justify-center gap-2"
-          >
-            <span>Open Strategy Bot Analytics</span>
-            <ChevronRight className="w-4 h-4 text-slate-600" />
-          </button>
+          {/* Action CTA & Pagination Dots */}
+          <div className="mt-4 space-y-2.5">
+            <button
+              onClick={() => {
+                const sug = smartSuggestions[activeSlideIndex];
+                onNavigateToView(sug.destinationView);
+                showToast(`Navigated to ${sug.destinationView.toUpperCase()} with ${sug.title} filter pre-applied.`, 'info');
+              }}
+              className="w-full py-2.5 px-4 bg-white hover:bg-slate-100 text-slate-950 font-bold rounded-xl text-xs transition-all shadow-premium-sm flex items-center justify-center gap-2"
+            >
+              <span>{smartSuggestions[activeSlideIndex].actionText}</span>
+              <ChevronRight className="w-4 h-4 text-slate-600" />
+            </button>
+
+            {/* Pagination Indicators */}
+            <div className="flex items-center justify-center gap-1.5 pt-1">
+              {smartSuggestions.map((s, idx) => (
+                <button
+                  key={s.id}
+                  onClick={() => setActiveSlideIndex(idx)}
+                  className={`h-1.5 rounded-full transition-all ${
+                    activeSlideIndex === idx ? 'w-5 bg-amber-400' : 'w-1.5 bg-slate-700 hover:bg-slate-600'
+                  }`}
+                  title={s.title}
+                />
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 

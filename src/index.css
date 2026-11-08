@@ -3,11 +3,66 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --bg-primary: #f8fafc;
+    --bg-secondary: #ffffff;
+    --surface-card: #ffffff;
+    --surface-secondary: #f1f5f9;
+    --surface-elevated: #ffffff;
+    --border-color: #e2e8f0;
+    --border-subtle: #f1f5f9;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    --brand-blue: #2554a8;
+    --brand-hover: #1b4188;
+    --accent-ai: #7c3aed;
+    --status-success: #10b981;
+    --status-warning: #f59e0b;
+    --status-danger: #ef4444;
+  }
+
+  /* APPROVED PREMIUM CHARCOAL DARK THEME WITH SUBTLE PURPLE ACCENTS */
+  .dark {
+    --bg-primary: #0D1118;
+    --bg-secondary: #090D14;
+    --surface-card: #151D29;
+    --surface-secondary: #111722;
+    --surface-elevated: #192231;
+    --surface-hover: #202B3A;
+    --surface-input: #141D29;
+    --surface-modal: #171F2C;
+    --border-color: #293445;
+    --border-strong: #374357;
+    --border-subtle: #222D3C;
+    --border-hover: #46536A;
+    --border-focus: #8B5CF6;
+    --text-primary: #F3F4F6;
+    --text-secondary: #B1BAC8;
+    --text-muted: #8491A3;
+    --text-disabled: #586476;
+    --text-link: #A78BFA;
+    --accent-purple: #8B5CF6;
+    --accent-purple-hover: #A78BFA;
+    --accent-purple-active: #7C3AED;
+    --accent-purple-bg: #241B39;
+    --accent-purple-border: #49336F;
+    --status-success: #20C997;
+    --status-success-bg: #102B27;
+    --status-info: #36B7C9;
+    --status-warning: #E5A83B;
+    --status-warning-bg: #302719;
+    --status-danger: #EF6472;
+    --status-danger-bg: #321C24;
+    --status-neutral: #8995A7;
+  }
+
   body {
     font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    color: #1e293b;
-    background-color: #f8fafc;
+    color: var(--text-primary);
+    background-color: var(--bg-primary);
     letter-spacing: -0.011em;
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -16,13 +71,293 @@
   }
 }
 
-/* Premium Card & Surface utilities */
+/* Base dark body styling exclusively for .dark */
+.dark body {
+  background-color: #0D1118;
+  color: #F3F4F6;
+}
+
+/* ==========================================================================
+   APPROVED PREMIUM CHARCOAL DARK THEME RULES (EXCLUSIVELY SCOPED TO .dark)
+   Zero modification to Light Theme styles.
+   ========================================================================== */
+
+/* 1. Main Backgrounds & Surfaces */
+.dark .bg-white {
+  background-color: #151D29 !important;
+}
+
+.dark .bg-slate-50,
+.dark .bg-slate-50\/50,
+.dark .bg-slate-50\/60,
+.dark .bg-slate-50\/70,
+.dark .bg-slate-50\/80,
+.dark .bg-slate-50\/90 {
+  background-color: #111722 !important;
+}
+
+.dark .bg-slate-100 {
+  background-color: #192231 !important;
+}
+
+.dark .bg-slate-800,
+.dark .bg-slate-800\/50,
+.dark .bg-slate-800\/60,
+.dark .bg-slate-800\/70,
+.dark .bg-slate-800\/80 {
+  background-color: #151D29 !important;
+}
+
+.dark .bg-slate-900 {
+  background-color: #111722 !important;
+}
+
+.dark .bg-slate-950,
+.dark .bg-slate-950\/70,
+.dark .bg-slate-950\/90 {
+  background-color: #090D14 !important;
+}
+
+/* 2. Borders and Dividers */
+.dark .border-slate-100,
+.dark .border-slate-200,
+.dark .border-slate-200\/80,
+.dark .border-slate-300,
+.dark .border-slate-700,
+.dark .border-slate-800,
+.dark .border-slate-800\/60,
+.dark .border-slate-800\/80,
+.dark .border-slate-900 {
+  border-color: #293445 !important;
+}
+
+/* 3. Typography in Dark Mode */
+.dark .text-slate-900,
+.dark .text-slate-950,
+.dark .text-white {
+  color: #F3F4F6 !important;
+}
+
+.dark .text-slate-800,
+.dark .text-slate-700 {
+  color: #B1BAC8 !important;
+}
+
+.dark .text-slate-600,
+.dark .text-slate-500 {
+  color: #8491A3 !important;
+}
+
+.dark .text-slate-400 {
+  color: #8491A3 !important;
+}
+
+.dark .text-slate-300 {
+  color: #B1BAC8 !important;
+}
+
+/* 4. Form Controls, Inputs, Dropdowns & Textareas */
+.dark input[type="text"],
+.dark input[type="number"],
+.dark input[type="search"],
+.dark input[type="date"],
+.dark textarea,
+.dark select {
+  background-color: #141D29 !important;
+  border-color: #374357 !important;
+  color: #F3F4F6 !important;
+}
+
+.dark input:focus,
+.dark textarea:focus,
+.dark select:focus {
+  border-color: #8B5CF6 !important;
+  outline: none !important;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #8491A3 !important;
+}
+
+/* 5. Tables in Dark Mode */
+.dark thead tr,
+.dark thead th {
+  background-color: #192231 !important;
+  color: #B1BAC8 !important;
+  border-color: #293445 !important;
+}
+
+.dark tbody tr {
+  background-color: #151D29 !important;
+}
+
+.dark tbody tr:hover {
+  background-color: #202B3A !important;
+}
+
+.dark tbody td {
+  border-color: #293445 !important;
+  color: #E5E7EB !important;
+}
+
+/* 6. Primary Action Buttons in Dark Mode: Subtle Purple Treatment */
+.dark .bg-blue-600 {
+  background-color: #8B5CF6 !important;
+  color: #FFFFFF !important;
+}
+
+.dark .bg-blue-600:hover,
+.dark .hover\:bg-blue-700:hover {
+  background-color: #7C3AED !important;
+}
+
+.dark .text-blue-600,
+.dark .text-blue-500,
+.dark .text-blue-400 {
+  color: #A78BFA !important;
+}
+
+.dark .border-blue-600,
+.dark .border-blue-500 {
+  border-color: #8B5CF6 !important;
+}
+
+/* 7. Subtle Status Indicator Badges in Dark Mode */
+/* Blue/Info */
+.dark .bg-blue-50,
+.dark .bg-blue-50\/30,
+.dark .bg-blue-50\/40,
+.dark .bg-blue-50\/50,
+.dark .bg-blue-50\/60,
+.dark .bg-blue-50\/70,
+.dark .bg-blue-950,
+.dark .bg-blue-950\/30,
+.dark .bg-blue-950\/40,
+.dark .bg-blue-950\/50,
+.dark .bg-blue-950\/60 {
+  background-color: #241B39 !important;
+  color: #C4B5FD !important;
+  border-color: #49336F !important;
+}
+
+/* Purple Accents */
+.dark .bg-purple-50,
+.dark .bg-purple-50\/40,
+.dark .bg-purple-50\/60,
+.dark .bg-purple-950,
+.dark .bg-purple-950\/40,
+.dark .bg-purple-950\/60 {
+  background-color: #241B39 !important;
+  color: #C4B5FD !important;
+  border-color: #49336F !important;
+}
+
+.dark .text-purple-600,
+.dark .text-purple-400,
+.dark .text-purple-300 {
+  color: #C4B5FD !important;
+}
+
+/* Warning / Pending (Amber) */
+.dark .bg-amber-50,
+.dark .bg-amber-50\/60,
+.dark .bg-amber-50\/70,
+.dark .bg-amber-950,
+.dark .bg-amber-950\/40,
+.dark .bg-amber-950\/50,
+.dark .bg-amber-950\/60 {
+  background-color: #302719 !important;
+  color: #E5A83B !important;
+  border-color: #553E1E !important;
+}
+
+.dark .text-amber-600,
+.dark .text-amber-700,
+.dark .text-amber-800,
+.dark .text-amber-400,
+.dark .text-amber-300 {
+  color: #E5A83B !important;
+}
+
+/* Success / Live (Teal) */
+.dark .bg-cyan-50,
+.dark .bg-teal-50,
+.dark .bg-emerald-50,
+.dark .bg-emerald-950\/50 {
+  background-color: #102B27 !important;
+  color: #20C997 !important;
+  border-color: #1C4E47 !important;
+}
+
+.dark .text-cyan-400,
+.dark .text-cyan-500,
+.dark .text-teal-400,
+.dark .text-emerald-400,
+.dark .text-green-500 {
+  color: #20C997 !important;
+}
+
+/* Error / Critical (Rose / Red) */
+.dark .bg-rose-50,
+.dark .bg-rose-50\/60,
+.dark .bg-rose-950,
+.dark .bg-rose-950\/40,
+.dark .bg-rose-950\/50,
+.dark .bg-rose-950\/60 {
+  background-color: #321C24 !important;
+  color: #EF6472 !important;
+  border-color: #5E2633 !important;
+}
+
+.dark .text-rose-600,
+.dark .text-rose-700,
+.dark .text-rose-400,
+.dark .text-rose-300 {
+  color: #EF6472 !important;
+}
+
+/* 8. Dark Sidebar Refinements */
+.dark aside {
+  background-color: #090D14 !important;
+  border-color: #222D3C !important;
+}
+
+.dark aside button:hover {
+  background-color: #171F2C !important;
+}
+
+.dark aside button.bg-brand-600,
+.dark aside .bg-brand-600 {
+  background-color: #241B39 !important;
+  color: #C4B5FD !important;
+  border-left: 3px solid #8B5CF6 !important;
+  box-shadow: none !important;
+}
+
+.dark aside .text-brand-400 {
+  color: #C4B5FD !important;
+}
+
+/* 9. Dark Header Refinements */
+.dark header {
+  background-color: #0B1018 !important;
+  border-color: #293445 !important;
+}
+
+/* 10. Card Utilities */
 .card-premium {
   background-color: #ffffff;
   border: 1px solid rgba(226, 232, 240, 0.9);
   border-radius: 1rem;
-  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 1px 2px -1px rgba(15, 23, 42, 0.03);
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 1px 2px -1px rgba(15, 23, 42, 0.04);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dark .card-premium {
+  background-color: #151D29 !important;
+  border-color: #293445 !important;
+  box-shadow: none !important;
 }
 
 .card-premium:hover {
@@ -30,7 +365,12 @@
   box-shadow: 0 4px 14px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -2px rgba(15, 23, 42, 0.03);
 }
 
-/* Custom scrollbars for data tables and panels */
+.dark .card-premium:hover {
+  background-color: #192231 !important;
+  border-color: #46536A !important;
+}
+
+/* Global scrollbars */
 ::-webkit-scrollbar {
   width: 5px;
   height: 5px;
@@ -45,11 +385,23 @@
   border-radius: 9999px;
 }
 
+.dark ::-webkit-scrollbar-thumb {
+  background: #293445;
+}
+
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #46536A;
 }
 
 .table-container {
   scrollbar-width: thin;
   scrollbar-color: #cbd5e1 transparent;
+}
+
+.dark .table-container {
+  scrollbar-color: #293445 transparent;
 }

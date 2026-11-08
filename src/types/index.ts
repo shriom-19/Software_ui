@@ -30,16 +30,37 @@ export interface Karyakarta {
   isOnline: boolean;
 }
 
+export interface UpdateFieldChange {
+  field: string;
+  label: string;
+  oldValue: string;
+  newValue: string;
+  isNew?: boolean;
+}
+
 export interface UpdateRequest {
   id: string;
+  voterId?: string;
+  voterName?: string;
+  epicNumber?: string;
+  boothNumber?: number;
+  locality?: string;
   karyakartaId: string;
   karyakartaName: string;
-  field: string;
-  currentValue: string;
-  proposedValue: string;
+  karyakartaPhone?: string;
+  field?: string;
+  currentValue?: string;
+  proposedValue?: string;
+  updatedFields?: UpdateFieldChange[];
   reason: string;
   requestedAt: string;
-  status: 'PENDING' | 'APPROVED' | 'REJECTED';
+  status: 'PENDING' | 'APPROVED' | 'REJECTED' | 'SYNC_FAILED';
+  rejectionReason?: string;
+  reviewedBy?: string;
+  reviewedAt?: string;
+  hasConflict?: boolean;
+  conflictNote?: string;
+  syncError?: string;
 }
 
 export interface Voter {
@@ -69,6 +90,22 @@ export interface Voter {
   voterSlipStatus: 'NOT_GENERATED' | 'GENERATED' | 'PRINTED' | 'DELIVERED';
   familyHeadEpic?: string;
   verified: boolean;
+  // Extended fields for filtering and details
+  voterCode?: string;
+  isDeceased?: boolean;
+  hasVoted?: boolean;
+  isVisited?: boolean;
+  isFavorite?: boolean;
+  isHelped?: boolean;
+  isOutside?: boolean;
+  email?: string;
+  newAddress?: string;
+  houseNo?: string;
+  colorCode?: string;
+  qualification?: string;
+  bloodGroup?: string;
+  karyakartaName?: string;
+  gan?: string;
 }
 
 export interface VoterProfile extends Voter {
@@ -178,15 +215,22 @@ export interface Campaign {
   id: string;
   name: string;
   channel: 'WHATSAPP' | 'SMS' | 'AI_VOICE' | 'BULK';
+  campaignType?: string;
   targetAudience: string;
   recipientCount: number;
   deliveredCount: number;
   readCount: number;
-  status: 'DRAFT' | 'SCHEDULED' | 'RUNNING' | 'COMPLETED' | 'PAUSED';
+  failedCount?: number;
+  answeredCount?: number;
+  callDurationSeconds?: number;
+  status: 'DRAFT' | 'SCHEDULED' | 'RUNNING' | 'COMPLETED' | 'PAUSED' | 'FAILED' | 'CANCELLED';
   scheduledTime: string;
   createdDate: string;
   messageTemplate: string;
   estimatedCostCredits: number;
+  booths?: number[];
+  language?: string;
+  voiceModel?: string;
 }
 
 export interface AuditLog {
