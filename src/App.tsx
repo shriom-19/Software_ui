@@ -147,6 +147,7 @@ const MainApp: React.FC = () => {
                 voter={selectedVoter}
                 onBack={() => setActiveView('voters')}
                 onOpenVoterSlip={handleOpenVoterSlip}
+                onSelectVoter={handleSelectVoter}
               />
             )}
 

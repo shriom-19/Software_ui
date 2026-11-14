@@ -609,6 +609,21 @@ export const MOCK_VOTERS: Voter[] = [
 
 export const MOCK_VOTER_PROFILE_SAMPLE: VoterProfile = {
   ...MOCK_VOTERS[0],
+  alternateMobile: "+91 94220 88123",
+  panNumberMasked: "•••••492K",
+  aadhaarNumberMasked: "•••• •••• 8812",
+  pollingStationAddress: "Navbharat High School Ground Floor, Hall No 4, Kothrud Depot Road, Pune 411038",
+  pollingRoomNo: "Room No. 4 (East Wing)",
+  gpsCoordinates: "18.5089° N, 73.8152° E",
+  mapUrl: "https://maps.google.com/?q=18.5089,73.8152",
+  tags: ["Core Supporter", "Senior Citizen Head", "Ladki Bahin Beneficiary", "Vyapar Mandal", "Door-to-Door Visited"],
+  votingHistory: [
+    { election: "2024 Lok Sabha General Elections", year: "2024", hasVoted: true, slipDelivered: true },
+    { election: "2019 Maharashtra Legislative Assembly", year: "2019", hasVoted: true, slipDelivered: true },
+    { election: "2019 Lok Sabha General Elections", year: "2019", hasVoted: true, slipDelivered: true },
+    { election: "2017 Pune Municipal Corporation (PMC)", year: "2017", hasVoted: true, slipDelivered: true },
+    { election: "2014 Lok Sabha General Elections", year: "2014", hasVoted: true, slipDelivered: true }
+  ],
   familyMembers: [
     {
       epicNumber: "MH34089212",
@@ -616,7 +631,10 @@ export const MOCK_VOTER_PROFILE_SAMPLE: VoterProfile = {
       relation: "Husband",
       age: 52,
       gender: "Male",
-      serialNo: 43
+      serialNo: 43,
+      mobile: "+91 98221 44002",
+      boothNumber: 101,
+      leaning: "STRONG_SUPPORTER"
     },
     {
       epicNumber: "MH34089213",
@@ -624,7 +642,10 @@ export const MOCK_VOTER_PROFILE_SAMPLE: VoterProfile = {
       relation: "Son",
       age: 21,
       gender: "Male",
-      serialNo: 44
+      serialNo: 44,
+      mobile: "+91 98221 44003",
+      boothNumber: 101,
+      leaning: "LEANING_SUPPORTER"
     },
     {
       epicNumber: "MH34089214",
@@ -632,7 +653,10 @@ export const MOCK_VOTER_PROFILE_SAMPLE: VoterProfile = {
       relation: "Daughter",
       age: 19,
       gender: "Female",
-      serialNo: 45
+      serialNo: 45,
+      mobile: "+91 98221 44004",
+      boothNumber: 101,
+      leaning: "NEUTRAL"
     }
   ],
   surveys: [
@@ -642,7 +666,9 @@ export const MOCK_VOTER_PROFILE_SAMPLE: VoterProfile = {
       surveyorName: "Ganesh Patil (Karyakarta #104)",
       keyIssue: "Morning water pressure problem in 4th floor flats",
       opinionOnCandidate: "Highly positive due to work on Kothrud flyover and streetlights",
-      likelihoodToVote: "Definite (10/10)"
+      likelihoodToVote: "Definite (10/10)",
+      status: "COMPLETED",
+      remarks: "Whole family confirmed support. Requested candidate to attend society festival."
     },
     {
       id: "surv-2",
@@ -650,7 +676,9 @@ export const MOCK_VOTER_PROFILE_SAMPLE: VoterProfile = {
       surveyorName: "Pooja Jadhav (Karyakarta #109)",
       keyIssue: "Need pedestrian crossing near Navbharat School",
       opinionOnCandidate: "Favorable",
-      likelihoodToVote: "Definite (9/10)"
+      likelihoodToVote: "Definite (9/10)",
+      status: "COMPLETED",
+      remarks: "Follow-up required on pedestrian crossing request."
     }
   ],
   issuesRaised: [
@@ -659,14 +687,56 @@ export const MOCK_VOTER_PROFILE_SAMPLE: VoterProfile = {
       category: "Water Supply",
       date: "2024-03-22",
       status: "RESOLVED",
-      description: "Low water pressure reported during 6:00 AM - 8:00 AM supply slot."
+      priority: "HIGH",
+      assignedTo: "Karyakarta Rohit Shinde",
+      description: "Low water pressure reported during 6:00 AM - 8:00 AM supply slot.",
+      resolution: "PMC water engineering team inspected line 3; valve adjusted on 26 March 2024."
     },
     {
       ticketId: "TKT-9204",
       category: "Roads & Infrastructure",
       date: "2024-04-05",
       status: "IN_PROGRESS",
-      description: "Speed breaker requested near Ideal Colony Gate 2."
+      priority: "MEDIUM",
+      assignedTo: "Karyakarta Ganesh Patil",
+      description: "Speed breaker requested near Ideal Colony Gate 2 for school pedestrian safety.",
+      resolution: "Submitted to PMC Traffic Department. Work order scheduled for next budget cycle."
+    }
+  ],
+  officeVisits: [
+    {
+      id: "vis-1",
+      date: "2024-04-02 11:30 AM",
+      reason: "Grievance Follow-up & PM Awas Yojana verification",
+      staffName: "Rohit Shinde (Constituency Office Secretary)",
+      notes: "Discussed water pressure issue resolution and verified PM Awas subsidy acknowledgment documents.",
+      followUpDate: "2024-04-18",
+      status: "COMPLETED"
+    },
+    {
+      id: "vis-2",
+      date: "2024-01-22 04:00 PM",
+      reason: "Voter Roll correction acknowledgment & Senior Citizen ID submission",
+      staffName: "Priyanka Deshmukh (Public Relations Desk)",
+      notes: "Provided application slip for Form 8 address correction. Reassurance given on booth mapping.",
+      followUpDate: "2024-02-10",
+      status: "COMPLETED"
+    }
+  ],
+  notes: [
+    {
+      id: "not-1",
+      date: "2024-04-10 03:30 PM",
+      author: "Ganesh Patil (Karyakarta #104)",
+      category: "Strategy & Outreach",
+      content: "Highly influential in housing society Block B. Suggested connecting with society chairman for morning group walk meeting."
+    },
+    {
+      id: "not-2",
+      date: "2024-03-24 10:15 AM",
+      author: "Rohit Shinde (Office Secretary)",
+      category: "Grievance",
+      content: "Coordinated with PMC water engineer Mr. Kamble. Pipeline valve replacement completed on lane 3."
     }
   ],
   communications: [
@@ -699,34 +769,60 @@ export const MOCK_VOTER_PROFILE_SAMPLE: VoterProfile = {
     {
       name: "Voter_Information_Slip_MH34089211.pdf",
       type: "Official Slip (Generated)",
-      uploadedAt: "2024-04-14"
+      uploadedAt: "2024-04-14",
+      size: "342 KB",
+      uploadedBy: "Central Portal System"
     },
     {
       name: "Booth_Mapping_Certificate.pdf",
       type: "ECI Form 8 Record",
-      uploadedAt: "2024-01-20"
+      uploadedAt: "2024-01-20",
+      size: "1.2 MB",
+      uploadedBy: "Priyanka Deshmukh"
+    },
+    {
+      name: "Aadhaar_Address_Verification_Copy.pdf",
+      type: "Identity Proof Verification",
+      uploadedAt: "2024-01-18",
+      size: "820 KB",
+      uploadedBy: "Rohit Shinde"
     }
   ],
   timeline: [
     {
-      date: "2024-04-15",
+      date: "2024-04-15 11:30 AM",
       title: "Digital Voter Slip Delivered via WhatsApp",
-      description: "Delivered to +91 98224 55102 with verified status."
+      description: "Official digital voter slip sent to +91 98221 44001 with verified status.",
+      type: "SLIP",
+      performedBy: "WhatsApp Bot Dispatcher"
     },
     {
-      date: "2024-04-10",
+      date: "2024-04-10 03:15 PM",
       title: "Door-to-Door Survey Completed",
-      description: "Survey conducted by Karyakarta Ganesh Patil; marked as Strong Supporter."
+      description: "Survey conducted by Karyakarta Ganesh Patil; marked as Strong Supporter.",
+      type: "SURVEY",
+      performedBy: "Ganesh Patil (Karyakarta #104)"
     },
     {
-      date: "2024-03-22",
+      date: "2024-04-02 11:30 AM",
+      title: "Office Visit Logged",
+      description: "Voter visited central campaign office to discuss water grievance resolution.",
+      type: "OFFICE",
+      performedBy: "Rohit Shinde (Office Secretary)"
+    },
+    {
+      date: "2024-03-22 09:40 AM",
       title: "Public Issue Registered: Water Pressure",
-      description: "Ticket TKT-8491 opened and coordinated with Pune Municipal Corporation Ward Officer."
+      description: "Ticket TKT-8491 opened and coordinated with Pune Municipal Corporation Ward Officer.",
+      type: "TICKET",
+      performedBy: "Grievance Intake Desk"
     },
     {
-      date: "2024-01-15",
+      date: "2024-01-15 02:00 PM",
       title: "Electoral Roll Verified",
-      description: "Voter name verified in Final Electoral Roll publication (Part 101, Serial 42)."
+      description: "Voter name verified in Final Electoral Roll publication (Part 325, Serial 1).",
+      type: "SYSTEM",
+      performedBy: "ECI Roll Import Sync"
     }
   ]
 };

@@ -109,6 +109,13 @@ export interface Voter {
 }
 
 export interface VoterProfile extends Voter {
+  alternateMobile?: string;
+  panNumberMasked?: string;
+  aadhaarNumberMasked?: string;
+  pollingStationAddress?: string;
+  pollingRoomNo?: string;
+  gpsCoordinates?: string;
+  mapUrl?: string;
   familyMembers: {
     epicNumber: string;
     fullName: string;
@@ -116,6 +123,9 @@ export interface VoterProfile extends Voter {
     age: number;
     gender: string;
     serialNo: number;
+    mobile?: string;
+    boothNumber?: number;
+    leaning?: string;
   }[];
   surveys: {
     id: string;
@@ -124,6 +134,8 @@ export interface VoterProfile extends Voter {
     keyIssue: string;
     opinionOnCandidate: string;
     likelihoodToVote: string;
+    status?: 'COMPLETED' | 'FOLLOW_UP_NEEDED';
+    remarks?: string;
   }[];
   issuesRaised: {
     ticketId: string;
@@ -131,6 +143,32 @@ export interface VoterProfile extends Voter {
     date: string;
     status: 'OPEN' | 'IN_PROGRESS' | 'RESOLVED';
     description: string;
+    priority?: 'HIGH' | 'MEDIUM' | 'LOW';
+    assignedTo?: string;
+    resolution?: string;
+  }[];
+  officeVisits?: {
+    id: string;
+    date: string;
+    reason: string;
+    staffName: string;
+    notes: string;
+    followUpDate?: string;
+    status: 'COMPLETED' | 'PENDING_ACTION';
+  }[];
+  notes?: {
+    id: string;
+    date: string;
+    author: string;
+    category: string;
+    content: string;
+  }[];
+  tags?: string[];
+  votingHistory?: {
+    election: string;
+    year: string;
+    hasVoted: boolean;
+    slipDelivered: boolean;
   }[];
   communications: {
     id: string;
@@ -144,12 +182,16 @@ export interface VoterProfile extends Voter {
     name: string;
     type: string;
     uploadedAt: string;
+    size?: string;
+    uploadedBy?: string;
   }[];
   timeline: {
     date: string;
     title: string;
     description: string;
     icon?: string;
+    performedBy?: string;
+    type?: 'PROFILE' | 'SURVEY' | 'OFFICE' | 'TICKET' | 'COMMUNICATION' | 'DOCUMENT' | 'SLIP' | 'SYSTEM';
   }[];
 }
 
