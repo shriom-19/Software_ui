@@ -43,9 +43,13 @@ import {
   Info,
   CheckCircle
 } from 'lucide-react';
-import { Voter, VoterProfile } from '../../types';
+import { Voter, VoterProfile, CommunityGroupAssociation, CommunityGroupCategory, ElectorAssociationStatus } from '../../types';
 import { MOCK_VOTER_PROFILE_SAMPLE, MOCK_VOTERS } from '../../data/mockData';
 import { useToast } from '../../components/common/Toast';
+import {
+  useCommunityGroups,
+  COMMUNITY_GROUP_CATEGORIES
+} from '../../services/communityGroupStore';
 
 interface CentralVoterProfileViewProps {
   voter?: Voter | null;
@@ -73,6 +77,41 @@ export const CentralVoterProfileView: React.FC<CentralVoterProfileViewProps> = (
       setProfile({ ...MOCK_VOTER_PROFILE_SAMPLE, ...voter });
     }
   }, [voter]);
+
+  // Centralized Community Group Store integration
+  const {
+    getAllocationsForElector,
+    getElectorStatus,
+    setElectorStatus,
+    addOrUpdateAllocation,
+    deleteAllocation,
+    toggleVerification
+  } = useCommunityGroups();
+
+  const electorId = voter?.id || voter?.voterCode || profile.id || profile.voterCode || '46250582';
+  const communityAllocations = getAllocationsForElector(electorId);
+  const communityStatus = getElectorStatus(electorId);
+
+  // Community Group Modal state
+  const [isCommunityModalOpen, setIsCommunityModalOpen] = useState(false);
+  const [editingAllocationId, setEditingAllocationId] = useState<string | null>(null);
+  const [communityFormData, setCommunityFormData] = useState<{
+    category: CommunityGroupCategory;
+    groupName: string;
+    villageOrLocality: string;
+    designation: string;
+    allocationDate: string;
+    verificationStatus: 'VERIFIED' | 'UNVERIFIED';
+    notes: string;
+  }>({
+    category: 'Agriculture',
+    groupName: "Farmers / Farmers' Associations",
+    villageOrLocality: profile.address || 'Kasba Peth, Pune',
+    designation: '',
+    allocationDate: new Date().toISOString().slice(0, 10),
+    verificationStatus: 'VERIFIED',
+    notes: ''
+  });
 
   // Interactive profile state
   const [politicalLeaning, setPoliticalLeaning] = useState(profile.politicalLeaning);
@@ -243,6 +282,88 @@ export const CentralVoterProfileView: React.FC<CentralVoterProfileViewProps> = (
     setTimeout(() => {
       onBack();
     }, 600);
+  };
+
+  // Community Group Allocation Handlers
+  const handleOpenAddCommunityModal = () => {
+    setEditingAllocationId(null);
+    setCommunityFormData({
+      category: 'Agriculture',
+      groupName: "Farmers / Farmers' Associations",
+      villageOrLocality: profile.address || 'Kasba Peth, Pune',
+      designation: '',
+      allocationDate: new Date().toISOString().slice(0, 10),
+      verificationStatus: 'VERIFIED',
+      notes: ''
+    });
+    setIsCommunityModalOpen(true);
+  };
+
+  const handleOpenEditCommunityModal = (alloc: CommunityGroupAssociation) => {
+    setEditingAllocationId(alloc.id);
+    setCommunityFormData({
+      category: alloc.category,
+      groupName: alloc.groupName,
+      villageOrLocality: alloc.villageOrLocality,
+      designation: alloc.designation || '',
+      allocationDate: alloc.allocationDate,
+      verificationStatus: alloc.verificationStatus,
+      notes: alloc.notes || ''
+    });
+    setIsCommunityModalOpen(true);
+  };
+
+  const handleSaveCommunityAllocation = (e: React.FormEvent) => {
+    e.preventDefault();
+    const saved = addOrUpdateAllocation(electorId, communityFormData, editingAllocationId || undefined);
+    setIsCommunityModalOpen(false);
+    const newTimelineEntry = {
+      date: 'Just now',
+      title: editingAllocationId ? 'Community Group Association Updated' : 'New Community Group Assigned',
+      description: `${saved.category}: ${saved.groupName} (${saved.verificationStatus}) in ${saved.villageOrLocality}.`,
+      type: 'PROFILE' as const,
+      performedBy: 'Candidate Admin'
+    };
+    setTimeline([newTimelineEntry, ...timeline]);
+    showToast(
+      editingAllocationId
+        ? `Updated community association: ${saved.groupName}`
+        : `Assigned community group: ${saved.groupName}`,
+      'success'
+    );
+  };
+
+  const handleDeleteCommunityAllocation = (id: string, name: string) => {
+    deleteAllocation(id);
+    const newTimelineEntry = {
+      date: 'Just now',
+      title: 'Community Group Association Removed',
+      description: `Removed allocation for ${name} from elector record.`,
+      type: 'PROFILE' as const,
+      performedBy: 'Candidate Admin'
+    };
+    setTimeline([newTimelineEntry, ...timeline]);
+    showToast(`Removed association: ${name}`, 'info');
+  };
+
+  const handleToggleCommunityVerification = (id: string, currentStatus: string, name: string) => {
+    toggleVerification(id);
+    const nextStatus = currentStatus === 'VERIFIED' ? 'UNVERIFIED' : 'VERIFIED';
+    showToast(`Association ${name} marked as ${nextStatus}.`, 'info');
+  };
+
+  const handleSetElectorCommunityStatus = (status: 'NOT_ASSOCIATED' | 'NOT_DISCLOSED') => {
+    setElectorStatus(electorId, status);
+    const label = status === 'NOT_ASSOCIATED' ? 'Not Associated with any community group' : 'Not Disclosed community association';
+    const newTimelineEntry = {
+      date: 'Just now',
+      title: `Community Status Set: ${status === 'NOT_ASSOCIATED' ? 'Not Associated' : 'Not Disclosed'}`,
+      description: `Elector explicitly declared: ${label}.`,
+      type: 'PROFILE' as const,
+      performedBy: 'Candidate Admin'
+    };
+    setTimeline([newTimelineEntry, ...timeline]);
+    showToast(`Elector marked as ${status === 'NOT_ASSOCIATED' ? 'Not Associated' : 'Not Disclosed'}.`, 'info');
   };
 
   // 4. Record Survey
@@ -537,6 +658,7 @@ export const CentralVoterProfileView: React.FC<CentralVoterProfileViewProps> = (
             { id: 'sec-address', label: 'Address' },
             { id: 'sec-election', label: 'Election' },
             { id: 'sec-occupation', label: 'Occupation' },
+            { id: 'sec-community', label: `Community (${communityAllocations.length})` },
             { id: 'sec-political', label: 'Political' },
             { id: 'sec-family', label: `Family (${profile.familyMembers?.length || 0})` },
             { id: 'sec-surveys', label: `Surveys (${surveys.length})` },
@@ -1315,6 +1437,209 @@ export const CentralVoterProfileView: React.FC<CentralVoterProfileViewProps> = (
             ))}
           </div>
         </div>
+      </section>
+
+      {/* =========================================================================
+          SECTION: COMMUNITY & LOCAL STAKEHOLDER GROUPS
+      ========================================================================= */}
+      <section id="sec-community" className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-xs">
+        {/* Section Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 border-b border-slate-100 dark:border-slate-800 pb-3">
+          <div className="flex items-center gap-2.5">
+            <div className="p-2.5 rounded-xl bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 border border-teal-200 dark:border-teal-800">
+              <Users className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <h3 className="text-base font-extrabold text-slate-900 dark:text-white">
+                  Community & Local Stakeholder Groups
+                </h3>
+                {communityStatus === 'ACTIVE' && communityAllocations.length > 0 && (
+                  <span className="px-2 py-0.5 rounded-full bg-teal-100 dark:bg-teal-950 text-teal-700 dark:text-teal-300 font-bold text-[11px] border border-teal-200 dark:border-teal-800">
+                    {communityAllocations.length} Active {communityAllocations.length === 1 ? 'Association' : 'Associations'}
+                  </span>
+                )}
+                {communityStatus === 'NOT_ASSOCIATED' && (
+                  <span className="px-2 py-0.5 rounded-full bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 font-bold text-[11px] border border-amber-200 dark:border-amber-800">
+                    Explicitly Not Associated
+                  </span>
+                )}
+                {communityStatus === 'NOT_DISCLOSED' && (
+                  <span className="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-bold text-[11px] border border-slate-200 dark:border-slate-700">
+                    Not Disclosed
+                  </span>
+                )}
+              </div>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                Voluntary and verified stakeholder memberships across agricultural, cooperative, trade, and grassroots collectives.
+              </p>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex items-center gap-2 flex-wrap">
+            <button
+              onClick={() => handleSetElectorCommunityStatus('NOT_ASSOCIATED')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-colors ${
+                communityStatus === 'NOT_ASSOCIATED'
+                  ? 'bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-800 font-bold'
+                  : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700'
+              }`}
+              title="Record that elector is explicitly not associated with any community group"
+            >
+              Not Associated
+            </button>
+            <button
+              onClick={() => handleSetElectorCommunityStatus('NOT_DISCLOSED')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-colors ${
+                communityStatus === 'NOT_DISCLOSED'
+                  ? 'bg-slate-200 dark:bg-slate-700 text-slate-900 dark:text-white border-slate-300 dark:border-slate-600 font-bold'
+                  : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700'
+              }`}
+              title="Record that elector chose not to disclose community associations"
+            >
+              Not Disclosed
+            </button>
+            <button
+              onClick={handleOpenAddCommunityModal}
+              className="flex items-center gap-1.5 px-3.5 py-1.5 bg-teal-600 hover:bg-teal-700 active:scale-95 text-white font-bold rounded-xl text-xs transition-all shadow-xs"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span>+ Assign Group</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Privacy & Non-Inference Disclaimer Banner */}
+        <div className="mb-4 p-3 bg-teal-50/60 dark:bg-teal-950/30 rounded-2xl border border-teal-100 dark:border-teal-900/40 flex items-start gap-2.5 text-xs text-teal-800 dark:text-teal-300">
+          <Shield className="w-4 h-4 text-teal-600 dark:text-teal-400 shrink-0 mt-0.5" />
+          <div className="leading-relaxed">
+            <span className="font-bold">Privacy & Voluntary Declaration Policy:</span> All community associations must be voluntarily declared or directly validated. Group membership is strictly never inferred from elector name, caste, religion, address, or other personal characteristics.
+          </div>
+        </div>
+
+        {/* List of Community Group Allocations or Empty State */}
+        {communityAllocations.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+            {communityAllocations.map(alloc => {
+              const catMeta = COMMUNITY_GROUP_CATEGORIES.find(c => c.category === alloc.category);
+              const isVerified = alloc.verificationStatus === 'VERIFIED';
+
+              return (
+                <div
+                  key={alloc.id}
+                  className="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 hover:bg-slate-50 dark:hover:bg-slate-800/70 transition-all flex flex-col justify-between space-y-3"
+                >
+                  <div className="space-y-2">
+                    {/* Category & Verification Status Row */}
+                    <div className="flex items-center justify-between gap-2">
+                      <span className={`px-2.5 py-0.5 rounded-lg text-[11px] font-bold border ${catMeta?.badgeBg || 'bg-slate-100'} ${catMeta?.badgeColor || 'text-slate-700'} ${catMeta?.borderClass || 'border-slate-200'}`}>
+                        {alloc.category}
+                      </span>
+                      <button
+                        onClick={() => handleToggleCommunityVerification(alloc.id, alloc.verificationStatus, alloc.groupName)}
+                        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border transition-colors ${
+                          isVerified
+                            ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800 hover:bg-emerald-100'
+                            : 'bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800 hover:bg-amber-100'
+                        }`}
+                        title="Click to toggle verification status"
+                      >
+                        {isVerified ? <CheckCircle2 className="w-3 h-3 text-emerald-600" /> : <Clock className="w-3 h-3 text-amber-600" />}
+                        <span>{isVerified ? 'Verified' : 'Unverified (Pending)'}</span>
+                      </button>
+                    </div>
+
+                    {/* Group Name & Role */}
+                    <div>
+                      <h4 className="text-sm font-extrabold text-slate-900 dark:text-white leading-tight">
+                        {alloc.groupName}
+                      </h4>
+                      {alloc.designation && (
+                        <p className="text-xs font-semibold text-teal-600 dark:text-teal-400 mt-0.5 flex items-center gap-1">
+                          <UserCheck className="w-3.5 h-3.5" />
+                          <span>{alloc.designation}</span>
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Village / Locality & Allocation Date */}
+                    <div className="flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400 flex-wrap">
+                      <div className="flex items-center gap-1">
+                        <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                        <span>{alloc.villageOrLocality}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Calendar className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                        <span>Allocated: {alloc.allocationDate}</span>
+                      </div>
+                    </div>
+
+                    {/* Notes if present */}
+                    {alloc.notes && (
+                      <p className="text-[11px] text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-900 p-2.5 rounded-xl border border-slate-100 dark:border-slate-800 italic">
+                        &quot;{alloc.notes}&quot;
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Card Footer: History info + Actions */}
+                  <div className="pt-2 border-t border-slate-200/60 dark:border-slate-700/60 flex items-center justify-between text-[11px] text-slate-400">
+                    <span className="truncate max-w-[180px]">
+                      By {alloc.allocatedBy || 'Admin'} • {alloc.updatedAt?.slice(0, 10)}
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => handleOpenEditCommunityModal(alloc)}
+                        className="text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 font-semibold flex items-center gap-0.5"
+                      >
+                        <Edit3 className="w-3 h-3" />
+                        <span>Edit</span>
+                      </button>
+                      <button
+                        onClick={() => handleDeleteCommunityAllocation(alloc.id, alloc.groupName)}
+                        className="text-red-500 hover:text-red-700 dark:hover:text-red-400 font-semibold flex items-center gap-0.5"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                        <span>Remove</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          /* Empty State */
+          <div className="p-8 text-center rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-800/20 space-y-3">
+            <div className="w-12 h-12 rounded-2xl bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 flex items-center justify-center mx-auto border border-teal-200 dark:border-teal-800">
+              <Users className="w-6 h-6" />
+            </div>
+            <div className="max-w-md mx-auto">
+              <h4 className="text-sm font-bold text-slate-800 dark:text-slate-200">
+                {communityStatus === 'NOT_ASSOCIATED'
+                  ? 'Elector Marked as Not Associated'
+                  : communityStatus === 'NOT_DISCLOSED'
+                  ? 'No Voluntary Association Disclosed'
+                  : 'No Community Group Associations Recorded'}
+              </h4>
+              <p className="text-xs text-slate-400 mt-1">
+                {communityStatus === 'NOT_ASSOCIATED'
+                  ? 'This elector has explicitly confirmed non-membership in local farmer, worker, or community bodies.'
+                  : communityStatus === 'NOT_DISCLOSED'
+                  ? 'The elector opted not to disclose community or stakeholder affiliations during survey intake.'
+                  : 'Assign verified memberships across farmers, sugar workers, Anganwadi staff, cooperatives, or SHGs.'}
+              </p>
+            </div>
+            <button
+              onClick={handleOpenAddCommunityModal}
+              className="inline-flex items-center gap-1.5 px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl text-xs shadow-xs transition-colors"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span>Assign First Group Association</span>
+            </button>
+          </div>
+        )}
       </section>
 
       {/* =========================================================================
@@ -2907,6 +3232,167 @@ export const CentralVoterProfileView: React.FC<CentralVoterProfileViewProps> = (
                 </a>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* =========================================================================
+          MODAL 16: ADD / EDIT COMMUNITY GROUP ALLOCATION MODAL
+      ========================================================================= */}
+      {isCommunityModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl max-w-lg w-full border border-slate-200 dark:border-slate-800 p-6 space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+              <div className="flex items-center gap-2">
+                <div className="p-2 rounded-xl bg-teal-50 dark:bg-teal-950 text-teal-600 dark:text-teal-400">
+                  <Users className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-extrabold text-slate-900 dark:text-white text-base">
+                    {editingAllocationId ? 'Edit Community Group Association' : 'Assign Community Group Association'}
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    Elector: {profile.fullName} ({profile.epicNumber})
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setIsCommunityModalOpen(false)}
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveCommunityAllocation} className="space-y-3.5 text-xs">
+              {/* Category */}
+              <div>
+                <label className="font-bold text-slate-700 dark:text-slate-300 block mb-1">
+                  Community Group Category *
+                </label>
+                <select
+                  value={communityFormData.category}
+                  onChange={(e) => {
+                    const cat = e.target.value as CommunityGroupCategory;
+                    const meta = COMMUNITY_GROUP_CATEGORIES.find(c => c.category === cat);
+                    setCommunityFormData({
+                      ...communityFormData,
+                      category: cat,
+                      groupName: meta?.defaultGroupName || communityFormData.groupName
+                    });
+                  }}
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-teal-500"
+                >
+                  {COMMUNITY_GROUP_CATEGORIES.map(c => (
+                    <option key={c.category} value={c.category}>{c.category}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Specific Group Name */}
+              <div>
+                <label className="font-bold text-slate-700 dark:text-slate-300 block mb-1">
+                  Specific Group / Association Name *
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Farmers / Farmers' Associations or Kasba Vyapar Mandal"
+                  value={communityFormData.groupName}
+                  onChange={(e) => setCommunityFormData({ ...communityFormData, groupName: e.target.value })}
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-teal-500"
+                />
+              </div>
+
+              {/* Village / Locality & Role */}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="font-bold text-slate-700 dark:text-slate-300 block mb-1">
+                    Village / Locality *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Kasba Peth, Ward 12"
+                    value={communityFormData.villageOrLocality}
+                    onChange={(e) => setCommunityFormData({ ...communityFormData, villageOrLocality: e.target.value })}
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-teal-500"
+                  />
+                </div>
+                <div>
+                  <label className="font-bold text-slate-700 dark:text-slate-300 block mb-1">
+                    Designation or Role (optional)
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Member, Secretary, Cluster Lead"
+                    value={communityFormData.designation}
+                    onChange={(e) => setCommunityFormData({ ...communityFormData, designation: e.target.value })}
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-teal-500"
+                  />
+                </div>
+              </div>
+
+              {/* Allocation Date & Verification Status */}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="font-bold text-slate-700 dark:text-slate-300 block mb-1">
+                    Allocation Date *
+                  </label>
+                  <input
+                    type="date"
+                    required
+                    value={communityFormData.allocationDate}
+                    onChange={(e) => setCommunityFormData({ ...communityFormData, allocationDate: e.target.value })}
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-teal-500"
+                  />
+                </div>
+                <div>
+                  <label className="font-bold text-slate-700 dark:text-slate-300 block mb-1">
+                    Verification Status *
+                  </label>
+                  <select
+                    value={communityFormData.verificationStatus}
+                    onChange={(e) => setCommunityFormData({ ...communityFormData, verificationStatus: e.target.value as 'VERIFIED' | 'UNVERIFIED' })}
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-teal-500"
+                  >
+                    <option value="VERIFIED">Verified (Validated Membership)</option>
+                    <option value="UNVERIFIED">Unverified (Pending Declaration Review)</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Notes */}
+              <div>
+                <label className="font-bold text-slate-700 dark:text-slate-300 block mb-1">
+                  Notes / Source of Declaration (optional)
+                </label>
+                <textarea
+                  rows={2}
+                  placeholder="e.g. Voluntarily declared in survey intake; verified via membership register."
+                  value={communityFormData.notes}
+                  onChange={(e) => setCommunityFormData({ ...communityFormData, notes: e.target.value })}
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-teal-500"
+                />
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
+                <button
+                  type="button"
+                  onClick={() => setIsCommunityModalOpen(false)}
+                  className="px-4 py-2 text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl text-xs shadow-xs"
+                >
+                  {editingAllocationId ? 'Update Allocation' : 'Save Group Allocation'}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

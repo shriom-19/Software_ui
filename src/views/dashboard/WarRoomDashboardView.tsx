@@ -55,15 +55,16 @@ import {
   MOCK_KARYAKARTAS,
   MOCK_TICKETS,
   MOCK_DASHBOARD_TASKS,
-  MOCK_MONITORING_EVENTS,
   MOCK_ATTENTION_ALERTS,
   MOCK_ORGANISATION_MEMBERS,
   MOCK_CASTE_CATEGORIES,
   MOCK_CASTE_DISTRIBUTION,
   MOCK_CONSTITUENCIES,
+  MOCK_VOTERS,
   DashboardTask
 } from '../../data/mockData';
 import { useToast } from '../../components/common/Toast';
+import { useCommunityGroups } from '../../services/communityGroupStore';
 
 interface WarRoomDashboardViewProps {
   onNavigateToView: (view: string) => void;
@@ -71,6 +72,7 @@ interface WarRoomDashboardViewProps {
 
 export const WarRoomDashboardView: React.FC<WarRoomDashboardViewProps> = ({ onNavigateToView }) => {
   const { showToast } = useToast();
+  const { allocations, stats } = useCommunityGroups();
   const [lastRefreshed, setLastRefreshed] = useState('Just now');
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [selectedTimeframe, setSelectedTimeframe] = useState('Today');
@@ -180,9 +182,6 @@ export const WarRoomDashboardView: React.FC<WarRoomDashboardViewProps> = ({ onNa
   const [selectedGradeFilter, setSelectedGradeFilter] = useState('ALL');
   const [boothSortField, setBoothSortField] = useState<'boothNumber' | 'totalVoters' | 'slipsDeliveredPercent' | 'projectedTurnoutPercent'>('boothNumber');
   const [boothSortAsc, setBoothSortAsc] = useState(true);
-
-  // Live monitoring tab state (Section 13: 4 visible activity categories)
-  const [activeMonitoringTab, setActiveMonitoringTab] = useState<'booth' | 'worker' | 'survey' | 'field'>('booth');
 
   // Task filter state (Section 11)
   const [taskFilterStatus, setTaskFilterStatus] = useState<string>('ALL');
@@ -548,14 +547,14 @@ export const WarRoomDashboardView: React.FC<WarRoomDashboardViewProps> = ({ onNa
         >
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 to-blue-600"></div>
           <div className="flex items-center justify-between mb-1.5 mt-0.5">
-            <span className="text-[10px] font-bold text-indigo-700 uppercase tracking-wider">Total Members</span>
+            <span className="text-[10px] font-bold text-indigo-900 uppercase tracking-wider">Total Members</span>
             <div className="w-7 h-7 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center group-hover:scale-110 transition-transform">
               <Award className="w-3.5 h-3.5" />
             </div>
           </div>
           <p className="text-lg font-black text-slate-900">34,200</p>
           <div className="flex items-center gap-1 mt-1 text-[10px] text-indigo-600 font-semibold truncate">
-            <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 shrink-0"></span>
+            <span className="w-1.5 h-1.5 rounded-full bg-indigo-600 shrink-0"></span>
             <span>28,450 Active Members</span>
           </div>
         </div>
@@ -565,7 +564,7 @@ export const WarRoomDashboardView: React.FC<WarRoomDashboardViewProps> = ({ onNa
           onClick={() => onNavigateToView('dashboard')}
           className="bg-white p-3.5 rounded-2xl border border-purple-200/70 shadow-premium-xs hover:border-purple-400 hover:shadow-premium-md cursor-pointer transition-all group relative overflow-hidden"
         >
-          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 to-fuchsia-600"></div>
+          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 to-pink-600"></div>
           <div className="flex items-center justify-between mb-1.5 mt-0.5">
             <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Total Booths</span>
             <div className="w-7 h-7 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -581,17 +580,17 @@ export const WarRoomDashboardView: React.FC<WarRoomDashboardViewProps> = ({ onNa
         {/* 4. BLO Officers - Explicit VoterX Metric */}
         <div
           onClick={() => onNavigateToView('blo')}
-          className="bg-white p-3.5 rounded-2xl border border-sky-200/70 shadow-premium-xs hover:border-sky-400 hover:shadow-premium-md cursor-pointer transition-all group relative overflow-hidden"
+          className="bg-white p-3.5 rounded-2xl border border-cyan-200/70 shadow-premium-xs hover:border-cyan-400 hover:shadow-premium-md cursor-pointer transition-all group relative overflow-hidden"
         >
-          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-sky-400 to-blue-500"></div>
+          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-500 to-blue-600"></div>
           <div className="flex items-center justify-between mb-1.5 mt-0.5">
-            <span className="text-[10px] font-bold text-sky-700 uppercase tracking-wider">BLO Officers</span>
-            <div className="w-7 h-7 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <span className="text-[10px] font-bold text-cyan-900 uppercase tracking-wider">BLO Officers</span>
+            <div className="w-7 h-7 rounded-lg bg-cyan-50 text-cyan-600 flex items-center justify-center group-hover:scale-110 transition-transform">
               <ShieldAlert className="w-3.5 h-3.5" />
             </div>
           </div>
           <p className="text-lg font-black text-slate-900">2,045</p>
-          <div className="flex items-center gap-1 mt-1 text-[10px] text-sky-700 font-semibold truncate">
+          <div className="flex items-center gap-1 mt-1 text-[10px] text-cyan-600 font-semibold truncate">
             <span>98.4% Verified Assigned</span>
           </div>
         </div>
@@ -694,32 +693,32 @@ export const WarRoomDashboardView: React.FC<WarRoomDashboardViewProps> = ({ onNa
           </div>
 
           {/* Interactive Mini Map SVG Container */}
-          <div className="w-full h-64 bg-slate-100 rounded-xl border border-slate-200 relative overflow-hidden flex items-center justify-center">
+          <div className="w-full h-64 bg-blue-50/30 rounded-xl border border-blue-100 relative overflow-hidden flex items-center justify-center">
             {/* Visual Grid Mock Pattern */}
             <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#2563eb_1px,transparent_1px)] [background-size:16px_16px]"></div>
 
             {/* Stylized Map Contours */}
             <svg className="w-full h-full absolute inset-0 text-slate-300" viewBox="0 0 600 240">
               <path d="M 50 180 Q 150 40 280 120 T 550 80" fill="none" stroke="#60a5fa" strokeWidth="5" strokeLinecap="round" opacity="0.6" />
-              <path d="M 80 80 Q 200 220 380 90 T 580 190" fill="none" stroke="#c084fc" strokeWidth="4" strokeDasharray="6,6" opacity="0.6" />
+              <path d="M 80 80 Q 200 220 380 90 T 580 190" fill="none" stroke="#818cf8" strokeWidth="4" strokeDasharray="6,6" opacity="0.6" />
               {/* Booth Polygons with distinctive rich tinting */}
-              <polygon points="120,40 220,60 190,140 100,110" fill="rgba(59,130,246,0.15)" stroke="#3b82f6" strokeWidth="2" />
-              <polygon points="230,70 340,50 360,150 250,160" fill="rgba(6,182,212,0.15)" stroke="#06b6d4" strokeWidth="2" />
+              <polygon points="120,40 220,60 190,140 100,110" fill="rgba(37,99,235,0.15)" stroke="#2563eb" strokeWidth="2" />
+              <polygon points="230,70 340,50 360,150 250,160" fill="rgba(16,185,129,0.15)" stroke="#10b981" strokeWidth="2" />
               <polygon points="370,60 520,70 490,180 380,160" fill="rgba(245,158,11,0.15)" stroke="#f59e0b" strokeWidth="2" />
             </svg>
 
             {/* Simulated Live Karyakarta Markers */}
             <div className="absolute top-1/4 left-1/4 flex flex-col items-center">
               <span className="w-3.5 h-3.5 rounded-full bg-blue-600 ring-4 ring-blue-200 animate-ping"></span>
-              <span className="mt-1 px-2 py-0.5 rounded-md bg-white text-[9px] font-bold text-blue-900 shadow-md border border-blue-200 flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span> Pooja J. (Booth 101)
+              <span className="mt-1 px-2 py-0.5 rounded-md bg-white text-[9px] font-bold text-slate-800 shadow-md border border-slate-200 flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-600"></span> Pooja J. (Booth 101)
               </span>
             </div>
 
             <div className="absolute top-1/2 left-1/2 flex flex-col items-center">
-              <span className="w-3.5 h-3.5 rounded-full bg-purple-600 ring-4 ring-purple-200 animate-ping"></span>
-              <span className="mt-1 px-2 py-0.5 rounded-md bg-white text-[9px] font-bold text-purple-900 shadow-md border border-purple-200 flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-purple-500"></span> Ganesh P. (Booth 102)
+              <span className="w-3.5 h-3.5 rounded-full bg-emerald-500 ring-4 ring-emerald-200 animate-ping"></span>
+              <span className="mt-1 px-2 py-0.5 rounded-md bg-white text-[9px] font-bold text-slate-800 shadow-md border border-slate-200 flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Ganesh P. (Booth 102)
               </span>
             </div>
 
@@ -734,8 +733,8 @@ export const WarRoomDashboardView: React.FC<WarRoomDashboardViewProps> = ({ onNa
               <span className="flex items-center gap-1.5 font-bold text-blue-700">
                 <span className="w-2.5 h-2.5 rounded-full bg-blue-600 ring-2 ring-blue-100"></span> Active Karyakarta
               </span>
-              <span className="flex items-center gap-1.5 font-bold text-purple-700">
-                <span className="w-2.5 h-2.5 rounded-full bg-purple-600 ring-2 ring-purple-100"></span> Field Squad
+              <span className="flex items-center gap-1.5 font-bold text-emerald-700">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-emerald-100"></span> Field Squad
               </span>
               <span className="flex items-center gap-1.5 font-bold text-amber-700">
                 <span className="w-2.5 h-2.5 rounded-full bg-amber-500 ring-2 ring-amber-100"></span> Swing Zone
@@ -851,10 +850,10 @@ export const WarRoomDashboardView: React.FC<WarRoomDashboardViewProps> = ({ onNa
           <div>
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
-                <Award className="w-4 h-4 text-brand-600" />
+                <Award className="w-4 h-4 text-blue-600" />
                 <h3 className="font-bold text-slate-900 text-sm">Organisation Score</h3>
               </div>
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-brand-50 text-brand-700 border border-brand-200">
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
                 ECI Roll Match: High
               </span>
             </div>
@@ -895,7 +894,7 @@ export const WarRoomDashboardView: React.FC<WarRoomDashboardViewProps> = ({ onNa
                     <span className="font-bold text-slate-900">99.6%</span>
                   </div>
                   <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
-                    <div className="bg-brand-600 h-2 rounded-full" style={{ width: '99.6%' }} />
+                    <div className="bg-blue-600 h-2 rounded-full" style={{ width: '99.6%' }} />
                   </div>
                   <span className="text-[10px] text-slate-400">2,038 / 2,045 booths active</span>
                 </div>
@@ -922,7 +921,7 @@ export const WarRoomDashboardView: React.FC<WarRoomDashboardViewProps> = ({ onNa
           <div className="mt-4 pt-3 border-t border-slate-100">
             <button
               onClick={() => onNavigateToView('voters')}
-              className="w-full py-2.5 px-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl text-xs transition-colors flex items-center justify-center gap-2 shadow-xs"
+              className="w-full py-2.5 px-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs transition-colors flex items-center justify-center gap-2 shadow-xs"
             >
               <UserPlus className="w-3.5 h-3.5" />
               <span>Add / Import Voters</span>
@@ -973,7 +972,7 @@ export const WarRoomDashboardView: React.FC<WarRoomDashboardViewProps> = ({ onNa
               </div>
 
               <div className="flex-1 space-y-2">
-                <div className="flex items-center justify-between p-2 rounded-lg bg-blue-50/60 border border-blue-100">
+                <div className="flex items-center justify-between p-2 rounded-lg bg-blue-50/80 border border-blue-200/60">
                   <div className="flex items-center gap-1.5">
                     <span className="w-2.5 h-2.5 rounded-full bg-blue-600 shrink-0" />
                     <span className="text-xs font-semibold text-slate-700">Male</span>
@@ -984,7 +983,7 @@ export const WarRoomDashboardView: React.FC<WarRoomDashboardViewProps> = ({ onNa
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between p-2 rounded-lg bg-purple-50/60 border border-purple-100">
+                <div className="flex items-center justify-between p-2 rounded-lg bg-purple-50/80 border border-purple-200/60">
                   <div className="flex items-center gap-1.5">
                     <span className="w-2.5 h-2.5 rounded-full bg-purple-500 shrink-0" />
                     <span className="text-xs font-semibold text-slate-700">Female</span>
@@ -1014,7 +1013,7 @@ export const WarRoomDashboardView: React.FC<WarRoomDashboardViewProps> = ({ onNa
               </div>
               <button
                 onClick={() => onNavigateToView('members')}
-                className="text-[11px] font-bold text-brand-600 hover:text-brand-700 transition-colors"
+                className="text-[11px] font-bold text-blue-600 hover:text-blue-700 transition-colors"
               >
                 View Roster →
               </button>
@@ -1026,13 +1025,13 @@ export const WarRoomDashboardView: React.FC<WarRoomDashboardViewProps> = ({ onNa
                   <div className="p-2.5 bg-slate-50 rounded-xl border border-slate-100">
                     <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Total Members</span>
                     <span className="text-lg font-black text-slate-900 font-mono">34,200</span>
-                    <span className="text-[10px] text-blue-600 font-semibold block mt-0.5">Across all booths</span>
+                    <span className="text-[10px] text-indigo-600 font-semibold block mt-0.5">Across all booths</span>
                   </div>
 
-                  <div className="p-2.5 bg-blue-50/70 rounded-xl border border-blue-100">
-                    <span className="text-[10px] font-bold text-blue-500 uppercase tracking-wider block">Active Members</span>
-                    <span className="text-lg font-black text-blue-900 font-mono">28,450</span>
-                    <span className="text-[10px] text-blue-700 font-semibold block mt-0.5">83.2% active</span>
+                  <div className="p-2.5 bg-blue-50 rounded-xl border border-blue-100">
+                    <span className="text-[10px] font-bold text-blue-700 uppercase tracking-wider block">Active Members</span>
+                    <span className="text-lg font-black text-slate-900 font-mono">28,450</span>
+                    <span className="text-[10px] text-blue-600 font-semibold block mt-0.5">83.2% active</span>
                   </div>
                 </div>
 
@@ -1061,7 +1060,7 @@ export const WarRoomDashboardView: React.FC<WarRoomDashboardViewProps> = ({ onNa
 
           <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-[11px]">
             <span className="text-slate-500">Cadre Readiness Rate:</span>
-            <span className="font-bold text-blue-700 font-mono">83.2% Verified</span>
+            <span className="font-bold text-blue-600 font-mono">83.2% Verified</span>
           </div>
         </div>
       </div>
@@ -1078,7 +1077,7 @@ export const WarRoomDashboardView: React.FC<WarRoomDashboardViewProps> = ({ onNa
                 <p className="text-[11px] text-slate-500">Broad social classifications across 21.54 L electorate</p>
               </div>
             </div>
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200">
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
               6 Categories
             </span>
           </div>
@@ -1110,7 +1109,7 @@ export const WarRoomDashboardView: React.FC<WarRoomDashboardViewProps> = ({ onNa
             <span>Primary Demographic: <strong className="text-slate-800">General + OBC (62.1%)</strong></span>
             <button
               onClick={() => onNavigateToView('voters')}
-              className="text-brand-600 font-bold hover:text-brand-700"
+              className="text-blue-600 font-bold hover:text-blue-700"
             >
               Filter Roll by Caste →
             </button>
@@ -1205,7 +1204,7 @@ export const WarRoomDashboardView: React.FC<WarRoomDashboardViewProps> = ({ onNa
 
             <button
               onClick={() => onNavigateToView('voters')}
-              className="text-xs text-blue-600 hover:text-blue-700 font-semibold flex items-center gap-1 bg-blue-50 px-2.5 py-1.5 rounded-lg"
+              className="text-xs text-blue-600 hover:text-blue-700 font-semibold flex items-center gap-1 bg-blue-50 px-2.5 py-1.5 rounded-lg border border-blue-200"
             >
               <span>Filter Total Voters</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -1777,6 +1776,358 @@ export const WarRoomDashboardView: React.FC<WarRoomDashboardViewProps> = ({ onNa
       </div>
 
       {/* ========================================================================= */}
+      {/* SECTION: Community & Local Stakeholder Statistics                         */}
+      {/* ========================================================================= */}
+      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-xs space-y-5">
+        {/* Header with Title, Last Updated, and Actions */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-xl bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 border border-teal-200 dark:border-teal-800 flex items-center justify-center">
+              <Users className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <h3 className="font-bold text-slate-900 dark:text-white text-base">
+                  Community & Local Stakeholder Statistics
+                </h3>
+                <span className="px-2 py-0.5 rounded-full bg-teal-100 dark:bg-teal-950 text-teal-700 dark:text-teal-300 font-bold text-[10px] border border-teal-200 dark:border-teal-800 uppercase tracking-wider">
+                  Live Centralized Records
+                </span>
+              </div>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                Aggregate real-time intelligence on voluntary farmer, worker, cooperative, and grassroots associations across authorized elector rolls.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 self-start sm:self-auto">
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[11px] text-slate-500 dark:text-slate-400">
+              <Clock className="w-3.5 h-3.5 text-slate-400" />
+              <span>Last Refreshed: {new Date(stats.lastUpdated).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+            </div>
+            <button
+              onClick={() => onNavigateToView('voters')}
+              className="px-3 py-1 bg-teal-50 dark:bg-teal-950/60 hover:bg-teal-100 text-teal-700 dark:text-teal-300 border border-teal-200 dark:border-teal-800 rounded-lg text-xs font-bold transition-colors flex items-center gap-1"
+            >
+              <span>Filter Electors</span>
+              <ChevronRight className="w-3 h-3" />
+            </button>
+          </div>
+        </div>
+
+        {/* 12 Metric Cards Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+          {/* 1. Total Associated Electors (counted once per elector) */}
+          <div className="p-3.5 bg-teal-50/70 dark:bg-teal-950/40 rounded-xl border border-teal-200 dark:border-teal-800 text-center relative overflow-hidden group">
+            <span className="text-[10px] font-bold text-teal-700 dark:text-teal-300 uppercase block truncate">
+              Total Associated Electors
+            </span>
+            <span className="text-xl font-black text-teal-950 dark:text-teal-100 mt-1 block font-mono">
+              {stats.totalAssociatedElectors}
+            </span>
+            <span className="text-[10px] font-semibold text-teal-600 dark:text-teal-400 block mt-0.5">
+              Unique Electors (Counted Once)
+            </span>
+          </div>
+
+          {/* 2. Farmers & Agricultural Groups */}
+          <div className="p-3.5 bg-emerald-50/70 dark:bg-emerald-950/40 rounded-xl border border-emerald-200 dark:border-emerald-800 text-center">
+            <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 uppercase block truncate">
+              Farmers & Agriculture
+            </span>
+            <span className="text-xl font-black text-emerald-950 dark:text-emerald-100 mt-1 block font-mono">
+              {stats.farmersCount}
+            </span>
+            <span className="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 block mt-0.5">
+              Farmers & Assocs.
+            </span>
+          </div>
+
+          {/* 3. Sugar Factory Workers */}
+          <div className="p-3.5 bg-amber-50/70 dark:bg-amber-950/40 rounded-xl border border-amber-200 dark:border-amber-800 text-center">
+            <span className="text-[10px] font-bold text-amber-700 dark:text-amber-300 uppercase block truncate">
+              Sugar Factory Workers
+            </span>
+            <span className="text-xl font-black text-amber-950 dark:text-amber-100 mt-1 block font-mono">
+              {stats.sugarWorkersCount}
+            </span>
+            <span className="text-[10px] font-semibold text-amber-600 dark:text-amber-400 block mt-0.5">
+              Sugar Mill & Cane Coop
+            </span>
+          </div>
+
+          {/* 4. Anganwadi / Balwadi Workers */}
+          <div className="p-3.5 bg-pink-50/70 dark:bg-pink-950/40 rounded-xl border border-pink-200 dark:border-pink-800 text-center">
+            <span className="text-[10px] font-bold text-pink-700 dark:text-pink-300 uppercase block truncate">
+              Anganwadi / Balwadi
+            </span>
+            <span className="text-xl font-black text-pink-950 dark:text-pink-100 mt-1 block font-mono">
+              {stats.anganwadiCount}
+            </span>
+            <span className="text-[10px] font-semibold text-pink-600 dark:text-pink-400 block mt-0.5">
+              Childcare Volunteers
+            </span>
+          </div>
+
+          {/* 5. Village Community Members */}
+          <div className="p-3.5 bg-blue-50/70 dark:bg-blue-950/40 rounded-xl border border-blue-200 dark:border-blue-800 text-center">
+            <span className="text-[10px] font-bold text-blue-700 dark:text-blue-300 uppercase block truncate">
+              Village Community
+            </span>
+            <span className="text-xl font-black text-blue-950 dark:text-blue-100 mt-1 block font-mono">
+              {stats.villageCommunityCount}
+            </span>
+            <span className="text-[10px] font-semibold text-blue-600 dark:text-blue-400 block mt-0.5">
+              Village Active Members
+            </span>
+          </div>
+
+          {/* 6. Local Stakeholders */}
+          <div className="p-3.5 bg-purple-50/70 dark:bg-purple-950/40 rounded-xl border border-purple-200 dark:border-purple-800 text-center">
+            <span className="text-[10px] font-bold text-purple-700 dark:text-purple-300 uppercase block truncate">
+              Local Stakeholders
+            </span>
+            <span className="text-xl font-black text-purple-950 dark:text-purple-100 mt-1 block font-mono">
+              {stats.localStakeholdersCount}
+            </span>
+            <span className="text-[10px] font-semibold text-purple-600 dark:text-purple-400 block mt-0.5">
+              Trade & RWA Guilds
+            </span>
+          </div>
+
+          {/* 7. Cooperative Society Members */}
+          <div className="p-3.5 bg-indigo-50/70 dark:bg-indigo-950/40 rounded-xl border border-indigo-200 dark:border-indigo-800 text-center">
+            <span className="text-[10px] font-bold text-indigo-700 dark:text-indigo-300 uppercase block truncate">
+              Cooperative Societies
+            </span>
+            <span className="text-xl font-black text-indigo-950 dark:text-indigo-100 mt-1 block font-mono">
+              {stats.cooperativesCount}
+            </span>
+            <span className="text-[10px] font-semibold text-indigo-600 dark:text-indigo-400 block mt-0.5">
+              Patsanstha & Credit
+            </span>
+          </div>
+
+          {/* 8. SHG Members */}
+          <div className="p-3.5 bg-cyan-50/70 dark:bg-cyan-950/40 rounded-xl border border-cyan-200 dark:border-cyan-800 text-center">
+            <span className="text-[10px] font-bold text-cyan-700 dark:text-cyan-300 uppercase block truncate">
+              SHG Members (Bachat Gat)
+            </span>
+            <span className="text-xl font-black text-cyan-950 dark:text-cyan-100 mt-1 block font-mono">
+              {stats.shgCount}
+            </span>
+            <span className="text-[10px] font-semibold text-cyan-600 dark:text-cyan-400 block mt-0.5">
+              Women Self-Help
+            </span>
+          </div>
+
+          {/* 9. Other Community Groups */}
+          <div className="p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700 text-center">
+            <span className="text-[10px] font-bold text-slate-600 dark:text-slate-300 uppercase block truncate">
+              Other Community Groups
+            </span>
+            <span className="text-xl font-black text-slate-900 dark:text-white mt-1 block font-mono">
+              {stats.otherCount}
+            </span>
+            <span className="text-[10px] font-semibold text-slate-500 block mt-0.5">
+              Special Collectives
+            </span>
+          </div>
+
+          {/* 10. Pending Verification */}
+          <div className="p-3.5 bg-amber-50/70 dark:bg-amber-950/40 rounded-xl border border-amber-300 dark:border-amber-800/80 text-center">
+            <span className="text-[10px] font-bold text-amber-800 dark:text-amber-300 uppercase block truncate">
+              Pending Verification
+            </span>
+            <span className="text-xl font-black text-amber-900 dark:text-amber-200 mt-1 block font-mono">
+              {stats.pendingVerification}
+            </span>
+            <span className="text-[10px] font-semibold text-amber-700 dark:text-amber-400 block mt-0.5">
+              Unverified Intake
+            </span>
+          </div>
+
+          {/* 11. Not Disclosed */}
+          <div className="p-3.5 bg-slate-100/70 dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700 text-center">
+            <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase block truncate">
+              Not Disclosed
+            </span>
+            <span className="text-xl font-black text-slate-800 dark:text-slate-200 mt-1 block font-mono">
+              {stats.notDisclosedCount}
+            </span>
+            <span className="text-[10px] font-semibold text-slate-400 block mt-0.5">
+              Declaration Opt-out
+            </span>
+          </div>
+
+          {/* 12. Not Associated */}
+          <div className="p-3.5 bg-slate-100/70 dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700 text-center">
+            <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase block truncate">
+              Not Associated
+            </span>
+            <span className="text-xl font-black text-slate-800 dark:text-slate-200 mt-1 block font-mono">
+              {stats.notAssociatedCount}
+            </span>
+            <span className="text-[10px] font-semibold text-slate-400 block mt-0.5">
+              Confirmed Independent
+            </span>
+          </div>
+        </div>
+
+        {/* Visualisations Grid: 4 Core Requirements */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 pt-2">
+          {/* 1. Community Group Distribution Visual Bar Chart */}
+          <div className="lg:col-span-2 p-4 rounded-2xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 space-y-3.5">
+            <div className="flex items-center justify-between">
+              <div>
+                <span className="text-xs font-bold text-slate-900 dark:text-white">
+                  1. Community Group Distribution
+                </span>
+                <p className="text-[11px] text-slate-400">
+                  Aggregate share across {stats.totalAllocations} voluntary declared associations
+                </p>
+              </div>
+              <span className="text-xs font-mono font-bold text-teal-600 dark:text-teal-400">
+                {stats.totalAllocations} Total Recorded
+              </span>
+            </div>
+
+            {/* Proportional Segmented Progress Bar */}
+            <div className="w-full h-3 rounded-full bg-slate-200 dark:bg-slate-700 flex overflow-hidden">
+              {stats.distribution.map((dist, idx) => {
+                if (dist.count === 0) return null;
+                const colors = [
+                  'bg-emerald-500',
+                  'bg-amber-500',
+                  'bg-pink-500',
+                  'bg-blue-500',
+                  'bg-purple-500',
+                  'bg-indigo-500',
+                  'bg-teal-500',
+                  'bg-slate-500'
+                ];
+                return (
+                  <div
+                    key={dist.category}
+                    className={`${colors[idx % colors.length]} h-full transition-all`}
+                    style={{ width: `${dist.percentage}%` }}
+                    title={`${dist.category}: ${dist.count} (${dist.percentage}%)`}
+                  />
+                );
+              })}
+            </div>
+
+            {/* Group-wise Statistics Breakdown Table */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1 text-xs">
+              {stats.distribution.map((dist, idx) => {
+                const colors = [
+                  'bg-emerald-500',
+                  'bg-amber-500',
+                  'bg-pink-500',
+                  'bg-blue-500',
+                  'bg-purple-500',
+                  'bg-indigo-500',
+                  'bg-teal-500',
+                  'bg-slate-500'
+                ];
+                return (
+                  <div
+                    key={dist.category}
+                    className="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-start gap-2"
+                  >
+                    <span className={`w-2.5 h-2.5 rounded-full ${colors[idx % colors.length]} mt-1 shrink-0`} />
+                    <div className="min-w-0 flex-1">
+                      <span className="font-semibold text-slate-700 dark:text-slate-300 block truncate text-[11px]">
+                        {dist.category}
+                      </span>
+                      <div className="flex items-center justify-between mt-0.5 font-mono">
+                        <span className="font-bold text-slate-900 dark:text-white">
+                          {dist.count}
+                        </span>
+                        <span className="text-[10px] text-slate-400">
+                          {dist.percentage}%
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* 2. Verification Overview & Constituency-wise Statistics */}
+          <div className="space-y-4">
+            {/* Verification Overview */}
+            <div className="p-4 rounded-2xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-slate-900 dark:text-white">
+                  3. Verification Overview
+                </span>
+                <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
+                  {stats.verificationRate}% Validated
+                </span>
+              </div>
+
+              <div className="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
+                <div
+                  className="bg-emerald-500 h-full rounded-full transition-all"
+                  style={{ width: `${stats.verificationRate}%` }}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-2 text-center text-xs">
+                <div className="p-2 bg-emerald-50 dark:bg-emerald-950/40 rounded-xl border border-emerald-200 dark:border-emerald-800">
+                  <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 block">Verified</span>
+                  <span className="font-black text-sm text-emerald-950 dark:text-emerald-100 font-mono">{stats.verifiedCount}</span>
+                </div>
+                <div className="p-2 bg-amber-50 dark:bg-amber-950/40 rounded-xl border border-amber-200 dark:border-amber-800">
+                  <span className="text-[10px] font-bold text-amber-700 dark:text-amber-300 block">Pending</span>
+                  <span className="font-black text-sm text-amber-950 dark:text-amber-100 font-mono">{stats.pendingVerification}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Constituency-wise Statistics */}
+            <div className="p-4 rounded-2xl bg-slate-50/70 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 space-y-2.5">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-slate-900 dark:text-white">
+                  4. Constituency-wise Distribution
+                </span>
+                <span className="text-[10px] text-slate-400">By Assembly Segment</span>
+              </div>
+
+              <div className="space-y-2 text-xs">
+                {/* Dynamically grouped constituencies from actual allocations */}
+                {(() => {
+                  const constMap: Record<string, number> = {};
+                  allocations.forEach(a => {
+                    const voterRecord = MOCK_VOTERS.find(v => v.id === a.electorId || v.voterCode === a.electorId);
+                    const acKey = voterRecord?.assemblySegment || '215 - Kasba Peth';
+                    constMap[acKey] = (constMap[acKey] || 0) + 1;
+                  });
+
+                  return Object.entries(constMap).map(([ac, count]) => {
+                    const pct = Math.round((count / (allocations.length || 1)) * 100);
+                    return (
+                      <div key={ac} className="space-y-0.5">
+                        <div className="flex items-center justify-between text-[11px]">
+                          <span className="font-medium text-slate-700 dark:text-slate-300 truncate max-w-[170px]">{ac}</span>
+                          <span className="font-bold text-slate-900 dark:text-white font-mono">{count} ({pct}%)</span>
+                        </div>
+                        <div className="w-full bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full overflow-hidden">
+                          <div className="bg-teal-500 h-full rounded-full" style={{ width: `${pct}%` }} />
+                        </div>
+                      </div>
+                    );
+                  });
+                })()}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ========================================================================= */}
       {/* SECTION 10: Field Operations & Workforce Intelligence                      */}
       {/* ========================================================================= */}
       <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
@@ -1997,142 +2348,74 @@ export const WarRoomDashboardView: React.FC<WarRoomDashboardViewProps> = ({ onNa
       </div>
 
       {/* ========================================================================= */}
-      {/* SECTION 12 & 13: Live War Room Monitoring & Live Monitoring Activity Tabs */}
+      {/* SECTION 12: Live War Room Monitoring                                      */}
       {/* ========================================================================= */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* SECTION 12: Live War Room Monitoring Status Bar (5/12) */}
-        <div className="lg:col-span-5 bg-white rounded-2xl border border-slate-200 p-5 shadow-xs flex flex-col justify-between">
-          <div>
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2">
-                <Radio className="w-4 h-4 text-blue-600 animate-pulse" />
-                <h3 className="font-bold text-slate-900 text-sm">Live War Room Monitoring</h3>
-              </div>
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200 font-bold">
-                Real-Time Sync
-              </span>
+      <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <Radio className="w-4 h-4 text-blue-600 animate-pulse" />
+              <h3 className="font-bold text-slate-900 text-sm">Live War Room Monitoring</h3>
             </div>
-            <p className="text-xs text-slate-500 mb-4">
-              Live telemetry aggregated from active Android terminals, web kiosks, and field dispatchers.
-            </p>
-
-            <div className="space-y-3">
-              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center font-bold">
-                    <MapPin className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <span className="text-xs font-bold text-slate-800 block">Active Polling Stations</span>
-                    <span className="text-[10px] text-slate-400">2,038 of 2,045 operational</span>
-                  </div>
-                </div>
-                <span className="text-sm font-black text-blue-700 font-mono">99.6%</span>
-              </div>
-
-              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-lg bg-cyan-100 text-cyan-700 flex items-center justify-center font-bold">
-                    <Users className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <span className="text-xs font-bold text-slate-800 block">Active Field Mobilizers</span>
-                    <span className="text-[10px] text-slate-400">GPS pinging within 15 mins</span>
-                  </div>
-                </div>
-                <span className="text-sm font-black text-cyan-800 font-mono">3,120</span>
-              </div>
-
-              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center font-bold">
-                    <AlertTriangle className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <span className="text-xs font-bold text-slate-800 block">Critical Flagged Issues</span>
-                    <span className="text-[10px] text-slate-400">Action required by coordinators</span>
-                  </div>
-                </div>
-                <span className="text-sm font-black text-amber-800 font-mono">4</span>
-              </div>
-
-              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold">
-                    <Clock className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <span className="text-xs font-bold text-slate-800 block">Last Global Telemetry Sync</span>
-                    <span className="text-[10px] text-slate-400">ECI server connection verified</span>
-                  </div>
-                </div>
-                <span className="text-xs font-bold text-indigo-800 font-mono">Just now</span>
-              </div>
-            </div>
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200 font-bold">
+              Real-Time Sync
+            </span>
           </div>
-        </div>
+          <p className="text-xs text-slate-500 mb-4">
+            Live telemetry aggregated from active Android terminals, web kiosks, and field dispatchers.
+          </p>
 
-        {/* SECTION 13: Live Monitoring Activity Tabs (7/12) */}
-        <div className="lg:col-span-7 bg-white rounded-2xl border border-slate-200 p-5 shadow-xs flex flex-col justify-between">
-          <div>
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
-              <div>
-                <div className="flex items-center gap-2">
-                  <Activity className="w-4 h-4 text-purple-600" />
-                  <h3 className="font-bold text-slate-900 text-sm">Live Monitoring Activity Feed</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center font-bold">
+                  <MapPin className="w-4 h-4" />
                 </div>
-                <p className="text-xs text-slate-500">
-                  Real-time event streams across booths, worker movements, survey logs, and field dispatches.
-                </p>
+                <div>
+                  <span className="text-xs font-bold text-slate-800 block">Active Polling Stations</span>
+                  <span className="text-[10px] text-slate-400">2,038 of 2,045 operational</span>
+                </div>
               </div>
-
-              {/* 4 Visible Activity Categories Tabs */}
-              <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg text-xs font-semibold">
-                {[
-                  { key: 'booth', label: 'Booth Activity' },
-                  { key: 'worker', label: 'Worker Activity' },
-                  { key: 'survey', label: 'Survey Activity' },
-                  { key: 'field', label: 'Field Updates' }
-                ].map((tab) => (
-                  <button
-                    key={tab.key}
-                    onClick={() => setActiveMonitoringTab(tab.key as any)}
-                    className={`px-2.5 py-1 rounded-md text-[11px] transition-all ${
-                      activeMonitoringTab === tab.key ? 'bg-white text-slate-900 font-bold shadow-xs' : 'text-slate-600 hover:text-slate-900'
-                    }`}
-                  >
-                    {tab.label}
-                  </button>
-                ))}
-              </div>
+              <span className="text-sm font-black text-blue-700 font-mono">99.6%</span>
             </div>
 
-            {/* Event List Container */}
-            <div className="space-y-2.5 max-h-72 overflow-y-auto pr-1 text-xs">
-              {MOCK_MONITORING_EVENTS[activeMonitoringTab].map((ev) => (
-                <div key={ev.id} className="p-3 bg-slate-50 rounded-xl border border-slate-100 flex items-start justify-between gap-3 hover:bg-slate-100/60 transition-colors">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <span className={`px-1.5 py-0.2 rounded font-black text-[9px] uppercase ${
-                        ev.status === 'NORMAL' || ev.status === 'ACTIVE' || ev.status === 'CONFIRMED' || ev.status === 'SYNCED'
-                          ? 'bg-blue-100 text-blue-800'
-                          : ev.status === 'ALERT' || ev.status === 'ESCALATED'
-                          ? 'bg-rose-100 text-rose-800'
-                          : 'bg-amber-100 text-amber-800'
-                      }`}>
-                        {ev.status}
-                      </span>
-                      <h4 className="font-bold text-slate-900 text-xs">{ev.title}</h4>
-                    </div>
-                    <div className="flex items-center gap-2 text-[11px] text-slate-500 mt-1">
-                      <span>Location: <strong className="text-slate-700">{ev.location}</strong></span>
-                      <span>•</span>
-                      <span>By: <strong className="text-slate-700">{ev.user}</strong></span>
-                    </div>
-                  </div>
-                  <span className="text-[10px] text-slate-400 shrink-0 font-mono">{ev.time}</span>
+            <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-cyan-100 text-cyan-700 flex items-center justify-center font-bold">
+                  <Users className="w-4 h-4" />
                 </div>
-              ))}
+                <div>
+                  <span className="text-xs font-bold text-slate-800 block">Active Field Mobilizers</span>
+                  <span className="text-[10px] text-slate-400">GPS pinging within 15 mins</span>
+                </div>
+              </div>
+              <span className="text-sm font-black text-cyan-800 font-mono">3,120</span>
+            </div>
+
+            <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center font-bold">
+                  <AlertTriangle className="w-4 h-4" />
+                </div>
+                <div>
+                  <span className="text-xs font-bold text-slate-800 block">Critical Flagged Issues</span>
+                  <span className="text-[10px] text-slate-400">Action required by coordinators</span>
+                </div>
+              </div>
+              <span className="text-sm font-black text-amber-800 font-mono">4</span>
+            </div>
+
+            <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold">
+                  <Clock className="w-4 h-4" />
+                </div>
+                <div>
+                  <span className="text-xs font-bold text-slate-800 block">Last Global Telemetry Sync</span>
+                  <span className="text-[10px] text-slate-400">ECI server connection verified</span>
+                </div>
+              </div>
+              <span className="text-xs font-bold text-indigo-800 font-mono">Just now</span>
             </div>
           </div>
         </div>

@@ -63,13 +63,42 @@ export interface UpdateRequest {
   syncError?: string;
 }
 
+export type CommunityGroupCategory =
+  | 'Agriculture'
+  | 'Sugar Industry'
+  | 'Childcare & Community Services'
+  | 'Village Community'
+  | 'Local Organisations'
+  | 'Cooperatives'
+  | 'Self-Help Groups'
+  | 'Other';
+
+export interface CommunityGroupAssociation {
+  id: string;
+  electorId: string;
+  category: CommunityGroupCategory;
+  groupName: string;
+  villageOrLocality: string;
+  designation?: string;
+  allocationDate: string;
+  verificationStatus: 'VERIFIED' | 'UNVERIFIED';
+  notes?: string;
+  allocatedBy?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type ElectorAssociationStatus = 'ACTIVE' | 'NOT_ASSOCIATED' | 'NOT_DISCLOSED';
+
 export interface Voter {
   id: string;
   epicNumber: string;
   partNo: number;
   serialNo: number;
   fullName: string;
+  hindiName?: string;
   relativeName: string;
+  relativeHindiName?: string;
   relationType: 'Father' | 'Husband' | 'Mother' | 'Other';
   gender: 'MALE' | 'FEMALE' | 'OTHER';
   age: number;
@@ -77,8 +106,10 @@ export interface Voter {
   mobile: string;
   address: string;
   constituency: string;
+  constituencyNo?: string | number;
   assemblySegment: string;
   prabhaag: string;
+  ward?: string;
   boothNumber: number;
   pollingStation: string;
   caste: string;
@@ -106,6 +137,8 @@ export interface Voter {
   bloodGroup?: string;
   karyakartaName?: string;
   gan?: string;
+  communityAssociations?: CommunityGroupAssociation[];
+  associationStatus?: ElectorAssociationStatus;
 }
 
 export interface VoterProfile extends Voter {
