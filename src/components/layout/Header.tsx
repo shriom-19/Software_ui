@@ -47,8 +47,22 @@ export const Header: React.FC<HeaderProps> = ({
   const [selectedGeo, setSelectedGeo] = useState(CURRENT_ELECTION_CONTEXT.constituency);
 
   const searchRef = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const notifRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
+
+  // Global Ctrl+K / Cmd+K listener to focus search bar
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+        setShowSearchResults(true);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   // Sample system notifications
   const [notifications, setNotifications] = useState([
@@ -185,44 +199,50 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Live War Room Status Indicator */}
         <div className="hidden lg:flex items-center gap-2 px-3 py-1 bg-blue-50 dark:bg-[#17243A] border border-blue-200/80 dark:border-blue-900/60 rounded-full text-xs font-semibold text-blue-700 dark:text-blue-400">
-          <span className="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse"></span>
-          <span>War Room Live</span>
+          <span className="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-400 pulse-glow-blue"></span>
+          <span className="tracking-wide">War Room Live</span>
         </div>
       </div>
 
       {/* Center: Global Search Bar */}
       <div ref={searchRef} className="flex-1 max-w-md mx-6 relative hidden sm:block">
-        <div className="relative">
-          <Search className="w-4 h-4 text-slate-400 dark:text-[#71819B] absolute left-3.5 top-1/2 -translate-y-1/2" />
+        <div className="relative flex items-center">
+          <Search className="w-4 h-4 text-slate-400 dark:text-[#71819B] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
+            ref={searchInputRef}
             type="text"
-            placeholder="Global search: voter name, EPIC ID, booth, phone..."
+            placeholder="Global search: voter, EPIC ID, booth, phone..."
             value={searchQuery}
             onChange={(e) => {
               setSearchQuery(e.target.value);
               setShowSearchResults(true);
             }}
             onFocus={() => setShowSearchResults(true)}
-            className="w-full pl-10 pr-8 py-2 bg-slate-50 dark:bg-[#111C30] border border-slate-200 dark:border-[#273750] rounded-xl text-xs text-slate-900 dark:text-[#F1F5FC] placeholder:text-slate-400 dark:placeholder:text-[#71819B] focus:outline-none focus:ring-1 focus:ring-blue-500 transition-all"
+            className="w-full pl-10 pr-16 py-2 bg-slate-50 dark:bg-[#111C30] border border-slate-200 dark:border-[#273750] rounded-xl text-xs text-slate-900 dark:text-[#F1F5FC] placeholder:text-slate-400 dark:placeholder:text-[#71819B] focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
           />
-          {searchQuery && (
+          {searchQuery ? (
             <button
               onClick={() => { setSearchQuery(''); setShowSearchResults(false); }}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 p-1"
             >
               <X className="w-3.5 h-3.5" />
             </button>
+          ) : (
+            <kbd className="absolute right-2.5 top-1/2 -translate-y-1/2 px-1.5 py-0.5 rounded text-[10px] font-semibold font-mono bg-slate-200/70 dark:bg-slate-700/60 text-slate-500 dark:text-slate-400 pointer-events-none select-none border border-slate-300/60 dark:border-slate-600/60">
+              Ctrl K
+            </kbd>
           )}
         </div>
 
         {/* Search Results Dropdown */}
         {showSearchResults && searchQuery.trim() && (
           <div className="absolute left-0 right-0 mt-2 bg-white dark:bg-[#111C30] rounded-xl shadow-xl border border-slate-200 dark:border-[#273750] p-2 max-h-80 overflow-y-auto z-50 animate-scale-up">
-            <div className="px-2 py-1 text-[10px] font-bold text-slate-400 dark:text-[#71819B] uppercase tracking-wider">
-              Search Results ({searchResults.length})
+            <div className="px-2 py-1 text-[10px] font-bold text-slate-400 dark:text-[#71819B] uppercase tracking-wider flex items-center justify-between">
+              <span>Search Results</span>
+              <span className="font-mono text-blue-600 dark:text-blue-400">{searchResults.length} matches</span>
             </div>
             {searchResults.length === 0 ? (
-              <div className="p-3 text-center text-xs text-slate-500 dark:text-[#71819B]">
+              <div className="p-4 text-center text-xs text-slate-500 dark:text-[#71819B]">
                 No matching voters, booths, or records found.
               </div>
             ) : (
@@ -234,20 +254,20 @@ export const Header: React.FC<HeaderProps> = ({
                     setShowSearchResults(false);
                     setSearchQuery('');
                   }}
-                  className="w-full text-left px-3 py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-[#17243A] flex items-center justify-between group transition-colors"
+                  className="w-full text-left px-3 py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-[#17243A] flex items-center justify-between group transition-colors btn-tactile"
                 >
-                  <div>
+                  <div className="min-w-0 pr-2">
                     <div className="flex items-center gap-2">
                       <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-slate-100 dark:bg-[#17243A] text-slate-600 dark:text-[#A5B3C9] uppercase">
                         {res.type}
                       </span>
-                      <span className="text-xs font-semibold text-slate-800 dark:text-[#F1F5FC] group-hover:text-blue-600 dark:group-hover:text-blue-400">
+                      <span className="text-xs font-semibold text-slate-800 dark:text-[#F1F5FC] group-hover:text-blue-600 dark:group-hover:text-blue-400 truncate">
                         {res.title}
                       </span>
                     </div>
-                    <p className="text-[11px] text-slate-500 dark:text-[#71819B] mt-0.5">{res.subtitle}</p>
+                    <p className="text-[11px] text-slate-500 dark:text-[#71819B] mt-0.5 truncate">{res.subtitle}</p>
                   </div>
-                  <ArrowRight className="w-3.5 h-3.5 text-slate-300 dark:text-[#71819B] group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" />
+                  <ArrowRight className="w-3.5 h-3.5 text-slate-300 dark:text-[#71819B] group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-transform group-hover:translate-x-0.5 shrink-0" />
                 </button>
               ))
             )}
@@ -260,7 +280,7 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Theme Switch Toggle (Light / Dark) */}
         <button
           onClick={toggleTheme}
-          className="p-2 text-slate-600 dark:text-[#A5B3C9] hover:text-slate-900 dark:hover:text-[#F1F5FC] hover:bg-slate-100 dark:hover:bg-[#17243A] rounded-xl transition-colors border border-slate-200 dark:border-[#273750]"
+          className="p-2 text-slate-600 dark:text-[#A5B3C9] hover:text-slate-900 dark:hover:text-[#F1F5FC] hover:bg-slate-100 dark:hover:bg-[#17243A] rounded-xl transition-colors border border-slate-200 dark:border-[#273750] btn-tactile"
           title={theme === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
         >
           {theme === 'dark' ? (
@@ -273,7 +293,7 @@ export const Header: React.FC<HeaderProps> = ({
         {/* AI Mode Entry Point */}
         <button
           onClick={onOpenAI}
-          className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-semibold shadow-xs transition-all ${
+          className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-semibold shadow-xs transition-all btn-tactile ${
             isAiLocked
               ? 'bg-amber-50 dark:bg-amber-950/40 text-amber-900 dark:text-amber-200 border border-amber-300 dark:border-amber-700 hover:bg-amber-100'
               : 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:opacity-95'
@@ -288,7 +308,7 @@ export const Header: React.FC<HeaderProps> = ({
         <div ref={notifRef} className="relative">
           <button
             onClick={() => setShowNotifications(!showNotifications)}
-            className="p-2 text-slate-600 dark:text-[#A5B3C9] hover:text-slate-900 dark:hover:text-[#F1F5FC] hover:bg-slate-100 dark:hover:bg-[#17243A] rounded-xl transition-colors relative"
+            className="p-2 text-slate-600 dark:text-[#A5B3C9] hover:text-slate-900 dark:hover:text-[#F1F5FC] hover:bg-slate-100 dark:hover:bg-[#17243A] rounded-xl transition-colors relative btn-tactile"
             title="System Notifications"
           >
             <Bell className="w-4 h-4" />
@@ -337,7 +357,7 @@ export const Header: React.FC<HeaderProps> = ({
         <div ref={profileRef} className="relative">
           <button
             onClick={() => setShowProfileMenu(!showProfileMenu)}
-            className="flex items-center gap-2.5 p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-[#17243A] transition-colors"
+            className="flex items-center gap-2.5 p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-[#17243A] transition-colors btn-tactile"
           >
             <div className="w-8 h-8 rounded-full bg-blue-700 text-white flex items-center justify-center font-bold text-xs shadow-xs">
               VP
@@ -363,7 +383,7 @@ export const Header: React.FC<HeaderProps> = ({
 
               <button
                 onClick={() => { setActiveView('settings'); setShowProfileMenu(false); }}
-                className="w-full text-left px-3 py-2 text-xs rounded-lg hover:bg-slate-50 dark:hover:bg-[#17243A] text-slate-700 dark:text-[#A5B3C9] flex items-center gap-2 font-medium"
+                className="w-full text-left px-3 py-2 text-xs rounded-lg hover:bg-slate-50 dark:hover:bg-[#17243A] text-slate-700 dark:text-[#A5B3C9] flex items-center gap-2 font-medium btn-tactile"
               >
                 <Settings className="w-3.5 h-3.5 text-slate-400 dark:text-[#71819B]" />
                 <span>Profile & Party Settings</span>
@@ -371,7 +391,7 @@ export const Header: React.FC<HeaderProps> = ({
 
               <button
                 onClick={() => { setActiveView('subscription'); setShowProfileMenu(false); }}
-                className="w-full text-left px-3 py-2 text-xs rounded-lg hover:bg-slate-50 dark:hover:bg-[#17243A] text-slate-700 dark:text-[#A5B3C9] flex items-center gap-2 font-medium"
+                className="w-full text-left px-3 py-2 text-xs rounded-lg hover:bg-slate-50 dark:hover:bg-[#17243A] text-slate-700 dark:text-[#A5B3C9] flex items-center gap-2 font-medium btn-tactile"
               >
                 <Layers className="w-3.5 h-3.5 text-slate-400 dark:text-[#71819B]" />
                 <span>Subscription & Billing</span>
@@ -384,7 +404,7 @@ export const Header: React.FC<HeaderProps> = ({
                   setShowProfileMenu(false);
                   onOpenLogout();
                 }}
-                className="w-full text-left px-3 py-2 text-xs rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/40 text-rose-600 dark:text-rose-400 flex items-center gap-2 font-semibold"
+                className="w-full text-left px-3 py-2 text-xs rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/40 text-rose-600 dark:text-rose-400 flex items-center gap-2 font-semibold btn-tactile"
               >
                 <LogOut className="w-3.5 h-3.5 text-rose-500" />
                 <span>Log Out</span>

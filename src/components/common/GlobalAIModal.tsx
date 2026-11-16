@@ -1043,7 +1043,7 @@ export const GlobalAIModal: React.FC<GlobalAIModalProps> = ({
                     <button
                       key={i}
                       onClick={() => handleSubmitMessage(p.prompt)}
-                      className="px-2.5 py-1 bg-slate-100 hover:bg-purple-50 hover:text-purple-700 hover:border-purple-200 border border-slate-200 rounded-full font-medium text-slate-700 whitespace-nowrap transition-colors"
+                      className="px-2.5 py-1 bg-slate-100 hover:bg-purple-50 hover:text-purple-700 hover:border-purple-200 border border-slate-200 rounded-full font-medium text-slate-700 whitespace-nowrap transition-colors btn-tactile"
                     >
                       {p.prompt}
                     </button>
@@ -1091,7 +1091,7 @@ export const GlobalAIModal: React.FC<GlobalAIModalProps> = ({
                       <button
                         type="button"
                         onClick={handleAttachFile}
-                        className="flex items-center gap-1 px-2.5 py-1 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg text-xs font-medium transition-colors"
+                        className="flex items-center gap-1 px-2.5 py-1 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg text-xs font-medium transition-colors btn-tactile"
                         title="Attach PDF, Excel or document"
                       >
                         <Paperclip className="w-3.5 h-3.5" />
@@ -1107,7 +1107,7 @@ export const GlobalAIModal: React.FC<GlobalAIModalProps> = ({
                       {isGenerating ? (
                         <button
                           onClick={() => setIsGenerating(false)}
-                          className="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-xs flex items-center gap-1 transition-colors"
+                          className="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-xs flex items-center gap-1 transition-colors btn-tactile"
                         >
                           <Square className="w-3 h-3 fill-current" />
                           <span>Stop</span>
@@ -1116,7 +1116,7 @@ export const GlobalAIModal: React.FC<GlobalAIModalProps> = ({
                         <button
                           disabled={!inputValue.trim()}
                           onClick={() => handleSubmitMessage(inputValue)}
-                          className="flex items-center gap-1.5 px-4 py-1.5 bg-purple-600 hover:bg-purple-700 disabled:opacity-40 disabled:hover:bg-purple-600 text-white font-bold rounded-xl text-xs transition-colors shadow-xs"
+                          className="flex items-center gap-1.5 px-4 py-1.5 bg-purple-600 hover:bg-purple-700 disabled:opacity-40 disabled:hover:bg-purple-600 text-white font-bold rounded-xl text-xs transition-colors shadow-xs btn-tactile"
                         >
                           <span>Send</span>
                           <Send className="w-3.5 h-3.5" />

@@ -32,6 +32,61 @@ interface SidebarProps {
   openIssuesCount?: number;
 }
 
+interface SidebarItemProps {
+  id: string;
+  label: string;
+  icon: React.ReactNode;
+  activeView: string;
+  isCollapsed: boolean;
+  onClick: () => void;
+  badge?: React.ReactNode;
+  pulseDot?: boolean;
+}
+
+const SidebarNavItem: React.FC<SidebarItemProps> = ({
+  id,
+  label,
+  icon,
+  activeView,
+  isCollapsed,
+  onClick,
+  badge,
+  pulseDot
+}) => {
+  const isActive = activeView === id;
+  return (
+    <div className="relative group">
+      <button
+        onClick={onClick}
+        className={`w-full flex items-center gap-3 py-2.5 rounded-xl text-xs font-semibold transition-all btn-tactile ${
+          isCollapsed ? 'justify-center px-0' : 'px-3'
+        } ${
+          isActive
+            ? 'bg-brand-600 text-white shadow-md shadow-brand-600/30 border-l-4 border-blue-400 font-bold'
+            : 'text-slate-300 hover:text-white hover:bg-slate-800/80 font-medium'
+        }`}
+        title={isCollapsed ? label : undefined}
+      >
+        <span className="shrink-0">{icon}</span>
+        {!isCollapsed && (
+          <div className="flex-1 flex items-center justify-between text-left truncate">
+            <span className="truncate">{label}</span>
+            {pulseDot && <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shrink-0"></span>}
+            {badge}
+          </div>
+        )}
+      </button>
+
+      {/* Floating tooltip when sidebar is collapsed */}
+      {isCollapsed && (
+        <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-2.5 py-1.5 bg-slate-900 border border-slate-700/80 text-white text-xs font-semibold rounded-lg shadow-xl opacity-0 group-hover:opacity-100 pointer-events-none transition-all whitespace-nowrap z-50">
+          {label}
+        </div>
+      )}
+    </div>
+  );
+};
+
 export const Sidebar: React.FC<SidebarProps> = ({
   activeView,
   setActiveView,
@@ -77,7 +132,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-900 transition-colors hidden md:block"
+          className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-900 transition-colors hidden md:block btn-tactile"
           title={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
         >
           {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
@@ -94,58 +149,40 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </p>
           )}
           <nav className="space-y-1">
-            <button
+            <SidebarNavItem
+              id="dashboard"
+              label="War Room Dashboard"
+              icon={<LayoutDashboard className="w-4 h-4 shrink-0 text-brand-400" />}
+              activeView={activeView}
+              isCollapsed={isCollapsed}
               onClick={() => setActiveView('dashboard')}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                activeView === 'dashboard'
-                  ? 'bg-brand-600 text-white shadow-md shadow-brand-600/30'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-800/80'
-              }`}
-              title="War Room Dashboard"
-            >
-              <LayoutDashboard className="w-4 h-4 shrink-0 text-brand-400" />
-              {!isCollapsed && <span>War Room Dashboard</span>}
-            </button>
+            />
 
-            <button
+            <SidebarNavItem
+              id="map"
+              label="Live Field Map"
+              icon={<MapPin className="w-4 h-4 shrink-0 text-cyan-400" />}
+              activeView={activeView}
+              isCollapsed={isCollapsed}
               onClick={() => setActiveView('map')}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                activeView === 'map'
-                  ? 'bg-brand-600 text-white shadow-md shadow-brand-600/30'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-800/80'
-              }`}
-              title="Live Field Map"
-            >
-              <MapPin className="w-4 h-4 shrink-0 text-cyan-400" />
-              {!isCollapsed && (
-                <div className="flex-1 flex items-center justify-between">
-                  <span>Live Field Map</span>
-                  <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
-                </div>
-              )}
-            </button>
+              pulseDot={true}
+            />
 
-            <button
+            <SidebarNavItem
+              id="office"
+              label="Office & Issues"
+              icon={<Building2 className="w-4 h-4 shrink-0 text-amber-400" />}
+              activeView={activeView}
+              isCollapsed={isCollapsed}
               onClick={() => setActiveView('office')}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                activeView === 'office'
-                  ? 'bg-brand-600 text-white shadow-md shadow-brand-600/30'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-800/80'
-              }`}
-              title="Office & Issues"
-            >
-              <Building2 className="w-4 h-4 shrink-0 text-amber-400" />
-              {!isCollapsed && (
-                <div className="flex-1 flex items-center justify-between">
-                  <span>Office & Issues</span>
-                  {openIssuesCount > 0 && (
-                    <span className="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">
-                      {openIssuesCount}
-                    </span>
-                  )}
-                </div>
-              )}
-            </button>
+              badge={
+                openIssuesCount > 0 ? (
+                  <span className="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                    {openIssuesCount}
+                  </span>
+                ) : undefined
+              }
+            />
           </nav>
         </div>
 
@@ -157,44 +194,32 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </p>
           )}
           <nav className="space-y-1">
-            <button
+            <SidebarNavItem
+              id="voters"
+              label="Total Voters"
+              icon={<Vote className="w-4 h-4 shrink-0 text-cyan-400" />}
+              activeView={activeView}
+              isCollapsed={isCollapsed}
               onClick={() => setActiveView('voters')}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                activeView === 'voters'
-                  ? 'bg-brand-600 text-white shadow-md shadow-brand-600/30'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-800/80'
-              }`}
-              title="Total Voters"
-            >
-              <Vote className="w-4 h-4 shrink-0 text-cyan-400" />
-              {!isCollapsed && <span>Total Voters</span>}
-            </button>
+            />
 
-            <button
+            <SidebarNavItem
+              id="phonebook"
+              label="Phone Book"
+              icon={<Contact className="w-4 h-4 shrink-0 text-purple-400" />}
+              activeView={activeView}
+              isCollapsed={isCollapsed}
               onClick={() => setActiveView('phonebook')}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                activeView === 'phonebook'
-                  ? 'bg-brand-600 text-white shadow-md shadow-brand-600/30'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-800/80'
-              }`}
-              title="Phone Book"
-            >
-              <Contact className="w-4 h-4 shrink-0 text-purple-400" />
-              {!isCollapsed && <span>Phone Book</span>}
-            </button>
+            />
 
-            <button
+            <SidebarNavItem
+              id="filters"
+              label="Filters"
+              icon={<Filter className="w-4 h-4 shrink-0 text-indigo-400" />}
+              activeView={activeView}
+              isCollapsed={isCollapsed}
               onClick={() => setActiveView('filters')}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                activeView === 'filters'
-                  ? 'bg-brand-600 text-white shadow-md shadow-brand-600/30'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-800/80'
-              }`}
-              title="Filters"
-            >
-              <Filter className="w-4 h-4 shrink-0 text-indigo-400" />
-              {!isCollapsed && <span>Filters</span>}
-            </button>
+            />
           </nav>
         </div>
 
@@ -207,7 +232,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           )}
           <nav className="space-y-1">
             {/* Users Accordion */}
-            <div>
+            <div className="relative group">
               <button
                 onClick={() => {
                   if (isCollapsed) {
@@ -215,12 +240,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   }
                   setIsUsersOpen(!isUsersOpen);
                 }}
-                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                className={`w-full flex items-center justify-between py-2.5 rounded-xl text-xs font-semibold transition-all btn-tactile ${
+                  isCollapsed ? 'justify-center px-0' : 'px-3'
+                } ${
                   activeView.startsWith('users')
-                    ? 'text-white bg-slate-800'
-                    : 'text-slate-300 hover:text-white hover:bg-slate-800/80'
+                    ? 'text-white bg-slate-800 border-l-4 border-blue-400 font-bold'
+                    : 'text-slate-300 hover:text-white hover:bg-slate-800/80 font-medium'
                 }`}
-                title="Users & Karyakarta"
+                title={isCollapsed ? "Users & Karyakarta" : undefined}
               >
                 <div className="flex items-center gap-3">
                   <Users className="w-4 h-4 shrink-0 text-teal-400" />
@@ -236,12 +263,19 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 )}
               </button>
 
+              {/* Floating tooltip when sidebar is collapsed */}
+              {isCollapsed && (
+                <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-2.5 py-1.5 bg-slate-900 border border-slate-700/80 text-white text-xs font-semibold rounded-lg shadow-xl opacity-0 group-hover:opacity-100 pointer-events-none transition-all whitespace-nowrap z-50">
+                  Users & Karyakarta
+                </div>
+              )}
+
               {/* Sub-menu items */}
               {!isCollapsed && isUsersOpen && (
                 <div className="pl-9 pr-2 py-1 space-y-1 border-l border-slate-800 ml-4 my-1">
                   <button
                     onClick={() => setActiveView('users-dashboard')}
-                    className={`w-full text-left py-1.5 px-2 rounded-lg text-xs ${
+                    className={`w-full text-left py-1.5 px-2 rounded-lg text-xs btn-tactile ${
                       activeView === 'users-dashboard' ? 'text-white font-bold bg-slate-800' : 'text-slate-400 hover:text-slate-200'
                     }`}
                   >
@@ -249,7 +283,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   </button>
                   <button
                     onClick={() => setActiveView('users-all')}
-                    className={`w-full text-left py-1.5 px-2 rounded-lg text-xs ${
+                    className={`w-full text-left py-1.5 px-2 rounded-lg text-xs btn-tactile ${
                       activeView === 'users-all' ? 'text-white font-bold bg-slate-800' : 'text-slate-400 hover:text-slate-200'
                     }`}
                   >
@@ -257,7 +291,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   </button>
                   <button
                     onClick={() => setActiveView('users-add')}
-                    className={`w-full text-left py-1.5 px-2 rounded-lg text-xs ${
+                    className={`w-full text-left py-1.5 px-2 rounded-lg text-xs btn-tactile ${
                       activeView === 'users-add' ? 'text-white font-bold bg-slate-800' : 'text-slate-400 hover:text-slate-200'
                     }`}
                   >
@@ -265,7 +299,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   </button>
                   <button
                     onClick={() => setActiveView('users-members')}
-                    className={`w-full text-left py-1.5 px-2 rounded-lg text-xs ${
+                    className={`w-full text-left py-1.5 px-2 rounded-lg text-xs btn-tactile ${
                       activeView === 'users-members' ? 'text-white font-bold bg-slate-800' : 'text-slate-400 hover:text-slate-200'
                     }`}
                   >
@@ -273,7 +307,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   </button>
                   <button
                     onClick={() => setActiveView('users-requests')}
-                    className={`w-full flex items-center justify-between py-1.5 px-2 rounded-lg text-xs ${
+                    className={`w-full flex items-center justify-between py-1.5 px-2 rounded-lg text-xs btn-tactile ${
                       activeView === 'users-requests' ? 'text-white font-bold bg-slate-800' : 'text-slate-400 hover:text-slate-200'
                     }`}
                   >
@@ -288,31 +322,23 @@ export const Sidebar: React.FC<SidebarProps> = ({
               )}
             </div>
 
-            <button
+            <SidebarNavItem
+              id="blo"
+              label="BLO Information"
+              icon={<ShieldAlert className="w-4 h-4 shrink-0 text-sky-400" />}
+              activeView={activeView}
+              isCollapsed={isCollapsed}
               onClick={() => setActiveView('blo')}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                activeView === 'blo'
-                  ? 'bg-brand-600 text-white shadow-md shadow-brand-600/30'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-800/80'
-              }`}
-              title="BLO Information"
-            >
-              <ShieldAlert className="w-4 h-4 shrink-0 text-sky-400" />
-              {!isCollapsed && <span>BLO Information</span>}
-            </button>
+            />
 
-            <button
+            <SidebarNavItem
+              id="audit"
+              label="User Activities"
+              icon={<Activity className="w-4 h-4 shrink-0 text-sky-400" />}
+              activeView={activeView}
+              isCollapsed={isCollapsed}
               onClick={() => setActiveView('audit')}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                activeView === 'audit'
-                  ? 'bg-brand-600 text-white shadow-md shadow-brand-600/30'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-800/80'
-              }`}
-              title="User Activities"
-            >
-              <Activity className="w-4 h-4 shrink-0 text-sky-400" />
-              {!isCollapsed && <span>User Activities</span>}
-            </button>
+            />
           </nav>
         </div>
 
@@ -324,31 +350,23 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </p>
           )}
           <nav className="space-y-1">
-            <button
+            <SidebarNavItem
+              id="campaigns"
+              label="Campaign Control"
+              icon={<Megaphone className="w-4 h-4 shrink-0 text-rose-400" />}
+              activeView={activeView}
+              isCollapsed={isCollapsed}
               onClick={() => setActiveView('campaigns')}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                activeView === 'campaigns'
-                  ? 'bg-brand-600 text-white shadow-md shadow-brand-600/30'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-800/80'
-              }`}
-              title="Campaign Control"
-            >
-              <Megaphone className="w-4 h-4 shrink-0 text-rose-400" />
-              {!isCollapsed && <span>Campaign Control</span>}
-            </button>
+            />
 
-            <button
+            <SidebarNavItem
+              id="subscription"
+              label="Subscription Plans"
+              icon={<CreditCard className="w-4 h-4 shrink-0 text-amber-400" />}
+              activeView={activeView}
+              isCollapsed={isCollapsed}
               onClick={() => setActiveView('subscription')}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                activeView === 'subscription'
-                  ? 'bg-brand-600 text-white shadow-md shadow-brand-600/30'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-800/80'
-              }`}
-              title="Subscription Plans"
-            >
-              <CreditCard className="w-4 h-4 shrink-0 text-amber-400" />
-              {!isCollapsed && <span>Subscription Plans</span>}
-            </button>
+            />
           </nav>
         </div>
 
@@ -360,31 +378,23 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </p>
           )}
           <nav className="space-y-1">
-            <button
+            <SidebarNavItem
+              id="reports"
+              label="Reports"
+              icon={<FileBarChart2 className="w-4 h-4 shrink-0 text-violet-400" />}
+              activeView={activeView}
+              isCollapsed={isCollapsed}
               onClick={() => setActiveView('reports')}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                activeView === 'reports'
-                  ? 'bg-brand-600 text-white shadow-md shadow-brand-600/30'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-800/80'
-              }`}
-              title="Reports"
-            >
-              <FileBarChart2 className="w-4 h-4 shrink-0 text-violet-400" />
-              {!isCollapsed && <span>Reports</span>}
-            </button>
+            />
 
-            <button
+            <SidebarNavItem
+              id="strategy"
+              label="Previous Election & Strategy"
+              icon={<History className="w-4 h-4 shrink-0 text-fuchsia-400" />}
+              activeView={activeView}
+              isCollapsed={isCollapsed}
               onClick={() => setActiveView('strategy')}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                activeView === 'strategy'
-                  ? 'bg-brand-600 text-white shadow-md shadow-brand-600/30'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-800/80'
-              }`}
-              title="Previous Election & Strategy"
-            >
-              <History className="w-4 h-4 shrink-0 text-fuchsia-400" />
-              {!isCollapsed && <span>Previous Election & Strategy</span>}
-            </button>
+            />
           </nav>
         </div>
 
@@ -396,43 +406,51 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </p>
           )}
           <nav className="space-y-1">
-            <button
+            <SidebarNavItem
+              id="settings"
+              label="Profile & Party Settings"
+              icon={<Settings className="w-4 h-4 shrink-0 text-slate-400" />}
+              activeView={activeView}
+              isCollapsed={isCollapsed}
               onClick={() => setActiveView('settings')}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                activeView === 'settings'
-                  ? 'bg-brand-600 text-white shadow-md shadow-brand-600/30'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-800/80'
-              }`}
-              title="Profile & Party Settings"
-            >
-              <Settings className="w-4 h-4 shrink-0 text-slate-400" />
-              {!isCollapsed && <span>Profile & Party Settings</span>}
-            </button>
+            />
 
-            <button
-              onClick={onOpenLogout}
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold text-rose-400 hover:text-rose-300 hover:bg-rose-950/40 transition-colors"
-              title="Logout"
-            >
-              <LogOut className="w-4 h-4 shrink-0 text-rose-400" />
-              {!isCollapsed && <span>Logout</span>}
-            </button>
+            <div className="relative group">
+              <button
+                onClick={onOpenLogout}
+                className={`w-full flex items-center gap-3 py-2.5 rounded-xl text-xs font-semibold text-rose-400 hover:text-rose-300 hover:bg-rose-950/40 transition-colors btn-tactile ${
+                  isCollapsed ? 'justify-center px-0' : 'px-3'
+                }`}
+                title={isCollapsed ? "Logout" : undefined}
+              >
+                <LogOut className="w-4 h-4 shrink-0 text-rose-400" />
+                {!isCollapsed && <span>Logout</span>}
+              </button>
+              {isCollapsed && (
+                <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-2.5 py-1.5 bg-rose-950 border border-rose-800 text-rose-200 text-xs font-semibold rounded-lg shadow-xl opacity-0 group-hover:opacity-100 pointer-events-none transition-all whitespace-nowrap z-50">
+                  Logout
+                </div>
+              )}
+            </div>
           </nav>
         </div>
       </div>
 
       {/* Footer User Info */}
-      {!isCollapsed && (
-        <div className="p-3 border-t border-slate-800 bg-slate-950/40 flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-brand-700 text-white flex items-center justify-center font-bold text-xs shrink-0">
+      <div className={`p-3 border-t border-slate-900 bg-slate-950/60 ${isCollapsed ? 'flex justify-center' : 'flex items-center gap-3'}`}>
+        <div className="relative">
+          <div className="w-8 h-8 rounded-full bg-brand-700 text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-sm">
             VP
           </div>
+          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-slate-950 absolute -bottom-0.5 -right-0.5"></span>
+        </div>
+        {!isCollapsed && (
           <div className="flex-1 truncate">
             <p className="text-xs font-bold text-white truncate">Adv. Vikram Patil</p>
             <p className="text-[10px] text-slate-400 truncate">Pune Constituency</p>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </aside>
   );
 };

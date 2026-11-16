@@ -633,7 +633,7 @@ export const CentralVoterProfileView: React.FC<CentralVoterProfileViewProps> = (
         <div className="flex items-center gap-3">
           <button
             onClick={onBack}
-            className="flex items-center gap-1.5 text-xs font-bold text-slate-700 dark:text-slate-200 hover:text-brand-600 dark:hover:text-brand-400 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xs transition-colors shrink-0"
+            className="flex items-center gap-1.5 text-xs font-bold text-slate-700 dark:text-slate-200 hover:text-brand-600 dark:hover:text-brand-400 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xs transition-colors shrink-0 btn-tactile"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Back to Total Voters</span>
@@ -643,7 +643,7 @@ export const CentralVoterProfileView: React.FC<CentralVoterProfileViewProps> = (
             <span className="text-xs font-black text-slate-900 dark:text-white truncate max-w-[180px]">
               {profile.fullName}
             </span>
-            <span className="font-mono text-[11px] font-bold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/60 px-2 py-0.5 rounded border border-brand-200 dark:border-brand-800">
+            <span className="font-mono font-tabular text-[11px] font-bold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/60 px-2 py-0.5 rounded border border-brand-200 dark:border-brand-800">
               {profile.epicNumber}
             </span>
           </div>
@@ -672,7 +672,7 @@ export const CentralVoterProfileView: React.FC<CentralVoterProfileViewProps> = (
             <button
               key={sec.id}
               onClick={() => scrollToSection(sec.id)}
-              className="px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-brand-50 hover:text-brand-700 dark:hover:bg-brand-950/50 dark:hover:text-brand-300 transition-colors whitespace-nowrap"
+              className="px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-brand-50 hover:text-brand-700 dark:hover:bg-brand-950/50 dark:hover:text-brand-300 transition-colors whitespace-nowrap btn-tactile"
             >
               {sec.label}
             </button>
@@ -683,21 +683,21 @@ export const CentralVoterProfileView: React.FC<CentralVoterProfileViewProps> = (
         <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={handleStartCall}
-            className="p-2 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 rounded-xl hover:bg-emerald-100 transition-colors shadow-xs"
+            className="p-2 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 rounded-xl hover:bg-emerald-100 transition-colors shadow-xs btn-tactile"
             title="Call Voter"
           >
             <PhoneCall className="w-4 h-4" />
           </button>
           <button
             onClick={() => setIsWhatsAppModalOpen(true)}
-            className="p-2 bg-brand-50 dark:bg-brand-950/40 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-800 rounded-xl hover:bg-brand-100 transition-colors shadow-xs"
+            className="p-2 bg-brand-50 dark:bg-brand-950/40 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-800 rounded-xl hover:bg-brand-100 transition-colors shadow-xs btn-tactile"
             title="WhatsApp Voter"
           >
             <MessageSquare className="w-4 h-4" />
           </button>
           <button
             onClick={() => onOpenVoterSlip(profile)}
-            className="flex items-center gap-1.5 px-3 py-2 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl text-xs shadow-xs transition-colors"
+            className="flex items-center gap-1.5 px-3 py-2 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl text-xs shadow-xs transition-colors btn-tactile"
           >
             <Printer className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Print Slip</span>
@@ -766,29 +766,29 @@ export const CentralVoterProfileView: React.FC<CentralVoterProfileViewProps> = (
 
               {/* Electoral Roll Identifiers */}
               <div className="flex flex-wrap items-center gap-y-1.5 gap-x-4 text-xs text-slate-300">
-                <span className="flex items-center gap-1.5 font-mono text-amber-300 font-bold bg-slate-900/80 px-2 py-0.5 rounded border border-slate-700/60">
+                <span className="flex items-center gap-1.5 font-mono font-tabular text-amber-300 font-bold bg-slate-900/80 px-2 py-0.5 rounded border border-slate-700/60">
                   <span>EPIC: {profile.epicNumber}</span>
                   <button
                     onClick={() => copyToClipboard(profile.epicNumber, 'EPIC Number')}
-                    className="hover:text-white transition-colors"
+                    className="hover:text-white transition-colors btn-tactile p-0.5"
                     title="Copy EPIC"
                   >
                     <Copy className="w-3 h-3" />
                   </button>
                 </span>
                 <span className="text-slate-400">•</span>
-                <span>Part: <strong className="text-white">{profile.partNo}</strong></span>
+                <span>Part: <strong className="text-white font-tabular">{profile.partNo}</strong></span>
                 <span className="text-slate-400">•</span>
-                <span>Serial: <strong className="text-white">#{profile.serialNo}</strong></span>
+                <span>Serial: <strong className="text-white font-tabular">#{profile.serialNo}</strong></span>
                 <span className="text-slate-400">•</span>
-                <span>{profile.age} Yrs • {profile.gender}</span>
+                <span><span className="font-tabular">{profile.age}</span> Yrs • {profile.gender}</span>
                 <span className="text-slate-400">•</span>
                 <span className="flex items-center gap-1">
                   <span>Mob:</span>
-                  <strong className="text-white font-mono">{profile.mobile}</strong>
+                  <strong className="text-white font-mono font-tabular">{profile.mobile}</strong>
                   <button
                     onClick={() => copyToClipboard(profile.mobile, 'Mobile Number')}
-                    className="hover:text-amber-300 transition-colors"
+                    className="hover:text-amber-300 transition-colors btn-tactile p-0.5"
                     title="Copy Mobile"
                   >
                     <Copy className="w-3 h-3" />

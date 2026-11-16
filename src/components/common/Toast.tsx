@@ -38,26 +38,26 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         {toasts.map((toast) => (
           <div
             key={toast.id}
-            className={`pointer-events-auto flex items-center justify-between gap-3 px-4 py-3 rounded-lg shadow-lg text-sm font-medium border transition-all animate-slide-in ${
+            className={`pointer-events-auto flex items-center justify-between gap-3 px-4 py-3 rounded-2xl shadow-premium-lg text-sm font-semibold border backdrop-blur-md transition-all animate-slide-in ${
               toast.type === 'success'
-                ? 'bg-brand-50 text-brand-900 border-brand-200'
+                ? 'bg-blue-50/95 dark:bg-[#111C30]/95 text-blue-950 dark:text-blue-100 border-blue-200 dark:border-blue-800'
                 : toast.type === 'error'
-                ? 'bg-rose-50 text-rose-900 border-rose-200'
+                ? 'bg-rose-50/95 dark:bg-rose-950/90 text-rose-950 dark:text-rose-100 border-rose-200 dark:border-rose-800'
                 : toast.type === 'warning'
-                ? 'bg-amber-50 text-amber-900 border-amber-200'
-                : 'bg-slate-900 text-white border-slate-700'
+                ? 'bg-amber-50/95 dark:bg-amber-950/90 text-amber-950 dark:text-amber-100 border-amber-200 dark:border-amber-800'
+                : 'bg-slate-900/95 text-white border-slate-700'
             }`}
           >
-            <div className="flex items-center gap-2">
-              {toast.type === 'success' && <CheckCircle2 className="w-5 h-5 text-brand-600 shrink-0" />}
-              {toast.type === 'error' && <AlertCircle className="w-5 h-5 text-rose-600 shrink-0" />}
-              {toast.type === 'warning' && <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0" />}
+            <div className="flex items-center gap-2.5">
+              {toast.type === 'success' && <CheckCircle2 className="w-5 h-5 text-blue-600 dark:text-blue-400 shrink-0" />}
+              {toast.type === 'error' && <AlertCircle className="w-5 h-5 text-rose-600 dark:text-rose-400 shrink-0" />}
+              {toast.type === 'warning' && <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0" />}
               {toast.type === 'info' && <Info className="w-5 h-5 text-blue-400 shrink-0" />}
-              <span>{toast.message}</span>
+              <span className="leading-snug">{toast.message}</span>
             </div>
             <button
               onClick={() => removeToast(toast.id)}
-              className="p-1 hover:opacity-75 rounded shrink-0"
+              className="p-1 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 rounded-lg shrink-0 transition-colors btn-tactile"
               aria-label="Close"
             >
               <X className="w-4 h-4" />
@@ -72,7 +72,11 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 export const useToast = () => {
   const context = useContext(ToastContext);
   if (!context) {
-    throw new Error('useToast must be used within a ToastProvider');
+    return {
+      showToast: (message: string, type: ToastType = 'info') => {
+        console.info(`[Toast Fallback] (${type}): ${message}`);
+      }
+    };
   }
   return context;
 };

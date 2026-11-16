@@ -521,10 +521,10 @@ export const WarRoomDashboardView: React.FC<WarRoomDashboardViewProps> = ({ onNa
 
       {/* Primary KPI Metric Cards (Explicitly highlighting Total Voters, Total Members, Total Booths, BLO Officers + existing operational KPIs) */}
       <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
-        {/* 1. Total Voters - Explicit VoterX Metric */}
+        {/* 1. Total Voters */}
         <div
           onClick={() => onNavigateToView('voters')}
-          className="bg-white p-3.5 rounded-2xl border border-blue-200/70 shadow-premium-xs hover:border-blue-400 hover:shadow-premium-md cursor-pointer transition-all group relative overflow-hidden"
+          className="bg-white p-3.5 rounded-2xl border border-blue-200/70 shadow-premium-xs hover:border-blue-400 interactive-card btn-tactile cursor-pointer transition-all group relative overflow-hidden"
         >
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
           <div className="flex items-center justify-between mb-1.5 mt-0.5">
@@ -533,17 +533,17 @@ export const WarRoomDashboardView: React.FC<WarRoomDashboardViewProps> = ({ onNa
               <Vote className="w-3.5 h-3.5" />
             </div>
           </div>
-          <p className="text-lg font-black text-slate-900">21.54 L</p>
+          <p className="text-xl font-black text-slate-900 font-tabular tracking-tight">21.54 L</p>
           <div className="flex items-center gap-1 mt-1 text-[10px] text-blue-600 font-semibold truncate">
             <CheckCircle className="w-3 h-3 shrink-0" />
             <span>ECI Verified</span>
           </div>
         </div>
 
-        {/* 2. Total Members - Explicit VoterX Metric */}
+        {/* 2. Total Members */}
         <div
           onClick={() => onNavigateToView('users-members')}
-          className="bg-white p-3.5 rounded-2xl border border-indigo-200/70 shadow-premium-xs hover:border-indigo-400 hover:shadow-premium-md cursor-pointer transition-all group relative overflow-hidden"
+          className="bg-white p-3.5 rounded-2xl border border-indigo-200/70 shadow-premium-xs hover:border-indigo-400 interactive-card btn-tactile cursor-pointer transition-all group relative overflow-hidden"
         >
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 to-blue-600"></div>
           <div className="flex items-center justify-between mb-1.5 mt-0.5">
@@ -552,17 +552,17 @@ export const WarRoomDashboardView: React.FC<WarRoomDashboardViewProps> = ({ onNa
               <Award className="w-3.5 h-3.5" />
             </div>
           </div>
-          <p className="text-lg font-black text-slate-900">34,200</p>
+          <p className="text-xl font-black text-slate-900 font-tabular tracking-tight">34,200</p>
           <div className="flex items-center gap-1 mt-1 text-[10px] text-indigo-600 font-semibold truncate">
             <span className="w-1.5 h-1.5 rounded-full bg-indigo-600 shrink-0"></span>
             <span>28,450 Active Members</span>
           </div>
         </div>
 
-        {/* 3. Total Booths - Explicit VoterX Metric */}
+        {/* 3. Total Booths */}
         <div
           onClick={() => onNavigateToView('dashboard')}
-          className="bg-white p-3.5 rounded-2xl border border-purple-200/70 shadow-premium-xs hover:border-purple-400 hover:shadow-premium-md cursor-pointer transition-all group relative overflow-hidden"
+          className="bg-white p-3.5 rounded-2xl border border-purple-200/70 shadow-premium-xs hover:border-purple-400 interactive-card btn-tactile cursor-pointer transition-all group relative overflow-hidden"
         >
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 to-pink-600"></div>
           <div className="flex items-center justify-between mb-1.5 mt-0.5">
@@ -571,16 +571,16 @@ export const WarRoomDashboardView: React.FC<WarRoomDashboardViewProps> = ({ onNa
               <MapPin className="w-3.5 h-3.5" />
             </div>
           </div>
-          <p className="text-lg font-black text-slate-900">2,045</p>
+          <p className="text-xl font-black text-slate-900 font-tabular tracking-tight">2,045</p>
           <div className="text-[10px] text-purple-600 font-semibold truncate mt-1">
             <span>2,038 Active Stations</span>
           </div>
         </div>
 
-        {/* 4. BLO Officers - Explicit VoterX Metric */}
+        {/* 4. BLO Officers */}
         <div
           onClick={() => onNavigateToView('blo')}
-          className="bg-white p-3.5 rounded-2xl border border-cyan-200/70 shadow-premium-xs hover:border-cyan-400 hover:shadow-premium-md cursor-pointer transition-all group relative overflow-hidden"
+          className="bg-white p-3.5 rounded-2xl border border-cyan-200/70 shadow-premium-xs hover:border-cyan-400 interactive-card btn-tactile cursor-pointer transition-all group relative overflow-hidden"
         >
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-500 to-blue-600"></div>
           <div className="flex items-center justify-between mb-1.5 mt-0.5">
@@ -589,7 +589,7 @@ export const WarRoomDashboardView: React.FC<WarRoomDashboardViewProps> = ({ onNa
               <ShieldAlert className="w-3.5 h-3.5" />
             </div>
           </div>
-          <p className="text-lg font-black text-slate-900">2,045</p>
+          <p className="text-xl font-black text-slate-900 font-tabular tracking-tight">2,045</p>
           <div className="flex items-center gap-1 mt-1 text-[10px] text-cyan-600 font-semibold truncate">
             <span>98.4% Verified Assigned</span>
           </div>
@@ -598,16 +598,16 @@ export const WarRoomDashboardView: React.FC<WarRoomDashboardViewProps> = ({ onNa
         {/* 5. Karyakartas */}
         <div
           onClick={() => onNavigateToView('users-members')}
-          className="bg-white p-3.5 rounded-2xl border border-cyan-200/70 shadow-premium-xs hover:border-cyan-400 hover:shadow-premium-md cursor-pointer transition-all group relative overflow-hidden"
+          className="bg-white p-3.5 rounded-2xl border border-cyan-200/70 shadow-premium-xs hover:border-cyan-400 interactive-card btn-tactile cursor-pointer transition-all group relative overflow-hidden"
         >
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-500 to-teal-500"></div>
           <div className="flex items-center justify-between mb-1.5 mt-0.5">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Karyakartas</span>
+            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Karyakartas</span>
             <div className="w-7 h-7 rounded-lg bg-cyan-50 text-cyan-600 flex items-center justify-center group-hover:scale-110 transition-transform">
               <Users className="w-3.5 h-3.5" />
             </div>
           </div>
-          <p className="text-lg font-black text-slate-900">4,850</p>
+          <p className="text-xl font-black text-slate-900 font-tabular tracking-tight">4,850</p>
           <div className="flex items-center gap-1 mt-1 text-[10px] text-cyan-700 font-semibold truncate">
             <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 shrink-0"></span>
             <span>3,120 On Field</span>
@@ -617,16 +617,16 @@ export const WarRoomDashboardView: React.FC<WarRoomDashboardViewProps> = ({ onNa
         {/* 6. Overall Coverage */}
         <div
           onClick={() => onNavigateToView('voters')}
-          className="bg-white p-3.5 rounded-2xl border border-amber-200/70 shadow-premium-xs hover:border-amber-400 hover:shadow-premium-md cursor-pointer transition-all group relative overflow-hidden"
+          className="bg-white p-3.5 rounded-2xl border border-amber-200/70 shadow-premium-xs hover:border-amber-400 interactive-card btn-tactile cursor-pointer transition-all group relative overflow-hidden"
         >
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 to-orange-500"></div>
           <div className="flex items-center justify-between mb-1.5 mt-0.5">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Coverage</span>
+            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Coverage</span>
             <div className="w-7 h-7 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center group-hover:scale-110 transition-transform">
               <TrendingUp className="w-3.5 h-3.5" />
             </div>
           </div>
-          <p className="text-lg font-black text-slate-900">78.2%</p>
+          <p className="text-xl font-black text-slate-900 font-tabular tracking-tight">78.2%</p>
           <div className="w-full bg-slate-100 h-1.5 rounded-full mt-1.5 overflow-hidden">
             <div className="bg-gradient-to-r from-amber-500 to-orange-500 h-full rounded-full" style={{ width: '78.2%' }}></div>
           </div>
@@ -635,16 +635,16 @@ export const WarRoomDashboardView: React.FC<WarRoomDashboardViewProps> = ({ onNa
         {/* 7. Voter Slips Delivered */}
         <div
           onClick={() => onNavigateToView('voters')}
-          className="bg-white p-3.5 rounded-2xl border border-violet-200/70 shadow-premium-xs hover:border-violet-400 hover:shadow-premium-md cursor-pointer transition-all group relative overflow-hidden"
+          className="bg-white p-3.5 rounded-2xl border border-violet-200/70 shadow-premium-xs hover:border-violet-400 interactive-card btn-tactile cursor-pointer transition-all group relative overflow-hidden"
         >
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-violet-500 to-purple-600"></div>
           <div className="flex items-center justify-between mb-1.5 mt-0.5">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Slips Deliv.</span>
+            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Slips Deliv.</span>
             <div className="w-7 h-7 rounded-lg bg-violet-50 text-violet-600 flex items-center justify-center group-hover:scale-110 transition-transform">
               <Printer className="w-3.5 h-3.5" />
             </div>
           </div>
-          <p className="text-lg font-black text-slate-900">84.6%</p>
+          <p className="text-xl font-black text-slate-900 font-tabular tracking-tight">84.6%</p>
           <div className="flex items-center gap-1 mt-1 text-[10px] text-violet-600 font-semibold truncate">
             <span>18.2 L Handed</span>
           </div>
@@ -653,16 +653,16 @@ export const WarRoomDashboardView: React.FC<WarRoomDashboardViewProps> = ({ onNa
         {/* 8. Open Issues */}
         <div
           onClick={() => onNavigateToView('office')}
-          className="bg-white p-3.5 rounded-2xl border border-rose-200/70 shadow-premium-xs hover:border-rose-400 hover:shadow-premium-md cursor-pointer transition-all group relative overflow-hidden"
+          className="bg-white p-3.5 rounded-2xl border border-rose-200/70 shadow-premium-xs hover:border-rose-400 interactive-card btn-tactile cursor-pointer transition-all group relative overflow-hidden"
         >
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-rose-500 to-pink-500"></div>
           <div className="flex items-center justify-between mb-1.5 mt-0.5">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Open Issues</span>
+            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Open Issues</span>
             <div className="w-7 h-7 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center group-hover:scale-110 transition-transform">
               <Building2 className="w-3.5 h-3.5" />
             </div>
           </div>
-          <p className="text-lg font-black text-slate-900">42</p>
+          <p className="text-xl font-black text-slate-900 font-tabular tracking-tight">42</p>
           <div className="flex items-center gap-1 mt-1 text-[10px] text-rose-600 font-semibold truncate">
             <span>89% Resolved</span>
           </div>

@@ -113,16 +113,16 @@ export const VoterSlipModal: React.FC<VoterSlipModalProps> = ({ voter, onClose }
         </div>
 
         {/* Modal Footer Controls */}
-        <div className="flex items-center justify-end gap-3 px-6 py-3 bg-slate-50 border-t border-slate-200">
+        <div className="flex items-center justify-end gap-3 px-6 py-3 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-800 hover:bg-slate-200 rounded-lg transition-colors"
+            className="px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-800 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 rounded-xl transition-colors btn-tactile"
           >
             Close
           </button>
           <button
             onClick={handlePrint}
-            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-brand-600 hover:bg-brand-700 rounded-lg shadow-sm transition-colors"
+            className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-sm transition-colors btn-tactile"
           >
             <Printer className="w-4 h-4" />
             <span>Print Slip</span>

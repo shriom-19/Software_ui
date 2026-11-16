@@ -34,7 +34,8 @@ import {
   Mail,
   Hash,
   ShieldCheck,
-  Info
+  Info,
+  ArrowRight
 } from 'lucide-react';
 import { Voter } from '../../types';
 import { MOCK_VOTERS, MOCK_BOOTHS } from '../../data/mockData';
@@ -1176,7 +1177,7 @@ export const TotalVotersView: React.FC<TotalVotersViewProps> = ({
         </div>
 
         {/* 23 Cards Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2.5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-2.5">
           {quickFilterCards.map((card) => {
             const Icon = card.icon;
             const isSelected = activeQuickFilter === card.id;
@@ -1188,25 +1189,27 @@ export const TotalVotersView: React.FC<TotalVotersViewProps> = ({
                   setCurrentPage(1);
                   showToast(`Filtered by ${card.label}.`, 'info');
                 }}
-                className={`flex items-start gap-2.5 p-2 rounded-xl border text-left transition-all ${
+                className={`flex items-start gap-2.5 p-2.5 rounded-xl border text-left transition-all btn-tactile interactive-card ${
                   isSelected
-                    ? 'border-blue-600 bg-blue-50/50 dark:bg-blue-950/40 shadow-xs ring-1 ring-blue-500/20'
-                    : 'border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900/60 hover:border-slate-300 dark:hover:border-slate-700 hover:bg-slate-50/60 dark:hover:bg-slate-800/40'
+                    ? 'border-blue-600 bg-blue-50/80 dark:bg-blue-950/50 shadow-sm ring-2 ring-blue-500/30'
+                    : 'border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-blue-300 dark:hover:border-slate-700 hover:bg-slate-50/80 dark:hover:bg-slate-800/40'
                 }`}
               >
-                <div className={`w-7 h-7 rounded-lg ${card.iconBg} ${card.iconColor} flex items-center justify-center shrink-0`}>
-                  <Icon className="w-3.5 h-3.5" />
+                <div className={`w-8 h-8 rounded-lg ${card.iconBg} ${card.iconColor} flex items-center justify-center shrink-0`}>
+                  <Icon className="w-4 h-4" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <span className="text-[10px] text-slate-500 dark:text-slate-400 font-medium block truncate leading-tight">
+                  <span className="text-[11px] text-slate-500 dark:text-slate-400 font-semibold block truncate leading-tight">
                     {card.label}
                   </span>
-                  <span className="text-xs font-black text-slate-900 dark:text-white block leading-tight font-mono mt-0.5">
+                  <span className="text-sm font-black text-slate-900 dark:text-white block leading-tight font-tabular mt-0.5">
                     {card.count}
                   </span>
-                  <span className="text-[9px] font-semibold text-blue-600 dark:text-blue-400 block mt-0.5 leading-none">
-                    {isSelected ? 'Active' : 'Click to Filter'}
-                  </span>
+                  {isSelected && (
+                    <span className="inline-flex items-center gap-0.5 text-[10px] font-bold text-blue-600 dark:text-blue-400 mt-1 leading-none">
+                      <Check className="w-2.5 h-2.5 stroke-[3]" /> Active
+                    </span>
+                  )}
                 </div>
               </button>
             );
@@ -2333,21 +2336,21 @@ export const TotalVotersView: React.FC<TotalVotersViewProps> = ({
 
                       {/* 1. Constituency No. */}
                       <td className="py-3 px-3 whitespace-nowrap">
-                        <span className="inline-flex items-center gap-1 font-mono text-xs font-bold text-slate-800 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-2 py-0.5 rounded">
+                        <span className="inline-flex items-center gap-1 font-mono font-tabular text-xs font-bold text-slate-800 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-2 py-0.5 rounded">
                           AC-{constituencyDisplay}
                         </span>
                       </td>
 
                       {/* 2. Booth No. */}
                       <td className="py-3 px-3 whitespace-nowrap">
-                        <span className="inline-flex items-center gap-1 font-mono text-xs font-bold text-blue-700 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-900/50 px-2 py-0.5 rounded">
+                        <span className="inline-flex items-center gap-1 font-mono font-tabular text-xs font-bold text-blue-700 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-900/50 px-2 py-0.5 rounded">
                           #{voter.boothNumber}
                         </span>
                       </td>
 
                       {/* 3. Sr. No. */}
                       <td className="py-3 px-3 whitespace-nowrap">
-                        <span className="font-mono text-xs font-bold text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 px-1.5 py-0.5 rounded">
+                        <span className="font-mono font-tabular text-xs font-bold text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 px-1.5 py-0.5 rounded">
                           #{voter.serialNo}
                         </span>
                       </td>
@@ -2434,12 +2437,12 @@ export const TotalVotersView: React.FC<TotalVotersViewProps> = ({
                       {/* 5. EPIC ID */}
                       <td className="py-3 px-3 whitespace-nowrap">
                         <div className="inline-flex items-center gap-1">
-                          <span className="font-mono text-[11px] font-bold text-slate-800 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-2 py-0.5 rounded tracking-wide">
+                          <span className="font-mono font-tabular text-[11px] font-bold text-slate-800 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-2 py-0.5 rounded tracking-wide">
                             {voter.epicNumber}
                           </span>
                           <button
                             onClick={() => handleCopyEpic(voter.epicNumber)}
-                            className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded transition-colors"
+                            className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded transition-colors btn-tactile"
                             title="Copy EPIC ID"
                           >
                             <Copy className="w-3 h-3" />
@@ -2450,7 +2453,7 @@ export const TotalVotersView: React.FC<TotalVotersViewProps> = ({
                       {/* 6. Age / Sex (compact format) */}
                       <td className="py-3 px-3 whitespace-nowrap">
                         <div className="inline-flex items-center gap-1.5 text-xs">
-                          <span className="font-mono font-bold text-slate-800 dark:text-slate-200">
+                          <span className="font-mono font-tabular font-bold text-slate-800 dark:text-slate-200">
                             {voter.age} yrs
                           </span>
                           <span className="text-slate-400">/</span>
@@ -2489,14 +2492,14 @@ export const TotalVotersView: React.FC<TotalVotersViewProps> = ({
                         {voter.mobile ? (
                           <a
                             href={`tel:${voter.mobile}`}
-                            className="inline-flex items-center gap-1 font-mono text-[11px] text-blue-600 dark:text-blue-400 hover:underline"
+                            className="inline-flex items-center gap-1 font-mono font-tabular text-[11px] text-blue-600 dark:text-blue-400 hover:underline"
                             title="Call elector"
                           >
                             <Phone className="w-3 h-3 text-slate-400 shrink-0" />
                             <span>{voter.mobile}</span>
                           </a>
                         ) : (
-                          <span className="text-slate-400 text-xs font-mono">—</span>
+                          <span className="text-slate-400 text-xs font-mono font-tabular">—</span>
                         )}
                       </td>
 
@@ -2504,11 +2507,12 @@ export const TotalVotersView: React.FC<TotalVotersViewProps> = ({
                       <td className="py-3 px-3 text-right whitespace-nowrap">
                         <button
                           onClick={() => onSelectVoter(voter)}
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold rounded-xl text-xs transition-all shadow-xs shrink-0"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs transition-all shadow-xs shrink-0 btn-tactile group"
                           title="Open Central Voter Profile"
                         >
                           <Eye className="w-3.5 h-3.5" />
                           <span>View Profile</span>
+                          <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
                         </button>
                       </td>
                     </tr>
