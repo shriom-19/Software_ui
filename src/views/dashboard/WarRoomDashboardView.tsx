@@ -1171,7 +1171,7 @@ export const WarRoomDashboardView: React.FC<WarRoomDashboardViewProps> = ({ onNa
               <h3 className="font-bold text-slate-900 text-sm">Booth Intelligence & Readiness Matrix</h3>
             </div>
             <p className="text-xs text-slate-500">
-              Live status, grade ratings, BLO verification, karyakarta staffing, and slip delivery per polling station.
+              Live status, BLO verification, karyakarta staffing, and slip delivery per polling station.
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -1204,7 +1204,7 @@ export const WarRoomDashboardView: React.FC<WarRoomDashboardViewProps> = ({ onNa
 
             <button
               onClick={() => onNavigateToView('voters')}
-              className="text-xs text-blue-600 hover:text-blue-700 font-semibold flex items-center gap-1 bg-blue-50 px-2.5 py-1.5 rounded-lg border border-blue-200"
+              className="text-xs text-blue-600 hover:text-blue-700 font-semibold flex items-center gap-1 bg-blue-50 px-2.5 py-1.5 rounded-lg border border-blue-200 btn-tactile"
             >
               <span>Filter Total Voters</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -1218,69 +1218,53 @@ export const WarRoomDashboardView: React.FC<WarRoomDashboardViewProps> = ({ onNa
               <tr className="bg-slate-50 text-slate-600 font-bold border-y border-slate-200 uppercase tracking-wider text-[11px]">
                 <th
                   onClick={() => { setBoothSortField('boothNumber'); setBoothSortAsc(!boothSortAsc); }}
-                  className="py-3 px-3 cursor-pointer hover:bg-slate-100"
+                  className="py-3.5 px-4 w-24 cursor-pointer hover:bg-slate-100 transition-colors"
                 >
                   Booth #
                 </th>
-                <th className="py-3 px-3">Polling Station Name & Locality</th>
+                <th className="py-3.5 px-4 min-w-[240px]">Polling Station Name & Locality</th>
                 <th
                   onClick={() => { setBoothSortField('totalVoters'); setBoothSortAsc(!boothSortAsc); }}
-                  className="py-3 px-3 cursor-pointer hover:bg-slate-100"
+                  className="py-3.5 px-4 w-28 cursor-pointer hover:bg-slate-100 transition-colors"
                 >
                   Voters
                 </th>
-                <th className="py-3 px-3">Grade</th>
-                <th className="py-3 px-3">BLO Incharge</th>
-                <th className="py-3 px-3">Karyakartas</th>
+                <th className="py-3.5 px-4 min-w-[180px]">BLO Incharge</th>
+                <th className="py-3.5 px-4 w-32">Karyakartas</th>
                 <th
                   onClick={() => { setBoothSortField('slipsDeliveredPercent'); setBoothSortAsc(!boothSortAsc); }}
-                  className="py-3 px-3 cursor-pointer hover:bg-slate-100"
+                  className="py-3.5 px-4 w-40 cursor-pointer hover:bg-slate-100 transition-colors"
                 >
                   Slip Delivery
                 </th>
                 <th
                   onClick={() => { setBoothSortField('projectedTurnoutPercent'); setBoothSortAsc(!boothSortAsc); }}
-                  className="py-3 px-3 cursor-pointer hover:bg-slate-100"
+                  className="py-3.5 px-4 w-36 cursor-pointer hover:bg-slate-100 transition-colors"
                 >
                   Projected Turnout
                 </th>
-                <th className="py-3 px-3 text-right">Actions</th>
+                <th className="py-3.5 px-4 text-right w-28">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 text-slate-700">
               {filteredBooths.map((b) => (
                 <tr key={b.boothNumber} className="hover:bg-slate-50 transition-colors">
-                  <td className="py-3 px-3 font-mono font-bold text-blue-700">
+                  <td className="py-3.5 px-4 font-mono font-tabular font-bold text-blue-700 whitespace-nowrap">
                     #{b.boothNumber}
                   </td>
-                  <td className="py-3 px-3">
-                    <span className="font-semibold text-slate-900 block">{b.name}</span>
-                    <span className="text-[11px] text-slate-500">{b.locality}</span>
+                  <td className="py-3.5 px-4">
+                    <span className="font-semibold text-slate-900 block leading-snug">{b.name}</span>
+                    <span className="text-[11px] text-slate-500 block mt-0.5">{b.locality}</span>
                   </td>
-                  <td className="py-3 px-3 font-semibold">{b.totalVoters.toLocaleString()}</td>
-                  <td className="py-3 px-3">
-                    <span className={`px-2.5 py-1 rounded-lg font-black text-[10px] tracking-wide inline-flex items-center gap-1 shadow-xs ${
-                      b.grade === 'A'
-                        ? 'bg-blue-50 text-blue-700 border border-blue-200'
-                        : b.grade === 'B'
-                        ? 'bg-indigo-50 text-indigo-700 border border-indigo-200'
-                        : b.grade === 'C'
-                        ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                        : 'bg-rose-50 text-rose-700 border border-rose-200'
-                    }`}>
-                      Grade {b.grade} {b.isSwing && '• Swing'}
-                    </span>
+                  <td className="py-3.5 px-4 font-semibold font-tabular text-slate-800 whitespace-nowrap">{b.totalVoters.toLocaleString()}</td>
+                  <td className="py-3.5 px-4">
+                    <span className="font-medium text-slate-800 block leading-snug">{b.bloName}</span>
+                    <span className="text-[11px] text-slate-500 font-mono font-tabular block mt-0.5">{b.bloPhone}</span>
                   </td>
-                  <td className="py-3 px-3">
-                    <span className="font-medium text-slate-800 block">{b.bloName}</span>
-                    <span className="text-[11px] text-slate-500">{b.bloPhone}</span>
-                  </td>
-                  <td className="py-3 px-3">
-                    <span className="font-semibold text-slate-800">{b.karyakartaCount} Assigned</span>
-                  </td>
-                  <td className="py-3 px-3">
+                  <td className="py-3.5 px-4 font-semibold font-tabular text-slate-800 whitespace-nowrap">{b.karyakartaCount} Assigned</td>
+                  <td className="py-3.5 px-4 whitespace-nowrap">
                     <div className="flex items-center gap-2">
-                      <div className="w-16 bg-slate-100 h-2 rounded-full overflow-hidden">
+                      <div className="w-20 bg-slate-100 h-2 rounded-full overflow-hidden">
                         <div
                           className={`h-full rounded-full ${
                             b.slipsDeliveredPercent >= 80 ? 'bg-gradient-to-r from-blue-500 to-indigo-600' : 'bg-gradient-to-r from-amber-400 to-orange-500'
@@ -1288,17 +1272,17 @@ export const WarRoomDashboardView: React.FC<WarRoomDashboardViewProps> = ({ onNa
                           style={{ width: `${b.slipsDeliveredPercent}%` }}
                         />
                       </div>
-                      <span className="font-bold text-[11px]">{b.slipsDeliveredPercent}%</span>
+                      <span className="font-bold font-tabular text-[11px] text-slate-800">{b.slipsDeliveredPercent}%</span>
                     </div>
                   </td>
-                  <td className="py-3 px-3">
-                    <span className="font-bold text-slate-800">{b.projectedTurnoutPercent}%</span>
-                    <span className="text-[10px] text-slate-400 block">Last: {b.lastTurnoutPercent}%</span>
+                  <td className="py-3.5 px-4 whitespace-nowrap">
+                    <span className="font-bold font-tabular text-slate-800 block">{b.projectedTurnoutPercent}%</span>
+                    <span className="text-[10px] text-slate-400 font-tabular block">Last: {b.lastTurnoutPercent}%</span>
                   </td>
-                  <td className="py-3 px-3 text-right">
+                  <td className="py-3.5 px-4 text-right whitespace-nowrap">
                     <button
                       onClick={() => onNavigateToView('voters')}
-                      className="px-2.5 py-1 text-[11px] font-semibold text-brand-700 bg-brand-50 hover:bg-brand-100 rounded-lg transition-colors"
+                      className="px-3 py-1.5 text-[11px] font-semibold text-brand-700 bg-brand-50 hover:bg-brand-100 rounded-lg transition-colors btn-tactile"
                     >
                       Inspect Roll
                     </button>
