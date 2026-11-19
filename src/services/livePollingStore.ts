@@ -100,6 +100,20 @@ export const DEFAULT_NOTIFICATION_SETTINGS: NotificationSettings = {
 // -------------------------------------------------------------
 export type LifecycleMode = 'ACTIVE_DAY1' | 'ACTIVE_DAY2' | 'EXPIRED' | 'UPCOMING';
 
+export interface VotingAuditRecord {
+  id: string;
+  voterId: string;
+  voterName: string;
+  epicNumber: string;
+  boothNumber: number;
+  previousStatus: 'NOT_VOTED' | 'VOTED';
+  newStatus: 'NOT_VOTED' | 'VOTED';
+  updatedBy: string;
+  updatedById: string;
+  timestamp: string;
+  correctionReason?: string;
+}
+
 export interface ElectionLifecycleInfo {
   electionName: string;
   electionDate: string;
@@ -173,6 +187,7 @@ const STORAGE_KEY_VOTING = 'rajtantra_live_polling_records_v1';
 const STORAGE_KEY_NOTIFS = 'rajtantra_polling_notification_settings_v2';
 const STORAGE_KEY_LIFECYCLE = 'rajtantra_polling_lifecycle_mode_v2';
 const STORAGE_KEY_LOGS = 'rajtantra_polling_notification_logs_v2';
+const STORAGE_KEY_AUDIT = 'rajtantra_polling_audit_records_v1';
 
 // -------------------------------------------------------------
 // Baseline Initial Data
@@ -416,6 +431,31 @@ let globalNotificationLogs: HistoricalNotificationLog[] = (() => {
   return INITIAL_NOTIFICATION_LOGS;
 })();
 
+const INITIAL_AUDIT_RECORDS: VotingAuditRecord[] = [
+  {
+    id: 'aud-seed-1',
+    voterId: '46250582',
+    voterName: 'Rajesh Ramchandra Patil',
+    epicNumber: 'WXE5488123',
+    boothNumber: 101,
+    previousStatus: 'NOT_VOTED',
+    newStatus: 'VOTED',
+    updatedBy: 'Adv. Vikram Patil (Candidate Admin)',
+    updatedById: 'usr-01',
+    timestamp: '19 Nov 2024, 09:15 AM'
+  }
+];
+
+let globalAuditRecords: VotingAuditRecord[] = (() => {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY_AUDIT);
+    if (saved) return JSON.parse(saved);
+  } catch (e) {
+    console.error('Failed to load polling audit records from storage', e);
+  }
+  return INITIAL_AUDIT_RECORDS;
+})();
+
 const listeners = new Set<() => void>();
 
 const broadcastChange = () => {
@@ -424,6 +464,7 @@ const broadcastChange = () => {
     localStorage.setItem(STORAGE_KEY_NOTIFS, JSON.stringify(globalNotificationSettings));
     localStorage.setItem(STORAGE_KEY_LIFECYCLE, globalLifecycleMode);
     localStorage.setItem(STORAGE_KEY_LOGS, JSON.stringify(globalNotificationLogs));
+    localStorage.setItem(STORAGE_KEY_AUDIT, JSON.stringify(globalAuditRecords));
   } catch (e) {
     console.error('Failed to persist polling state to storage', e);
   }
@@ -768,6 +809,80 @@ export const useLivePollingStore = () => {
     return historicalElections.find((e) => e.id === id);
   };
 
+  const recordVotingStatusWithAudit = (params: {
+    voterId: string;
+    voterName: string;
+    epicNumber: string;
+    boothNumber: number;
+    newStatus: boolean;
+    updatedBy: string;
+    updatedById: string;
+    correctionReason?: string;
+  }) => {
+    if (globalLifecycleMode === 'EXPIRED') {
+      console.warn('Cannot update voting status: Live polling window has expired.');
+      return;
+    }
+
+    const existing = globalVotingRecords[params.voterId];
+    const previousStatus: 'NOT_VOTED' | 'VOTED' = existing?.hasVoted ? 'VOTED' : 'NOT_VOTED';
+    const nextStatus: 'NOT_VOTED' | 'VOTED' = params.newStatus ? 'VOTED' : 'NOT_VOTED';
+
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const dateStr = now.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+
+    globalVotingRecords[params.voterId] = {
+      ...(existing || {
+        voterId: params.voterId,
+        epicNumber: params.epicNumber,
+        fullName: params.voterName,
+        boothNumber: params.boothNumber
+      }),
+      hasVoted: params.newStatus,
+      votingDate: params.newStatus ? dateStr : '--',
+      votingTime: params.newStatus ? timeStr : '--',
+      updatedBy: params.updatedBy,
+      updatedAt: `${dateStr}, ${timeStr}`
+    };
+
+    const newAuditEntry: VotingAuditRecord = {
+      id: 'aud-' + Date.now(),
+      voterId: params.voterId,
+      voterName: params.voterName,
+      epicNumber: params.epicNumber,
+      boothNumber: params.boothNumber,
+      previousStatus,
+      newStatus: nextStatus,
+      updatedBy: params.updatedBy,
+      updatedById: params.updatedById,
+      timestamp: `${dateStr}, ${timeStr}`,
+      correctionReason: params.correctionReason
+    };
+
+    globalAuditRecords = [newAuditEntry, ...globalAuditRecords];
+
+    // Auto-trigger notification if milestone reached
+    if (params.newStatus && globalNotificationSettings.inAppEnabled) {
+      const currentVotes = Object.values(globalVotingRecords).filter((r) => r.hasVoted).length;
+      if (currentVotes % 20 === 0) {
+        addNotificationLog({
+          category: 'Overall Turnout',
+          channel: 'BOTH',
+          recipientCount: Math.max(1, globalNotificationSettings.inAppRecipients.length),
+          title: `Polling Station Surge Update`,
+          message: `Elector ${params.voterName} verified at Booth #${params.boothNumber}. Recorded by ${params.updatedBy}.`
+        });
+      }
+    }
+
+    broadcastChange();
+  };
+
+  const getAuditRecordsForVoter = (voterId: string): VotingAuditRecord[] => {
+    return globalAuditRecords.filter((a) => a.voterId === voterId);
+  };
+
   return {
     boothLiveStats,
     summary,
@@ -775,6 +890,9 @@ export const useLivePollingStore = () => {
     votingRecords: globalVotingRecords,
     getVoterVotingRecord,
     toggleVoterVotingStatus,
+    recordVotingStatusWithAudit,
+    getAuditRecordsForVoter,
+    auditRecords: globalAuditRecords,
     resetAllPollingData,
     // Notification & Lifecycle extensions
     notificationSettings: globalNotificationSettings,

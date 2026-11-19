@@ -50,6 +50,7 @@ import {
   useCommunityGroups,
   COMMUNITY_GROUP_CATEGORIES
 } from '../../services/communityGroupStore';
+import { useLivePollingStore } from '../../services/livePollingStore';
 
 interface CentralVoterProfileViewProps {
   voter?: Voter | null;
@@ -91,6 +92,86 @@ export const CentralVoterProfileView: React.FC<CentralVoterProfileViewProps> = (
   const electorId = voter?.id || voter?.voterCode || profile.id || profile.voterCode || '46250582';
   const communityAllocations = getAllocationsForElector(electorId);
   const communityStatus = getElectorStatus(electorId);
+
+  // Live Polling Store integration for conditional Election-Day voting status
+  const {
+    lifecycleInfo,
+    getVoterVotingRecord,
+    recordVotingStatusWithAudit,
+    getAuditRecordsForVoter
+  } = useLivePollingStore();
+
+  const isPollingPeriodActive = lifecycleInfo.status === 'ACTIVE';
+  const liveVotingRecord = getVoterVotingRecord(electorId);
+  const isVoted = liveVotingRecord ? liveVotingRecord.hasVoted : (profile.hasVoted ?? false);
+
+  const [isMarkVotedConfirmOpen, setIsMarkVotedConfirmOpen] = useState(false);
+  const [isCorrectionModalOpen, setIsCorrectionModalOpen] = useState(false);
+  const [correctionReason, setCorrectionReason] = useState('Clerical Error in Roll Search');
+  const electorAuditRecords = getAuditRecordsForVoter(electorId);
+
+  const handleConfirmMarkAsVoted = () => {
+    recordVotingStatusWithAudit({
+      voterId: electorId,
+      voterName: profile.fullName,
+      epicNumber: profile.epicNumber,
+      boothNumber: profile.boothNumber,
+      newStatus: true,
+      updatedBy: 'Adv. Vikram Patil (Candidate Admin)',
+      updatedById: 'usr-01'
+    });
+
+    setProfile(prev => ({ ...prev, hasVoted: true }));
+    setIsMarkVotedConfirmOpen(false);
+
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const newTimelineEntry = {
+      date: 'Today, ' + timeStr,
+      title: 'Voted in 2024 General Elections',
+      description: `EVM voting confirmed at Booth #${profile.boothNumber}. Verified by Candidate Admin Adv. Vikram Patil.`,
+      type: 'SYSTEM' as const,
+      performedBy: 'Adv. Vikram Patil (Candidate Admin)'
+    };
+    setTimeline([newTimelineEntry, ...timeline]);
+
+    showToast(`Voting status updated: ${profile.fullName} marked as VOTED. Live Polling Turnout updated.`, 'success');
+  };
+
+  const handleConfirmCorrection = () => {
+    if (!correctionReason.trim()) {
+      showToast('Please provide an authorized reason for voting status correction.', 'error');
+      return;
+    }
+
+    recordVotingStatusWithAudit({
+      voterId: electorId,
+      voterName: profile.fullName,
+      epicNumber: profile.epicNumber,
+      boothNumber: profile.boothNumber,
+      newStatus: false,
+      updatedBy: 'Adv. Vikram Patil (Candidate Admin)',
+      updatedById: 'usr-01',
+      correctionReason: correctionReason.trim()
+    });
+
+    setProfile(prev => ({ ...prev, hasVoted: false }));
+    setIsCorrectionModalOpen(false);
+    setCorrectionReason('Clerical Error in Roll Search');
+
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const newTimelineEntry = {
+      date: 'Today, ' + timeStr,
+      title: 'Voting Status Corrected: Reverted to Not Voted',
+      description: `Administrative correction applied. Reason: ${correctionReason.trim()}. Audit log preserved.`,
+      type: 'SYSTEM' as const,
+      performedBy: 'Adv. Vikram Patil (Candidate Admin)'
+    };
+    setTimeline([newTimelineEntry, ...timeline]);
+
+    showToast(`Correction applied: ${profile.fullName} voting status reverted to Not Voted. Audit logged.`, 'info');
+  };
 
   // Community Group Modal state
   const [isCommunityModalOpen, setIsCommunityModalOpen] = useState(false);
@@ -695,6 +776,37 @@ export const CentralVoterProfileView: React.FC<CentralVoterProfileViewProps> = (
           >
             <MessageSquare className="w-4 h-4" />
           </button>
+
+          {/* Conditional Election-Day Live Voting Status Action (Requirement 1, 2, 3) */}
+          {isPollingPeriodActive && (
+            <>
+              {!isVoted ? (
+                <button
+                  onClick={() => setIsMarkVotedConfirmOpen(true)}
+                  className="flex items-center gap-1.5 px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold rounded-xl text-xs shadow-md transition-all btn-tactile animate-pulse"
+                  title="Election Day Live Polling: Mark as Voted"
+                >
+                  <Vote className="w-4 h-4" />
+                  <span>Mark as Voted</span>
+                </button>
+              ) : (
+                <div className="flex items-center gap-1.5 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 rounded-xl px-2.5 py-1.5 text-xs shadow-2xs">
+                  <span className="font-bold text-emerald-700 dark:text-emerald-300 flex items-center gap-1">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>Voted ({liveVotingRecord?.votingTime || 'Recorded'})</span>
+                  </span>
+                  <button
+                    onClick={() => setIsCorrectionModalOpen(true)}
+                    className="text-[10px] text-slate-500 hover:text-rose-600 underline ml-1 font-semibold"
+                    title="Authorized Correction / Undo"
+                  >
+                    Correct
+                  </button>
+                </div>
+              )}
+            </>
+          )}
+
           <button
             onClick={() => onOpenVoterSlip(profile)}
             className="flex items-center gap-1.5 px-3 py-2 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl text-xs shadow-xs transition-colors btn-tactile"
@@ -756,11 +868,33 @@ export const CentralVoterProfileView: React.FC<CentralVoterProfileViewProps> = (
                   <UserCheck className="w-3 h-3" />
                   <span>Verified Roll</span>
                 </span>
-                {profile.hasVoted && (
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 flex items-center gap-1">
-                    <Vote className="w-3 h-3" />
-                    <span>2024 Voted</span>
-                  </span>
+
+                {/* Conditional Election-Day Live Voting Status (Requirement 1, 2, 3) */}
+                {isPollingPeriodActive ? (
+                  <>
+                    {isVoted ? (
+                      <span className="px-3 py-1 rounded-full text-xs font-black bg-emerald-500/30 text-emerald-200 border border-emerald-400/50 flex items-center gap-1.5 shadow-xs">
+                        <Vote className="w-3.5 h-3.5 text-emerald-300" />
+                        <span>VOTED (2024 General Elections)</span>
+                      </span>
+                    ) : (
+                      <button
+                        onClick={() => setIsMarkVotedConfirmOpen(true)}
+                        className="px-3 py-1 rounded-full text-xs font-extrabold bg-emerald-600 hover:bg-emerald-500 text-white border border-emerald-400 flex items-center gap-1.5 shadow-md btn-tactile animate-pulse cursor-pointer"
+                        title="Click to Record Elector Vote at EVM Station"
+                      >
+                        <Vote className="w-3.5 h-3.5" />
+                        <span>MARK AS VOTED</span>
+                      </button>
+                    )}
+                  </>
+                ) : (
+                  profile.hasVoted && (
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 flex items-center gap-1">
+                      <Vote className="w-3 h-3" />
+                      <span>2024 Voted</span>
+                    </span>
+                  )
                 )}
               </div>
 
@@ -822,6 +956,35 @@ export const CentralVoterProfileView: React.FC<CentralVoterProfileViewProps> = (
                 {voterSlipStatus}
               </span>
             </div>
+
+            {/* Conditional Election-Day Live Status Row */}
+            {isPollingPeriodActive && (
+              <div className="pt-2 border-t border-slate-800 flex items-center justify-between text-xs">
+                <span className="text-slate-300 font-bold flex items-center gap-1">
+                  <Vote className="w-3 h-3 text-emerald-400" />
+                  <span>Polling Turnout:</span>
+                </span>
+                {isVoted ? (
+                  <div className="flex items-center gap-1">
+                    <span className="font-bold text-emerald-300">Voted ({liveVotingRecord?.votingTime || 'Recorded'})</span>
+                    <button
+                      onClick={() => setIsCorrectionModalOpen(true)}
+                      className="text-[10px] text-slate-400 hover:text-rose-300 underline ml-1"
+                      title="Authorized Correction"
+                    >
+                      Undo
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => setIsMarkVotedConfirmOpen(true)}
+                    className="px-2 py-0.5 bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-bold rounded shadow-xs btn-tactile"
+                  >
+                    Mark as Voted
+                  </button>
+                )}
+              </div>
+            )}
             <div className="pt-2 border-t border-slate-800 flex items-center justify-between text-[11px]">
               <span className="text-slate-400">Quick Flags:</span>
               <div className="flex items-center gap-1.5">
@@ -883,6 +1046,57 @@ export const CentralVoterProfileView: React.FC<CentralVoterProfileViewProps> = (
             Role: Authorized Admin
           </span>
         </div>
+
+        {/* Conditional Election-Day Live Polling Action Banner (Requirement 1, 2, 3) */}
+        {isPollingPeriodActive && (
+          <div className="mb-4 p-4 rounded-2xl bg-gradient-to-r from-emerald-50 via-teal-50 to-blue-50 dark:from-emerald-950/40 dark:via-teal-950/30 dark:to-blue-950/30 border border-emerald-200 dark:border-emerald-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-sm">
+                <Vote className="w-5 h-5" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-xs font-black text-slate-900 dark:text-white">
+                    Election Day Polling Desk • Booth #{profile.boothNumber}
+                  </span>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-200">
+                    Live Polling Window
+                  </span>
+                </div>
+                <p className="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
+                  {isVoted
+                    ? `Elector marked as VOTED at ${liveVotingRecord?.votingTime || 'today'} • Recorded by ${liveVotingRecord?.updatedBy || 'Authorized Agent'}.`
+                    : `Elector is registered in Booth #${profile.boothNumber} (${profile.pollingStation}). Verify voter roll slip and tap below to record vote.`}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 self-start sm:self-auto shrink-0">
+              {!isVoted ? (
+                <button
+                  onClick={() => setIsMarkVotedConfirmOpen(true)}
+                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs rounded-xl shadow-sm transition-all btn-tactile inline-flex items-center gap-1.5"
+                >
+                  <Check className="w-4 h-4" />
+                  <span>Mark as Voted</span>
+                </button>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <span className="px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-200 border border-emerald-300 dark:border-emerald-700 inline-flex items-center gap-1">
+                    <CheckCircle className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>Vote Recorded ✓</span>
+                  </span>
+                  <button
+                    onClick={() => setIsCorrectionModalOpen(true)}
+                    className="px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 btn-tactile shadow-2xs"
+                  >
+                    Authorized Correction
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* 12 Quick Action Buttons Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
@@ -1356,6 +1570,44 @@ export const CentralVoterProfileView: React.FC<CentralVoterProfileViewProps> = (
             ))}
           </div>
         </div>
+
+        {/* Election Day Live Polling Audit Log (Requirement 5) */}
+        {electorAuditRecords.length > 0 && (
+          <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+            <h4 className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+              <Shield className="w-3.5 h-3.5 text-blue-600" />
+              <span>Election-Day Voting Status Audit Log ({electorAuditRecords.length} Event{electorAuditRecords.length > 1 ? 's' : ''})</span>
+            </h4>
+            <div className="space-y-1.5">
+              {electorAuditRecords.map((aud) => (
+                <div
+                  key={aud.id}
+                  className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2"
+                >
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-slate-900 dark:text-white">
+                        Status changed: {aud.previousStatus} → {aud.newStatus}
+                      </span>
+                      <span className="text-[10px] font-mono text-slate-400">{aud.timestamp}</span>
+                    </div>
+                    <span className="text-[11px] text-slate-500 block mt-0.5">
+                      Updated by {aud.updatedBy} (ID: {aud.updatedById}) • Booth #{aud.boothNumber}
+                    </span>
+                    {aud.correctionReason && (
+                      <span className="text-[11px] text-amber-600 dark:text-amber-400 font-semibold block mt-0.5">
+                        Correction Justification: {aud.correctionReason}
+                      </span>
+                    )}
+                  </div>
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 self-start sm:self-auto font-mono">
+                    Audited
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </section>
 
       {/* =========================================================================
@@ -3393,6 +3645,131 @@ export const CentralVoterProfileView: React.FC<CentralVoterProfileViewProps> = (
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+      {/* =========================================================================
+          MODAL 17: CONFIRM MARK AS VOTED (Requirement 2 & 4)
+      ========================================================================= */}
+      {isMarkVotedConfirmOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-fade-in">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl max-w-md w-full p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                <Vote className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="text-base font-black text-slate-900 dark:text-white">
+                  Confirm Voter Turnout Status
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  Are you sure you want to mark this voter as voted?
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-slate-50 dark:bg-slate-800/60 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-2 text-xs">
+              <div className="flex justify-between">
+                <span className="text-slate-500">Elector Name:</span>
+                <span className="font-bold text-slate-900 dark:text-white">{profile.fullName}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500">EPIC Number:</span>
+                <span className="font-mono font-bold text-blue-600">{profile.epicNumber}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500">Assigned Station:</span>
+                <span className="font-semibold text-slate-800 dark:text-slate-200">Booth #{profile.boothNumber} ({profile.pollingStation || 'Navbharat High School'})</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500">Action Performed By:</span>
+                <span className="font-semibold text-slate-800 dark:text-slate-200">Adv. Vikram Patil (Admin • usr-01)</span>
+              </div>
+              <div className="pt-2 border-t border-slate-200 dark:border-slate-700 text-[11px] text-slate-500 leading-relaxed">
+                This will increment votes cast for Booth #{profile.boothNumber}, recalculate constituency live turnout, and record an immutable audit timestamp.
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-2.5 pt-2">
+              <button
+                type="button"
+                onClick={() => setIsMarkVotedConfirmOpen(false)}
+                className="px-4 py-2 text-xs font-bold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 rounded-xl transition-colors btn-tactile"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmMarkAsVoted}
+                className="px-4 py-2 text-xs font-black text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl shadow-md transition-colors btn-tactile inline-flex items-center gap-1.5"
+              >
+                <Check className="w-4 h-4" />
+                <span>Confirm & Mark as Voted</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* =========================================================================
+          MODAL 18: AUTHORIZED VOTING STATUS CORRECTION (Requirement 3 & 5)
+      ========================================================================= */}
+      {isCorrectionModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-fade-in">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl max-w-md w-full p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl bg-amber-100 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                <AlertTriangle className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="text-base font-black text-slate-900 dark:text-white">
+                  Authorized Status Correction
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  Revert status from Voted to Not Voted with mandatory audit justification.
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-3 text-xs">
+              <div>
+                <label className="font-bold text-slate-700 dark:text-slate-300 block mb-1">
+                  Reason for Correction (Required for Audit Compliance)
+                </label>
+                <select
+                  value={correctionReason}
+                  onChange={(e) => setCorrectionReason(e.target.value)}
+                  className="w-full p-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-800 dark:text-slate-200 font-medium focus:outline-hidden focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="Clerical Error in Roll Search">Clerical Error in Roll Search</option>
+                  <option value="Duplicate Identity Verification Error">Duplicate Identity Verification Error</option>
+                  <option value="EVM Queue Slip Issue Cancelled">EVM Queue Slip Issue Cancelled</option>
+                  <option value="Wrong Elector Serial Tagged by Agent">Wrong Elector Serial Tagged by Agent</option>
+                  <option value="Voter Returned Before Casting Ballot">Voter Returned Before Casting Ballot</option>
+                </select>
+              </div>
+
+              <div className="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 text-[11px] text-amber-800 dark:text-amber-300 leading-relaxed">
+                This correction will adjust live votes cast for Booth #{profile.boothNumber} and create an immutable audit record with your administrator ID.
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-2.5 pt-2">
+              <button
+                type="button"
+                onClick={() => setIsCorrectionModalOpen(false)}
+                className="px-4 py-2 text-xs font-bold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 rounded-xl transition-colors btn-tactile"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmCorrection}
+                className="px-4 py-2 text-xs font-black text-white bg-rose-600 hover:bg-rose-700 rounded-xl shadow-md transition-colors btn-tactile inline-flex items-center gap-1.5"
+              >
+                <span>Confirm Correction</span>
+              </button>
+            </div>
           </div>
         </div>
       )}
