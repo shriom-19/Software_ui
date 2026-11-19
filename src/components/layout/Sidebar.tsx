@@ -159,6 +159,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
             />
 
             <SidebarNavItem
+              id="live-polling"
+              label="Live Polling"
+              icon={<Vote className="w-4 h-4 shrink-0 text-emerald-400" />}
+              activeView={activeView}
+              isCollapsed={isCollapsed}
+              onClick={() => setActiveView('live-polling')}
+              pulseDot={true}
+            />
+
+            <SidebarNavItem
               id="map"
               label="Live Field Map"
               icon={<MapPin className="w-4 h-4 shrink-0 text-cyan-400" />}

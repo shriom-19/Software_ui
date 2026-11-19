@@ -1203,6 +1203,16 @@ export const WarRoomDashboardView: React.FC<WarRoomDashboardViewProps> = ({ onNa
             </div>
 
             <button
+              onClick={() => onNavigateToView('live-polling')}
+              className="text-xs text-white bg-blue-600 hover:bg-blue-700 font-semibold flex items-center gap-1.5 px-3 py-1.5 rounded-lg shadow-xs btn-tactile"
+              title="Open Complete Live Polling Dashboard"
+            >
+              <Vote className="w-3.5 h-3.5" />
+              <span>Read More (Live Polling)</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+
+            <button
               onClick={() => onNavigateToView('voters')}
               className="text-xs text-blue-600 hover:text-blue-700 font-semibold flex items-center gap-1 bg-blue-50 px-2.5 py-1.5 rounded-lg border border-blue-200 btn-tactile"
             >
@@ -1282,15 +1292,37 @@ export const WarRoomDashboardView: React.FC<WarRoomDashboardViewProps> = ({ onNa
                   <td className="py-3.5 px-4 text-right whitespace-nowrap">
                     <button
                       onClick={() => onNavigateToView('voters')}
-                      className="px-3 py-1.5 text-[11px] font-semibold text-brand-700 bg-brand-50 hover:bg-brand-100 rounded-lg transition-colors btn-tactile"
+                      className="px-3 py-1.5 text-[11px] font-semibold text-brand-700 bg-brand-50 hover:bg-brand-100 rounded-lg transition-colors btn-tactile mr-1.5"
                     >
                       Inspect Roll
+                    </button>
+                    <button
+                      onClick={() => onNavigateToView('live-polling')}
+                      className="px-2.5 py-1.5 text-[11px] font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors btn-tactile inline-flex items-center gap-1"
+                      title="View in Live Polling Dashboard"
+                    >
+                      <span>Live</span>
+                      <ArrowRight className="w-3 h-3" />
                     </button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+        </div>
+
+        {/* Read More Footer Bar for Live Polling Dashboard */}
+        <div className="pt-3 px-4 pb-3 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-2 bg-slate-50/50 rounded-b-2xl">
+          <span className="text-xs text-slate-500">
+            Showing top preview polling stations. View complete constituency turnout, hourly progression curves, and live booth records:
+          </span>
+          <button
+            onClick={() => onNavigateToView('live-polling')}
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:text-blue-700 hover:underline btn-tactile"
+          >
+            <span>Read More in Live Polling Dashboard</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
         </div>
       </div>
 

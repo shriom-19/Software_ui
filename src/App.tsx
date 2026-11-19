@@ -12,6 +12,7 @@ import { LoginView } from './views/auth/LoginView';
 import { RegisterView } from './views/auth/RegisterView';
 import { ForgotPasswordView } from './views/auth/ForgotPasswordView';
 import { WarRoomDashboardView } from './views/dashboard/WarRoomDashboardView';
+import { LivePollingDashboardView } from './views/polling/LivePollingDashboardView';
 import { TotalVotersView } from './views/voters/TotalVotersView';
 import { CentralVoterProfileView } from './views/voters/CentralVoterProfileView';
 import { PhoneBookView } from './views/voters/PhoneBookView';
@@ -133,6 +134,13 @@ const MainApp: React.FC = () => {
           <div className="max-w-7xl mx-auto">
             {activeView === 'dashboard' && (
               <WarRoomDashboardView onNavigateToView={setActiveView} />
+            )}
+
+            {activeView === 'live-polling' && (
+              <LivePollingDashboardView
+                onNavigateToView={setActiveView}
+                onSelectVoter={handleSelectVoter}
+              />
             )}
 
             {activeView === 'voters' && (
